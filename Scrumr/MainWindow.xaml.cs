@@ -23,7 +23,7 @@ namespace Scrumr
 
         public Dictionary<Sprint, int> SprintToColumnMap;
         public Dictionary<Feature, int> FeatureToRowMap;
-        public Dictionary<WrapPanel, Tuple<int, int>> CellMap;
+        public Dictionary<WrapPanel, SprintFeature> CellMap;
 
         public MainWindow()
         {
@@ -55,6 +55,7 @@ namespace Scrumr
                 new Ticket { Name = "Ticket 3", Sprint = Sprints[2], Feature = Features[2] },
                 new Ticket { Name = "Ticket 4", Sprint = Sprints[1], Feature = Features[1] },
                 new Ticket { Name = "Ticket 5", Sprint = Sprints[1], Feature = Features[1] },
+                new Ticket { Name = "Ticket 5", Sprint = Sprints[0], Feature = Features[2] },
             };
         }
 
@@ -63,7 +64,7 @@ namespace Scrumr
             int i = 0, j = 0;
             SprintToColumnMap = new Dictionary<Sprint, int>();
             FeatureToRowMap = new Dictionary<Feature, int>();
-            CellMap = new Dictionary<WrapPanel, Tuple<int,int>>();
+            CellMap = new Dictionary<WrapPanel, SprintFeature>();
 
             foreach (var sprint in Sprints)
             {
@@ -84,9 +85,14 @@ namespace Scrumr
                     var sprint = Sprints[column];
                     var feature = Features[row];
 
-                    var newCell = new WrapPanel();
+                    var newCell = new WrapPanel
+                    {
+                        AllowDrop = true,
+                        Background = Brushes.Transparent,
+                    };
+                    newCell.Drop += newCell_Drop;
 
-                    CellMap.Add(newCell, Tuple.Create(column,row));
+                    CellMap.Add(newCell, new SprintFeature(column, row));
                     Board.Children.Add(newCell);
                     Grid.SetColumn(newCell, column);
                     Grid.SetRow(newCell, row);
@@ -94,11 +100,29 @@ namespace Scrumr
                     var tickets = Tickets.Where(t => t.Sprint == sprint && t.Feature == feature);
                     foreach (var ticket in tickets)
                     {
-                        var newTicket = new Button { Content = ticket.Name, Height = 20, Width = 200 };
+                        var newTicket = new TicketView { Name = ticket.Name, Height = 50, Width = 200 };
                         newCell.Children.Add(newTicket);
                     }
                 }
             }
+        }
+
+        void newCell_Drop(object sender, DragEventArgs e)
+        {
+            var cell = sender as WrapPanel;
+            var data = CellMap[cell];
+        }
+    }
+
+    public struct SprintFeature
+    {
+        int Sprint;
+        int Feature;
+
+        public SprintFeature(int sprint, int feature)
+        {
+            Sprint = sprint;
+            Feature = feature;
         }
     }
 }

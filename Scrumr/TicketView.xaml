@@ -1,0 +1,14 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	x:Class="Scrumr.TicketView"
+    Padding="5"
+	x:Name="UserControl" Height="100" Width="200" MouseDown="UserControl_MouseDown">
+
+    <Border x:Name="LayoutRoot" Background="#FFD7EBF2" BorderBrush="#FF0194C8" BorderThickness="6,0,0,0">
+		<Label x:Name="labelName" Content="{Binding Name}"/>
+	</Border>
+</UserControl>

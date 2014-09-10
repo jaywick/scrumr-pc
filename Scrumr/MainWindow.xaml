@@ -2,7 +2,11 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Scrumr for Desktop" Height="571" Width="1008">
-    <Grid>
-        <Grid x:Name="Board" ShowGridLines="True"/>
+    <Grid Background="White">
+        <Grid x:Name="Board" ShowGridLines="True" Margin="12.935,72.516,13.226,11.613">
+        	<TextBlock HorizontalAlignment="Left" Margin="114,134,0,0" TextWrapping="Wrap" VerticalAlignment="Top"/>
+        </Grid>
+        <Border Background="#FF131313" Height="54.178" BorderBrush="Black" VerticalAlignment="Top" BorderThickness="0,0,0,1"/>
+		<TextBlock HorizontalAlignment="Left" Margin="16.161,7.096,0,0" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="30" Text="Scrumr" Foreground="White"/>
     </Grid>
 </Window>
