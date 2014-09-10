@@ -53,10 +53,10 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
-    <Compile Include="Entity.cs" />
-    <Compile Include="Feature.cs" />
-    <Compile Include="Sprint.cs" />
-    <Compile Include="Ticket.cs" />
+    <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\Feature.cs" />
+    <Compile Include="Entities\Sprint.cs" />
+    <Compile Include="Entities\Ticket.cs" />
     <Compile Include="TicketView.xaml.cs">
       <DependentUpon>TicketView.xaml</DependentUpon>
     </Compile>
