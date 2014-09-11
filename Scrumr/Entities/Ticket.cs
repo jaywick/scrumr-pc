@@ -8,6 +8,8 @@ namespace Scrumr
 {
     public class Ticket : Entity
     {
+        public int ID { get; set; }
+        public string Name { get; set; }
         public Feature Feature { get; set; }
         public Sprint Sprint { get; set; }
     }

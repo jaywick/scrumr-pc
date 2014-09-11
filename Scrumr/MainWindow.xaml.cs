@@ -66,18 +66,21 @@ namespace Scrumr
             FeatureToRowMap = new Dictionary<Feature, int>();
             CellMap = new Dictionary<WrapPanel, SprintFeature>();
 
+            Board.ColumnDefinitions.Clear();
             foreach (var sprint in Sprints)
             {
                 Board.ColumnDefinitions.Add(new ColumnDefinition());
                 SprintToColumnMap.Add(sprint, i++);
             }
 
+            Board.RowDefinitions.Clear();
             foreach (var feature in Features)
             {
                 Board.RowDefinitions.Add(new RowDefinition());
                 FeatureToRowMap.Add(feature, j++);
             }
 
+            Board.Children.Clear();
             for (int column = 0; column < Sprints.Count; column++)
             {
                 for (int row = 0; row < Features.Count; row++)
@@ -100,8 +103,7 @@ namespace Scrumr
                     var tickets = Tickets.Where(t => t.Sprint == sprint && t.Feature == feature);
                     foreach (var ticket in tickets)
                     {
-                        var newTicket = new TicketView { Name = ticket.Name, Height = 50, Width = 200 };
-                        newCell.Children.Add(newTicket);
+                        newCell.Children.Add(new TicketView(ticket));
                     }
                 }
             }
@@ -110,19 +112,25 @@ namespace Scrumr
         void newCell_Drop(object sender, DragEventArgs e)
         {
             var cell = sender as WrapPanel;
-            var data = CellMap[cell];
+            var targetSprintFeature = CellMap[cell];
+            var ticket = e.Data.GetData(typeof(Ticket)) as Ticket;
+
+            ticket.Sprint = Sprints[targetSprintFeature.Sprint];
+            ticket.Feature = Features[targetSprintFeature.Feature];
+
+            drawBoards();
         }
     }
 
-    public struct SprintFeature
+    public class SprintFeature
     {
-        int Sprint;
-        int Feature;
+        public int Sprint { get; set; }
+        public int Feature { get; set; }
 
         public SprintFeature(int sprint, int feature)
         {
-            Sprint = sprint;
-            Feature = feature;
+            this.Sprint = sprint;
+            this.Feature = feature;
         }
     }
 }

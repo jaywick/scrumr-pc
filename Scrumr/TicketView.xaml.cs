@@ -23,27 +23,32 @@ namespace Scrumr
 			this.InitializeComponent();
 		}
 
-        public string ID { get; set; }
+        public TicketView(Ticket ticket)
+            : this()
+        {
+            this.Ticket = ticket;
 
-        private string name;
+            // TEMP: until we fix binding
+            labelName.Content = Name;
+        }
+
+        public Ticket Ticket { get; set; }
+
         public string Name
         {
-            get
-            {
-                return name;
-            }
-            set
-            {
-                name = value;
-                labelName.Content = name;
-            }
+            get { return Ticket.Name; }
+        }
+
+        public int ID
+        {
+            get { return Ticket.ID; }
         }
 
         private void UserControl_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ButtonState == MouseButtonState.Pressed)
             {
-                DragDrop.DoDragDrop(sender as TicketView, new DataObject("myFormat", sender), DragDropEffects.Move);
+                DragDrop.DoDragDrop(sender as TicketView, new DataObject(typeof(Ticket), Ticket), DragDropEffects.Move);
             }
         }
 	}
