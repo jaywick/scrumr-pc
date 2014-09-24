@@ -23,7 +23,7 @@ namespace Scrumr
 
         public Dictionary<Sprint, int> SprintToColumnMap;
         public Dictionary<Feature, int> FeatureToRowMap;
-        public Dictionary<WrapPanel, SprintFeature> CellMap;
+        public Dictionary<ListView, SprintFeature> CellMap;
 
         public MainWindow()
         {
@@ -64,7 +64,7 @@ namespace Scrumr
             int i = 0, j = 0;
             SprintToColumnMap = new Dictionary<Sprint, int>();
             FeatureToRowMap = new Dictionary<Feature, int>();
-            CellMap = new Dictionary<WrapPanel, SprintFeature>();
+            CellMap = new Dictionary<ListView, SprintFeature>();
 
             Board.ColumnDefinitions.Clear();
             foreach (var sprint in Sprints)
@@ -88,7 +88,7 @@ namespace Scrumr
                     var sprint = Sprints[column];
                     var feature = Features[row];
 
-                    var newCell = new WrapPanel
+                    var newCell = new ListView
                     {
                         AllowDrop = true,
                         Background = Brushes.Transparent,
@@ -103,15 +103,27 @@ namespace Scrumr
                     var tickets = Tickets.Where(t => t.Sprint == sprint && t.Feature == feature);
                     foreach (var ticket in tickets)
                     {
-                        newCell.Children.Add(new TicketView(ticket));
+                        var newItem = new ListViewItem { Content = ticket.Name };
+                        newItem.PreviewMouseLeftButtonDown += newItem_MouseDown;
+                        newItem.Tag = ticket;
+                        newCell.Items.Add(newItem);
                     }
                 }
             }
         }
 
+        void newItem_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ButtonState == MouseButtonState.Pressed)
+            {
+                var thisControl = sender as ListViewItem;
+                DragDrop.DoDragDrop(thisControl, new DataObject(typeof(Ticket), thisControl.Tag as Ticket), DragDropEffects.Move);
+            }
+        }
+
         void newCell_Drop(object sender, DragEventArgs e)
         {
-            var cell = sender as WrapPanel;
+            var cell = sender as ListView;
             var targetSprintFeature = CellMap[cell];
             var ticket = e.Data.GetData(typeof(Ticket)) as Ticket;
 
