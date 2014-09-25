@@ -56,6 +56,7 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Compile Include="Library.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Feature.cs" />
     <Compile Include="Entities\Sprint.cs" />

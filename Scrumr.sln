@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scrumr", "Scrumr\Scrumr.csproj", "{f78c363a-28b3-4509-aedf-1da1394c3100}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scrumr", "Scrumr\Scrumr.csproj", "{F78C363A-28B3-4509-AEDF-1DA1394C3100}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,5 +13,8 @@ Global
 		{F78C363A-28B3-4509-AEDF-1DA1394C3100}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F78C363A-28B3-4509-AEDF-1DA1394C3100}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F78C363A-28B3-4509-AEDF-1DA1394C3100}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

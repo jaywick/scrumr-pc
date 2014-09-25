@@ -34,29 +34,9 @@ namespace Scrumr
 
         private void populateData()
         {
-            Features = new List<Feature>
-            {
-                new Feature { Name = "features 1" },
-                new Feature { Name = "features 2" },
-                new Feature { Name = "features 3" },
-            };
-
-            Sprints = new List<Sprint>
-            {
-                new Sprint { Name = "sprint 1" },
-                new Sprint { Name = "sprint 2" },
-                new Sprint { Name = "sprint 3" },
-            };
-
-            Tickets = new List<Ticket>
-            {
-                new Ticket { Name = "Ticket 1", Sprint = Sprints[0], Feature = Features[0] },
-                new Ticket { Name = "Ticket 2", Sprint = Sprints[1], Feature = Features[0] },
-                new Ticket { Name = "Ticket 3", Sprint = Sprints[2], Feature = Features[2] },
-                new Ticket { Name = "Ticket 4", Sprint = Sprints[1], Feature = Features[1] },
-                new Ticket { Name = "Ticket 5", Sprint = Sprints[1], Feature = Features[1] },
-                new Ticket { Name = "Ticket 5", Sprint = Sprints[0], Feature = Features[2] },
-            };
+            Features = Library.Load<Feature>();
+            Sprints = Library.Load<Sprint>();
+            Tickets = Library.Load<Ticket>();
         }
 
         private void drawBoards()
@@ -100,7 +80,7 @@ namespace Scrumr
                     Grid.SetColumn(newCell, column);
                     Grid.SetRow(newCell, row);
 
-                    var tickets = Tickets.Where(t => t.Sprint == sprint && t.Feature == feature);
+                    var tickets = Tickets.Where(t => t.SprintId == sprint.ID && t.FeatureId == feature.ID);
                     foreach (var ticket in tickets)
                     {
                         var newItem = new ListBoxItem { Content = ticket.Name };
@@ -127,8 +107,8 @@ namespace Scrumr
             var targetSprintFeature = CellMap[cell];
             var ticket = e.Data.GetData(typeof(Ticket)) as Ticket;
 
-            ticket.Sprint = Sprints[targetSprintFeature.Sprint];
-            ticket.Feature = Features[targetSprintFeature.Feature];
+            ticket.SprintId = targetSprintFeature.Sprint;
+            ticket.FeatureId = targetSprintFeature.Feature;
 
             drawBoards();
         }
