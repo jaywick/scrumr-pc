@@ -28,15 +28,27 @@ namespace Scrumr
         public MainWindow()
         {
             InitializeComponent();
-            populateData();
+            load();
             drawBoards();
         }
 
-        private void populateData()
+        ~MainWindow()
+        {
+            save();
+        }
+
+        private void load()
         {
             Features = Library.Load<Feature>();
             Sprints = Library.Load<Sprint>();
             Tickets = Library.Load<Ticket>();
+        }
+
+        private void save()
+        {
+            Library.Save(Features);
+            Library.Save(Sprints);
+            Library.Save(Tickets);
         }
 
         private void drawBoards()
