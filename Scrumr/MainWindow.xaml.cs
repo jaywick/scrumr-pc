@@ -23,7 +23,7 @@ namespace Scrumr
 
         public Dictionary<Sprint, int> SprintToColumnMap;
         public Dictionary<Feature, int> FeatureToRowMap;
-        public Dictionary<ListView, SprintFeature> CellMap;
+        public Dictionary<ListBox, SprintFeature> CellMap;
 
         public MainWindow()
         {
@@ -64,7 +64,7 @@ namespace Scrumr
             int i = 0, j = 0;
             SprintToColumnMap = new Dictionary<Sprint, int>();
             FeatureToRowMap = new Dictionary<Feature, int>();
-            CellMap = new Dictionary<ListView, SprintFeature>();
+            CellMap = new Dictionary<ListBox, SprintFeature>();
 
             Board.ColumnDefinitions.Clear();
             foreach (var sprint in Sprints)
@@ -88,7 +88,7 @@ namespace Scrumr
                     var sprint = Sprints[column];
                     var feature = Features[row];
 
-                    var newCell = new ListView
+                    var newCell = new ListBox
                     {
                         AllowDrop = true,
                         Background = Brushes.Transparent,
@@ -103,8 +103,8 @@ namespace Scrumr
                     var tickets = Tickets.Where(t => t.Sprint == sprint && t.Feature == feature);
                     foreach (var ticket in tickets)
                     {
-                        var newItem = new ListViewItem { Content = ticket.Name };
-                        newItem.PreviewMouseLeftButtonDown += newItem_MouseDown;
+                        var newItem = new ListBoxItem { Content = ticket.Name };
+                        newItem.PreviewMouseMove += newItem_PreviewMouseMove;
                         newItem.Tag = ticket;
                         newCell.Items.Add(newItem);
                     }
@@ -112,18 +112,18 @@ namespace Scrumr
             }
         }
 
-        void newItem_MouseDown(object sender, MouseButtonEventArgs e)
+        void newItem_PreviewMouseMove(object sender, MouseEventArgs e)
         {
-            if (e.ButtonState == MouseButtonState.Pressed)
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
-                var thisControl = sender as ListViewItem;
+                var thisControl = sender as ListBoxItem;
                 DragDrop.DoDragDrop(thisControl, new DataObject(typeof(Ticket), thisControl.Tag as Ticket), DragDropEffects.Move);
             }
         }
 
         void newCell_Drop(object sender, DragEventArgs e)
         {
-            var cell = sender as ListView;
+            var cell = sender as ListBox;
             var targetSprintFeature = CellMap[cell];
             var ticket = e.Data.GetData(typeof(Ticket)) as Ticket;
 
