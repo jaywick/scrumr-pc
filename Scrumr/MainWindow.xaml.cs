@@ -58,21 +58,38 @@ namespace Scrumr
             FeatureToRowMap = new Dictionary<Feature, int>();
             CellMap = new Dictionary<ListBox, SprintFeature>();
 
+            Board.Children.Clear();
+
             Board.ColumnDefinitions.Clear();
+            Board.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
             foreach (var sprint in Sprints)
             {
                 Board.ColumnDefinitions.Add(new ColumnDefinition());
-                SprintToColumnMap.Add(sprint, i++);
+                SprintToColumnMap.Add(sprint, i);
+
+                var sprintLabel = new Label { Content = Sprints[i].Name, FontWeight = FontWeights.Bold };
+                Board.Children.Add(sprintLabel);
+                Grid.SetColumn(sprintLabel, i + 1);
+                Grid.SetRow(sprintLabel, 0);
+
+                i++;
             }
 
             Board.RowDefinitions.Clear();
+            Board.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             foreach (var feature in Features)
             {
                 Board.RowDefinitions.Add(new RowDefinition());
-                FeatureToRowMap.Add(feature, j++);
+                FeatureToRowMap.Add(feature, j);
+
+                var featureLabel = new Label { Content = Features[j].Name, FontWeight = FontWeights.Bold };
+                Board.Children.Add(featureLabel);
+                Grid.SetColumn(featureLabel, 0);
+                Grid.SetRow(featureLabel, j + 1);
+
+                j++;
             }
 
-            Board.Children.Clear();
             for (int column = 0; column < Sprints.Count; column++)
             {
                 for (int row = 0; row < Features.Count; row++)
@@ -89,8 +106,8 @@ namespace Scrumr
 
                     CellMap.Add(newCell, new SprintFeature(column, row));
                     Board.Children.Add(newCell);
-                    Grid.SetColumn(newCell, column);
-                    Grid.SetRow(newCell, row);
+                    Grid.SetColumn(newCell, column + 1);
+                    Grid.SetRow(newCell, row + 1);
 
                     var tickets = Tickets.Where(t => t.SprintId == sprint.ID && t.FeatureId == feature.ID);
                     foreach (var ticket in tickets)
