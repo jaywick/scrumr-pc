@@ -35,28 +35,31 @@ namespace Scrumr
 
         public void Render()
         {
-            int i = 0, j = 0;
             SprintToColumnMap = new Dictionary<Sprint, int>();
             FeatureToRowMap = new Dictionary<Feature, int>();
             CellMap = new Dictionary<ListBox, SprintFeature>();
 
             Board.Children.Clear();
 
-            Board.ColumnDefinitions.Clear();
-            Board.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
-            foreach (var sprint in Sprints)
+            CreateSprintColumns();
+            CreateFeatureRows();
+            CreateTicketCells();
+        }
+
+        private void CreateTicketCells()
+        {
+            for (int column = 0; column < Sprints.Count; column++)
             {
-                Board.ColumnDefinitions.Add(new ColumnDefinition());
-                SprintToColumnMap.Add(sprint, i);
-
-                var sprintLabel = new Label { Content = Sprints[i].Name, FontWeight = FontWeights.Bold };
-                Board.Children.Add(sprintLabel);
-                Grid.SetColumn(sprintLabel, i + 1);
-                Grid.SetRow(sprintLabel, 0);
-
-                i++;
+                for (int row = 0; row < Features.Count; row++)
+                {
+                    CreateTicketCell(column, row);
+                }
             }
+        }
 
+        private void CreateFeatureRows()
+        {
+            int j = 0;
             Board.RowDefinitions.Clear();
             Board.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
             foreach (var feature in Features)
@@ -71,37 +74,55 @@ namespace Scrumr
 
                 j++;
             }
+        }
 
-            for (int column = 0; column < Sprints.Count; column++)
+        private void CreateSprintColumns()
+        {
+            int i = 0;
+            Board.ColumnDefinitions.Clear();
+            Board.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            foreach (var sprint in Sprints)
             {
-                for (int row = 0; row < Features.Count; row++)
-                {
-                    var sprint = Sprints[column];
-                    var feature = Features[row];
+                Board.ColumnDefinitions.Add(new ColumnDefinition());
+                SprintToColumnMap.Add(sprint, i);
 
-                    var newCell = new ListBox
-                    {
-                        AllowDrop = true,
-                        Background = Brushes.Transparent,
-                    };
-                    newCell.Drop += newCell_Drop;
+                var sprintLabel = new Label { Content = Sprints[i].Name, FontWeight = FontWeights.Bold };
+                Board.Children.Add(sprintLabel);
+                Grid.SetColumn(sprintLabel, i + 1);
+                Grid.SetRow(sprintLabel, 0);
 
-                    CellMap.Add(newCell, new SprintFeature(column, row));
-                    Board.Children.Add(newCell);
-                    Grid.SetColumn(newCell, column + 1);
-                    Grid.SetRow(newCell, row + 1);
-
-                    var tickets = Tickets.Where(t => t.SprintId == sprint.ID && t.FeatureId == feature.ID);
-                    foreach (var ticket in tickets)
-                    {
-                        var newItem = new ListBoxItem { Content = ticket.Name };
-                        newItem.PreviewMouseMove += newItem_PreviewMouseMove;
-                        newItem.Tag = ticket;
-                        newCell.Items.Add(newItem);
-                    }
-                }
+                i++;
             }
         }
+
+        private void CreateTicketCell(int column, int row)
+        {
+            var sprint = Sprints[column];
+            var feature = Features[row];
+
+            var newCell = new ListBox
+            {
+                AllowDrop = true,
+                Background = Brushes.Transparent,
+            };
+            newCell.Drop += newCell_Drop;
+
+            CellMap.Add(newCell, new SprintFeature(column, row));
+            Board.Children.Add(newCell);
+            Grid.SetColumn(newCell, column + 1);
+            Grid.SetRow(newCell, row + 1);
+
+            var tickets = Tickets.Where(t => t.SprintId == sprint.ID && t.FeatureId == feature.ID);
+            foreach (var ticket in tickets)
+            {
+                var newItem = new ListBoxItem { Content = ticket.Name };
+                newItem.PreviewMouseMove += newItem_PreviewMouseMove;
+                newItem.Tag = ticket;
+                newCell.Items.Add(newItem);
+            }
+        }
+
+        #region event handlers
 
         void newItem_PreviewMouseMove(object sender, MouseEventArgs e)
         {
@@ -123,5 +144,7 @@ namespace Scrumr
 
             Render();
         }
+
+        #endregion
     }
 }
