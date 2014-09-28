@@ -56,11 +56,19 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Compile Include="BoardView.xaml.cs">
+      <DependentUpon>BoardView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Entities\Linkers\SprintFeature.cs" />
     <Compile Include="Library.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Feature.cs" />
     <Compile Include="Entities\Sprint.cs" />
     <Compile Include="Entities\Ticket.cs" />
+    <Page Include="BoardView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
