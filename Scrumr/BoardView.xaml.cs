@@ -25,9 +25,32 @@ namespace Scrumr
         public Dictionary<Feature, int> FeatureToRowMap;
         public Dictionary<ListBox, SprintFeature> CellMap;
 
+        public Func<Sprint, bool> SprintFilter { get; set; }
+        public Func<Feature, bool> FeatureFilter { get; set; }
+        public Func<Ticket, bool> TicketFilter { get; set; }
+
+        public IEnumerable<Sprint> VisibleSprints
+        {
+            get { return Sprints.Where(SprintFilter); }
+        }
+
+        public IEnumerable<Feature> VisibleFeatures
+        {
+            get { return Features.Where(FeatureFilter); }
+        }
+
+        public IEnumerable<Ticket> VisibleTickets
+        {
+            get { return Tickets.Where(TicketFilter); }
+        }
+
         public BoardView()
         {
             InitializeComponent();
+
+            SprintFilter = (x) => true;
+            FeatureFilter = (x) => true;
+            TicketFilter = (x) => true;
         }
 
         public void Render()
@@ -45,9 +68,9 @@ namespace Scrumr
 
         private void CreateTicketCells()
         {
-            for (int column = 0; column < Sprints.Count; column++)
+            for (int column = 0; column < VisibleSprints.Count(); column++)
             {
-                for (int row = 0; row < Features.Count; row++)
+                for (int row = 0; row < VisibleFeatures.Count(); row++)
                 {
                     CreateTicketCell(column, row);
                 }
@@ -60,12 +83,12 @@ namespace Scrumr
             Board.RowDefinitions.Clear();
             Board.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
-            foreach (var feature in Features)
+            foreach (var feature in VisibleFeatures)
             {
                 Board.RowDefinitions.Add(new RowDefinition());
                 FeatureToRowMap.Add(feature, i);
 
-                var featureLabel = new Label { Content = Features[i].Name, FontWeight = FontWeights.Bold };
+                var featureLabel = new Label { Content = feature.Name, FontWeight = FontWeights.Bold };
                 AddToGrid(featureLabel, 0, i + 1);
 
                 i++;
@@ -78,12 +101,12 @@ namespace Scrumr
             Board.ColumnDefinitions.Clear();
             Board.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
-            foreach (var sprint in Sprints)
+            foreach (var sprint in VisibleSprints)
             {
                 Board.ColumnDefinitions.Add(new ColumnDefinition());
                 SprintToColumnMap.Add(sprint, i);
 
-                var sprintLabel = new Label { Content = Sprints[i].Name, FontWeight = FontWeights.Bold };
+                var sprintLabel = new Label { Content = sprint.Name, FontWeight = FontWeights.Bold };
                 AddToGrid(sprintLabel, i + 1, 0);
 
                 i++;
@@ -105,8 +128,8 @@ namespace Scrumr
             AddToGrid(newCell, sprintId + 1, featureId + 1);
             newCell.Drop += newCell_Drop;
 
-            var tickets = Tickets.Where(t => t.SprintId == sprintId)
-                                 .Where(t => t.FeatureId == featureId);
+            var tickets = VisibleTickets.Where(t => t.SprintId == sprintId)
+                                        .Where(t => t.FeatureId == featureId);
 
             foreach (var ticket in tickets)
             {
