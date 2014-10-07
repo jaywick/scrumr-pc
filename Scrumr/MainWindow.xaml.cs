@@ -43,5 +43,31 @@ namespace Scrumr
             Library.Save(Board.Sprints);
             Library.Save(Board.Tickets);
         }
+
+        private void MenuNewSprint_Click(object sender, RoutedEventArgs e)
+        {
+            add<Sprint>(Board.Sprints);
+        }
+
+        private void MenuNewFeature_Click(object sender, RoutedEventArgs e)
+        {
+            add<Feature>(Board.Features);
+        }
+
+        private void MenuNewTicket_Click(object sender, RoutedEventArgs e)
+        {
+            add<Ticket>(Board.Tickets);
+        }
+
+        private void add<T>(List<T> list) where T : Entity
+        {
+            var addEditView = new AddEditView(typeof(T));
+            if (addEditView.ShowDialog() == true)
+            {
+                list.Add(addEditView.Result as T);
+            }
+
+            Board.Render();
+        }
     }
 }

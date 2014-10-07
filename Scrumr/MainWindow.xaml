@@ -4,6 +4,17 @@
         xmlns:local="clr-namespace:Scrumr"
         Title="Scrumr for Desktop" Height="571" Width="1008">
     <Grid Background="White">
-        <local:BoardView x:Name="Board"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0">
+            <MenuItem Header="New">
+                <MenuItem Header="Sprint" Click="MenuNewSprint_Click"/>
+                <MenuItem Header="Feature" Click="MenuNewFeature_Click"/>
+                <MenuItem Header="Ticket" Click="MenuNewTicket_Click"/>
+            </MenuItem>
+        </Menu>
+        <local:BoardView x:Name="Board" Grid.Row="1"/>
     </Grid>
 </Window>
