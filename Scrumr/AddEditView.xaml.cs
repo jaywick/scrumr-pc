@@ -19,6 +19,8 @@ namespace Scrumr
         private List<AddEditItem> _items;
         private Dictionary<string, Func<object>> ContentMap;
         private Type _valueType;
+        private Type type;
+        private Entity _entity;
 
         public object Result { get; set; }
 
@@ -27,10 +29,11 @@ namespace Scrumr
             InitializeComponent();
         }
 
-        public AddEditView(Type type)
+        public AddEditView(Type type, Entity entity = null)
             : this()
         {
             _valueType = type;
+            _entity = entity;
             _items = loadItems();
             drawItems();
         }
@@ -40,22 +43,28 @@ namespace Scrumr
             var items = new List<AddEditItem>();
             foreach (var property in _valueType.GetProperties())
             {
-                items.Add(new AddEditItem(property.Name, property.PropertyType));
+                object currentValue = null;
+
+                if (_entity != null)
+                    currentValue = property.GetValue(_entity);
+
+                items.Add(new AddEditItem(property.Name, property.PropertyType, currentValue));
             }
-            
+
             return items;
         }
 
         private object getResult()
         {
-            var newValue = Activator.CreateInstance(_valueType);
+            var result = (_entity != null) ? _entity : Activator.CreateInstance(_valueType);
+            
             foreach (var item in _items)
             {
                 var property = _valueType.GetProperty(item.Name);
                 var rawValue = ContentMap[item.Name].Invoke();
                 try
                 {
-                    property.SetValue(newValue, Convert.ChangeType(rawValue, item.Type));
+                    property.SetValue(result, Convert.ChangeType(rawValue, item.Type));
                 }
                 catch (FormatException ex)
                 {
@@ -63,7 +72,7 @@ namespace Scrumr
                 }
             }
 
-            return newValue;
+            return result;
         }
 
         private void drawItems()
@@ -84,6 +93,10 @@ namespace Scrumr
 
                 var newInput = new TextBox();
                 newInput.Margin = new Thickness(0, 5, 0, 0);
+                
+                if (_entity != null)
+                    newInput.Text = item.Value.ToString();
+
                 itemGrid.Children.Add(newInput);
                 Grid.SetColumn(newInput, 1);
 

@@ -53,7 +53,7 @@ namespace Scrumr
             TicketFilter = (x) => true;
         }
 
-        public void Render()
+        public void Update()
         {
             SprintToColumnMap = new Dictionary<Sprint, int>();
             FeatureToRowMap = new Dictionary<Feature, int>();
@@ -89,6 +89,8 @@ namespace Scrumr
                 FeatureToRowMap.Add(feature, i);
 
                 var featureLabel = new Label { Content = feature.Name, FontWeight = FontWeights.Bold };
+                featureLabel.ContextMenu = new ContextMenu();
+                featureLabel.ContextMenu.Items.Add(createMenuItem("Edit", () => editEntity<Feature>(feature)));
                 AddToGrid(featureLabel, 0, i + 1);
 
                 i++;
@@ -107,6 +109,8 @@ namespace Scrumr
                 SprintToColumnMap.Add(sprint, i);
 
                 var sprintLabel = new Label { Content = sprint.Name, FontWeight = FontWeights.Bold };
+                sprintLabel.ContextMenu = new ContextMenu();
+                sprintLabel.ContextMenu.Items.Add(createMenuItem("Edit", () => editEntity<Sprint>(sprint)));
                 AddToGrid(sprintLabel, i + 1, 0);
 
                 i++;
@@ -135,9 +139,32 @@ namespace Scrumr
             {
                 var newItem = new ListBoxItem { Content = ticket.Name, Tag = ticket };
                 newItem.PreviewMouseMove += newItem_PreviewMouseMove;
+                newItem.ContextMenu = new ContextMenu();
+                newItem.ContextMenu.Items.Add(createMenuItem("Edit", () => editEntity<Ticket>(ticket)));
                 newCell.Items.Add(newItem);
             }
         }
+
+        #region editing
+
+        private void editEntity<T>(T entity) where T : Entity
+        {
+            var addEditView = new AddEditView(typeof(T), entity);
+            addEditView.ShowDialog();
+
+            Update();
+        }
+
+        private MenuItem createMenuItem(string text, System.Action action)
+        {
+            var newItem = new MenuItem();
+            newItem.Header = text;
+            newItem.Click += (s, e) => action.Invoke();
+
+            return newItem;
+        }
+
+        #endregion
 
         #region event handlers
 
@@ -159,7 +186,7 @@ namespace Scrumr
             ticket.SprintId = targetSprintFeature.Sprint;
             ticket.FeatureId = targetSprintFeature.Feature;
 
-            Render();
+            Update();
         }
 
         #endregion

@@ -34,7 +34,7 @@ namespace Scrumr
             Board.Sprints = Library.Load<Sprint>();
             Board.Tickets = Library.Load<Ticket>();
 
-            Board.Render();
+            Board.Update();
         }
 
         private void save()
@@ -67,7 +67,7 @@ namespace Scrumr
                 list.Add(addEditView.Result as T);
             }
 
-            Board.Render();
+            Board.Update();
         }
     }
 }
