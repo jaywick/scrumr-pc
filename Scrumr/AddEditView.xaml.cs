@@ -53,7 +53,14 @@ namespace Scrumr
             {
                 var property = _valueType.GetProperty(item.Name);
                 var rawValue = ContentMap[item.Name].Invoke();
-                property.SetValue(newValue, Convert.ChangeType(rawValue, item.Type));
+                try
+                {
+                    property.SetValue(newValue, Convert.ChangeType(rawValue, item.Type));
+                }
+                catch (FormatException ex)
+                {
+                    throw new InvalidInputException(item, rawValue, ex);
+                }
             }
 
             return newValue;
@@ -87,9 +94,16 @@ namespace Scrumr
 
         private void Save_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult = true;
-            Result = getResult();
-            Hide();
+            try
+            {
+                Result = getResult();
+                DialogResult = true;
+                Hide();
+            }
+            catch (InvalidInputException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
 
         private void Cancel_Click(object sender, RoutedEventArgs e)

@@ -64,6 +64,7 @@
       <DependentUpon>BoardView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Entities\Linkers\SprintFeature.cs" />
+    <Compile Include="InvalidInputException.cs" />
     <Compile Include="Library.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Feature.cs" />
