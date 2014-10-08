@@ -91,6 +91,7 @@ namespace Scrumr
                 var featureLabel = new Label { Content = feature.Name, FontWeight = FontWeights.Bold };
                 featureLabel.ContextMenu = new ContextMenu();
                 featureLabel.ContextMenu.Items.Add(createMenuItem("Edit", () => editEntity<Feature>(feature)));
+                featureLabel.ContextMenu.Items.Add(createMenuItem("Remove", () => removeEntity<Feature>(feature)));
                 AddToGrid(featureLabel, 0, i + 1);
 
                 i++;
@@ -111,6 +112,7 @@ namespace Scrumr
                 var sprintLabel = new Label { Content = sprint.Name, FontWeight = FontWeights.Bold };
                 sprintLabel.ContextMenu = new ContextMenu();
                 sprintLabel.ContextMenu.Items.Add(createMenuItem("Edit", () => editEntity<Sprint>(sprint)));
+                sprintLabel.ContextMenu.Items.Add(createMenuItem("Remove", () => removeEntity<Sprint>(sprint)));
                 AddToGrid(sprintLabel, i + 1, 0);
 
                 i++;
@@ -141,16 +143,32 @@ namespace Scrumr
                 newItem.PreviewMouseMove += newItem_PreviewMouseMove;
                 newItem.ContextMenu = new ContextMenu();
                 newItem.ContextMenu.Items.Add(createMenuItem("Edit", () => editEntity<Ticket>(ticket)));
+                newItem.ContextMenu.Items.Add(createMenuItem("Remove", () => removeEntity<Ticket>(ticket)));
                 newCell.Items.Add(newItem);
             }
         }
 
-        #region editing
+        #region Editing + Removing
 
         private void editEntity<T>(T entity) where T : Entity
         {
             var addEditView = new AddEditView(typeof(T), entity);
             addEditView.ShowDialog();
+
+            Update();
+        }
+
+        private void removeEntity<T>(T entity) where T : Entity
+        {
+            if (MessageBox.Show("Are you sure?", "Scrumr", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+                return;
+
+            if (typeof(T) == typeof(Sprint))
+                Sprints.Remove(entity as Sprint);
+            else if (typeof(T) == typeof(Feature))
+                Features.Remove(entity as Feature);
+            else if (typeof(T) == typeof(Ticket))
+                Tickets.Remove(entity as Ticket);
 
             Update();
         }
