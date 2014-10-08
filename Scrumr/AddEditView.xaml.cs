@@ -115,7 +115,7 @@ namespace Scrumr
             }
             catch (InvalidInputException ex)
             {
-                MessageBox.Show(ex.Message);
+                MessageBox.Show(ex.Message, "Scrumr", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

@@ -160,7 +160,7 @@ namespace Scrumr
 
         private void removeEntity<T>(T entity) where T : Entity
         {
-            if (MessageBox.Show("Are you sure?", "Scrumr", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+            if (MessageBox.Show("Are you sure you wish to delete this " + entity.GetType().Name + "?", "Scrumr", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                 return;
 
             if (typeof(T) == typeof(Sprint))
