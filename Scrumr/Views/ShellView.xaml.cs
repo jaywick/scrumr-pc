@@ -61,10 +61,10 @@ namespace Scrumr
 
         private void add<T>(List<T> list) where T : Entity
         {
-            var addEditView = new AddEditView(typeof(T));
-            if (addEditView.ShowDialog() == true)
+            var propertiesView = new PropertiesView(typeof(T));
+            if (propertiesView.ShowDialog() == true)
             {
-                list.Add(addEditView.Result as T);
+                list.Add(propertiesView.Result as T);
             }
 
             Board.Update();

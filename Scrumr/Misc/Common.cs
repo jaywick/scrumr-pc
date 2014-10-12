@@ -21,10 +21,10 @@ namespace Scrumr
 
     class InvalidInputException : Exception
     {
-        private AddEditItem item;
+        private PropertiesView.PropertyItem item;
         private object rawValue;
 
-        public InvalidInputException(AddEditItem item, object rawValue, Exception innerException)
+        public InvalidInputException(PropertiesView.PropertyItem item, object rawValue, Exception innerException)
             : base(String.Format("Cannot convert {0} to an {1} using the value {2}", item.Name, item.Type.Name, rawValue.ToString()), innerException)
         {
         }

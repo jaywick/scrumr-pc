@@ -60,9 +60,8 @@
     <Compile Include="Entities\Meta\EnumerationAttribute.cs" />
     <Compile Include="Entities\Enums\TicketTypes.cs" />
     <Compile Include="Entities\Meta\ForeignAttribute.cs" />
-    <Compile Include="Misc\AddEditItem.cs" />
-    <Compile Include="Views\AddEditView.xaml.cs">
-      <DependentUpon>AddEditView.xaml</DependentUpon>
+    <Compile Include="Views\PropertiesView.xaml.cs">
+      <DependentUpon>PropertiesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\BoardView.xaml.cs">
       <DependentUpon>BoardView.xaml</DependentUpon>
@@ -77,7 +76,7 @@
     <Compile Include="Entities\Sprint.cs" />
     <Compile Include="Entities\Ticket.cs" />
     <Compile Include="Views\TicketView.cs" />
-    <Page Include="Views\AddEditView.xaml">
+    <Page Include="Views\PropertiesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

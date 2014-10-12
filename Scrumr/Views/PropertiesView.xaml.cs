@@ -14,21 +14,21 @@ using System.Windows.Shapes;
 
 namespace Scrumr
 {
-    public partial class AddEditView : Window
+    public partial class PropertiesView : Window
     {
-        private List<AddEditItem> _items;
-        private Dictionary<string, Func<object>> ContentMap;
+        private List<PropertyItem> _items;
         private Type _valueType;
         private Entity _entity;
 
-        public object Result { get; set; }
+        public Dictionary<string, Func<object>> PropertyValueMap { get; private set; }
+        public object Result { get; private set; }
 
-        public AddEditView()
+        public PropertiesView()
         {
             InitializeComponent();
         }
 
-        public AddEditView(Type type, Entity entity = null)
+        public PropertiesView(Type type, Entity entity = null)
             : this()
         {
             _valueType = type;
@@ -54,17 +54,15 @@ namespace Scrumr
             }
         }
 
-        private List<AddEditItem> loadItems()
+        private List<PropertyItem> loadItems()
         {
-            var items = new List<AddEditItem>();
+            var items = new List<PropertyItem>();
             foreach (var property in _valueType.GetProperties())
             {
-                object currentValue = null;
+                var currentValue = (Mode == Modes.Existing) ? property.GetValue(_entity) : null;
+                var attributes = Attribute.GetCustomAttributes(property);
 
-                if (_entity != null)
-                    currentValue = property.GetValue(_entity);
-
-                items.Add(new AddEditItem(property.Name, property.PropertyType, currentValue));
+                items.Add(new PropertyItem(property.Name, property.PropertyType, attributes, currentValue));
             }
 
             return items;
@@ -77,7 +75,7 @@ namespace Scrumr
             foreach (var item in _items)
             {
                 var property = _valueType.GetProperty(item.Name);
-                var rawValue = ContentMap[item.Name].Invoke();
+                var rawValue = PropertyValueMap[item.Name].Invoke();
                 try
                 {
                     property.SetValue(result, Convert.ChangeType(rawValue, item.Type));
@@ -93,7 +91,7 @@ namespace Scrumr
 
         private void drawItems()
         {
-            ContentMap = new Dictionary<string, Func<object>>();
+            PropertyValueMap = new Dictionary<string, Func<object>>();
 
             Contents.Children.Clear();
             foreach (var item in _items)
@@ -116,7 +114,7 @@ namespace Scrumr
                 itemGrid.Children.Add(newInput);
                 Grid.SetColumn(newInput, 1);
 
-                ContentMap.Add(item.Name, () => newInput.Text);
+                PropertyValueMap.Add(item.Name, () => newInput.Text);
                 Contents.Children.Add(itemGrid);
             }
         }
@@ -140,6 +138,22 @@ namespace Scrumr
             DialogResult = false;
             Result = null;
             Hide();
+        }
+
+        public class PropertyItem
+        {
+            public string Name { get; set; }
+            public Type Type { get; set; }
+            private Attribute[] Attributes;
+            public object Value { get; set; }
+
+            public PropertyItem(string name, Type type, Attribute[] attributes, object value = null)
+            {
+                Name = name;
+                Type = type;
+                Attributes = attributes;
+                Value = value;
+            }
         }
     }
 }

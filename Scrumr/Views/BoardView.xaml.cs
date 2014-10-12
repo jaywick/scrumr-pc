@@ -152,8 +152,8 @@ namespace Scrumr
 
         private void editEntity<T>(T entity) where T : Entity
         {
-            var addEditView = new AddEditView(typeof(T), entity);
-            addEditView.ShowDialog();
+            var propertiesView = new PropertiesView(typeof(T), entity);
+            propertiesView.ShowDialog();
 
             Update();
         }
