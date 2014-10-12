@@ -5,12 +5,30 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
+using System.Collections;
 
 namespace Scrumr
 {
     class Library
     {
-        public static List<T> Load<T>() where T : Entity
+        public static Context Load()
+        {
+            return new Context
+            {
+                Sprints = Library.Load<Sprint>(),
+                Features = Library.Load<Feature>(),
+                Tickets = Library.Load<Ticket>(),
+            };
+        }
+
+        public static void Save(Context context)
+        {
+            Save<Sprint>(context.Sprints);
+            Save<Feature>(context.Features);
+            Save<Ticket>(context.Tickets);
+        }
+
+        private static List<T> Load<T>() where T : Entity
         {
             var file = getFile<T>();
 
@@ -39,6 +57,32 @@ namespace Scrumr
         private static FileInfo getFile<T>() where T : Entity
         {
             return new FileInfo(Path.Combine(getFolder().FullName, typeof(T).Name + "s.json"));
+        }
+    }
+
+    public class Context
+    {
+        public List<Sprint> Sprints { get; set; }
+        public List<Feature> Features { get; set; }
+        public List<Ticket> Tickets { get; set; }
+
+        public Context()
+        {
+            Sprints = new List<Sprint>();
+            Features = new List<Feature>();
+            Tickets = new List<Ticket>();
+        }
+
+        public IEnumerable<Entity> GetForeign(Type type)
+        {
+            if (type == typeof(Sprint))
+                return Sprints;
+            if (type == typeof(Feature))
+                return Features;
+            if (type == typeof(Ticket))
+                return Tickets;
+
+            return null;
         }
     }
 }

@@ -17,9 +17,7 @@ namespace Scrumr
 {
     public partial class BoardView : UserControl
     {
-        public List<Sprint> Sprints { get; set; }
-        public List<Feature> Features { get; set; }
-        public List<Ticket> Tickets { get; set; }
+        public Context Context { get; set; }
 
         public Dictionary<Sprint, int> SprintToColumnMap;
         public Dictionary<Feature, int> FeatureToRowMap;
@@ -31,17 +29,17 @@ namespace Scrumr
 
         public IEnumerable<Sprint> VisibleSprints
         {
-            get { return Sprints.Where(SprintFilter); }
+            get { return Context.Sprints.Where(SprintFilter); }
         }
 
         public IEnumerable<Feature> VisibleFeatures
         {
-            get { return Features.Where(FeatureFilter); }
+            get { return Context.Features.Where(FeatureFilter); }
         }
 
         public IEnumerable<Ticket> VisibleTickets
         {
-            get { return Tickets.Where(TicketFilter); }
+            get { return Context.Tickets.Where(TicketFilter); }
         }
 
         public BoardView()
@@ -152,7 +150,7 @@ namespace Scrumr
 
         private void editEntity<T>(T entity) where T : Entity
         {
-            var propertiesView = new PropertiesView(typeof(T), entity);
+            var propertiesView = new PropertiesView(typeof(T), Context, entity);
             propertiesView.ShowDialog();
 
             Update();
@@ -164,11 +162,11 @@ namespace Scrumr
                 return;
 
             if (typeof(T) == typeof(Sprint))
-                Sprints.Remove(entity as Sprint);
+                Context.Sprints.Remove(entity as Sprint);
             else if (typeof(T) == typeof(Feature))
-                Features.Remove(entity as Feature);
+                Context.Features.Remove(entity as Feature);
             else if (typeof(T) == typeof(Ticket))
-                Tickets.Remove(entity as Ticket);
+                Context.Tickets.Remove(entity as Ticket);
 
             Update();
         }

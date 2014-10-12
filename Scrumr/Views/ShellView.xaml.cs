@@ -30,38 +30,34 @@ namespace Scrumr
 
         private void load()
         {
-            Board.Features = Library.Load<Feature>();
-            Board.Sprints = Library.Load<Sprint>();
-            Board.Tickets = Library.Load<Ticket>();
-
+            Board.Context = Library.Load();
+            
             Board.Update();
         }
 
         private void save()
         {
-            Library.Save(Board.Features);
-            Library.Save(Board.Sprints);
-            Library.Save(Board.Tickets);
+            Library.Save(Board.Context);
         }
 
         private void MenuNewSprint_Click(object sender, RoutedEventArgs e)
         {
-            add<Sprint>(Board.Sprints);
+            add(Board.Context.Sprints);
         }
 
         private void MenuNewFeature_Click(object sender, RoutedEventArgs e)
         {
-            add<Feature>(Board.Features);
+            add(Board.Context.Features);
         }
 
         private void MenuNewTicket_Click(object sender, RoutedEventArgs e)
         {
-            add<Ticket>(Board.Tickets);
+            add(Board.Context.Tickets);
         }
 
         private void add<T>(List<T> list) where T : Entity
         {
-            var propertiesView = new PropertiesView(typeof(T));
+            var propertiesView = new PropertiesView(typeof(T), Board.Context);
             if (propertiesView.ShowDialog() == true)
             {
                 list.Add(propertiesView.Result as T);

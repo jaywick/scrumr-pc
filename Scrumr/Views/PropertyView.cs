@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace Scrumr
     {
         public string Name { get; set; }
         public Type Type { get; set; }
-        private Attribute[] Attributes;
+        public Attribute[] Attributes { get; set; }
         public object Value { get; set; }
 
         public PropertyItem(string name, Type type, Attribute[] attributes, object value = null)
@@ -29,25 +30,32 @@ namespace Scrumr
         public PropertyItem Property { get; private set; }
         public UIElement View { get; protected set; }
         public abstract object Value { get; }
+        public virtual bool IsHidden { get; protected set; }
 
         protected PropertyView(PropertyItem propertyItem)
         {
             Property = propertyItem;
         }
 
-        public static PropertyView Create(PropertyItem propertyItem)
+        public static PropertyView Create(PropertyItem propertyItem, Context context)
         {
+            if (propertyItem.Attributes.Any(x => x is KeyAttribute))
+                return new HiddenKeyPropertyView(propertyItem);
+
+            if (propertyItem.Attributes.Any(x => x is ForeignAttribute))
+                return new DataListPropertyView(propertyItem, context);
+
+            if (propertyItem.Attributes.Any(x => x is EnumerationAttribute))
+                return new EnumListPropertyView(propertyItem);
+
+            if (propertyItem.Type == typeof(bool))
+                return new CheckPropertyView(propertyItem);
+
             if (propertyItem.Type == typeof(string))
                 return new TextPropertyView(propertyItem);
 
             if (propertyItem.Type == typeof(int) || propertyItem.Type == typeof(double) || propertyItem.Type == typeof(float) || propertyItem.Type == typeof(decimal))
                 return new NumericPropertyView(propertyItem);
-
-            if (propertyItem.Type == typeof(bool))
-                return new CheckPropertyView(propertyItem);
-
-            if (propertyItem.Type == typeof(Enum))
-                return new EnumListPropertyView(propertyItem);
 
             return null;
         }
@@ -118,35 +126,64 @@ namespace Scrumr
 
     public class EnumListPropertyView : PropertyView
     {
+        private Type _enum;
+
         public EnumListPropertyView(PropertyItem propertyItem)
             : base(propertyItem)
         {
-            View = new ListBox
+            var enumInfo = propertyItem.Attributes.Single(x => x is EnumerationAttribute) as EnumerationAttribute;
+            _enum = enumInfo.Enumeration;
+
+            View = new ComboBox
             {
-                ItemsSource = Enum.GetNames(propertyItem.Type).ToList(),
+                ItemsSource = Enum.GetNames(_enum).ToList(),
             };
         }
 
         public override object Value
         {
-            get { return Enum.Parse(Property.Type, (View as ListBox).SelectedItem.ToString()); }
+            get { return Enum.Parse(_enum, (View as ComboBox).SelectedItem.ToString()); }
         }
     }
 
     public class DataListPropertyView : PropertyView
     {
-        public DataListPropertyView(PropertyItem propertyItem)
+        public DataListPropertyView(PropertyItem propertyItem, Context context)
             : base(propertyItem)
         {
-            View = new ListBox
+            var foreignSource = propertyItem.Attributes.Single(x => x is ForeignAttribute) as ForeignAttribute;
+            var collection = context.GetForeign(foreignSource.ForeignEntity);
+            var selected = collection.Single(x => x.ID == (int)propertyItem.Value);
+
+            View = new ComboBox
             {
-                ItemsSource = null, //todo
+                ItemsSource = collection,
+                DisplayMemberPath = "Name",
+                SelectedItem = selected,
             };
         }
 
         public override object Value
         {
-            get { return null; } //todo
+            get
+            {
+                var listBox = View as ComboBox;
+                return (listBox.SelectedItem as Entity).ID;
+            }
+        }
+    }
+
+    public class HiddenKeyPropertyView : PropertyView
+    {
+        public HiddenKeyPropertyView(PropertyItem propertyItem)
+            : base(propertyItem)
+        {
+            IsHidden = true;
+        }
+
+        public override object Value
+        {
+            get { return Property.Value; }
         }
     }
 }
