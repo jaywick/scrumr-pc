@@ -90,7 +90,7 @@ namespace Scrumr
 
                 var headerView = new HeaderView(feature);
                 headerView.RequestEdit += (h) => editEntity(h);
-                headerView.RequestRemove += (h) => editEntity(h);
+                headerView.RequestRemove += (h) => removeEntity(h);
 
                 AddToGrid(headerView, 0, i + 1);
 
@@ -111,7 +111,7 @@ namespace Scrumr
 
                 var headerView = new HeaderView(sprint);
                 headerView.RequestEdit += (h) => editEntity(h);
-                headerView.RequestRemove += (h) => editEntity(h);
+                headerView.RequestRemove += (h) => removeEntity(h);
 
                 AddToGrid(headerView, i + 1, 0);
 
@@ -144,7 +144,7 @@ namespace Scrumr
                 cellView.Items.Add(ticketView);
 
                 ticketView.RequestEdit += (t) => editEntity(t);
-                ticketView.RequestRemove += (t) => editEntity(t);
+                ticketView.RequestRemove += (t) => removeEntity(t);
             }
         }
 
