@@ -37,6 +37,23 @@ namespace Scrumr
             drawItems();
         }
 
+        public enum Modes
+        {
+            New,
+            Existing
+        }
+
+        public Modes Mode
+        {
+            get
+            {
+                if (_entity == null)
+                    return Modes.New;
+                else
+                    return Modes.Existing;
+            }
+        }
+
         private List<AddEditItem> loadItems()
         {
             var items = new List<AddEditItem>();
@@ -55,8 +72,8 @@ namespace Scrumr
 
         private object getResult()
         {
-            var result = (_entity != null) ? _entity : Activator.CreateInstance(_valueType);
-            
+            var result = (Mode == Modes.Existing) ? _entity : Activator.CreateInstance(_valueType);
+
             foreach (var item in _items)
             {
                 var property = _valueType.GetProperty(item.Name);
@@ -92,8 +109,8 @@ namespace Scrumr
 
                 var newInput = new TextBox();
                 newInput.Margin = new Thickness(0, 5, 0, 0);
-                
-                if (_entity != null)
+
+                if (Mode == Modes.Existing)
                     newInput.Text = item.Value.ToString();
 
                 itemGrid.Children.Add(newInput);
