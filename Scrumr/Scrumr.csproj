@@ -63,6 +63,7 @@
     <Compile Include="BoardView.xaml.cs">
       <DependentUpon>BoardView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Common.cs" />
     <Compile Include="Entities\Linkers\SprintFeature.cs" />
     <Compile Include="InvalidInputException.cs" />
     <Compile Include="Library.cs" />
@@ -70,6 +71,7 @@
     <Compile Include="Entities\Feature.cs" />
     <Compile Include="Entities\Sprint.cs" />
     <Compile Include="Entities\Ticket.cs" />
+    <Compile Include="TicketView.cs" />
     <Page Include="AddEditView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

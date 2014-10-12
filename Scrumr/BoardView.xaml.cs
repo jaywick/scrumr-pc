@@ -90,8 +90,8 @@ namespace Scrumr
 
                 var featureLabel = new Label { Content = feature.Name, FontWeight = FontWeights.Bold };
                 featureLabel.ContextMenu = new ContextMenu();
-                featureLabel.ContextMenu.Items.Add(createMenuItem("Edit", () => editEntity<Feature>(feature)));
-                featureLabel.ContextMenu.Items.Add(createMenuItem("Remove", () => removeEntity<Feature>(feature)));
+                featureLabel.ContextMenu.Items.Add(Common.CreateMenuItem("Edit", () => editEntity<Feature>(feature)));
+                featureLabel.ContextMenu.Items.Add(Common.CreateMenuItem("Remove", () => removeEntity<Feature>(feature)));
                 AddToGrid(featureLabel, 0, i + 1);
 
                 i++;
@@ -111,8 +111,8 @@ namespace Scrumr
 
                 var sprintLabel = new Label { Content = sprint.Name, FontWeight = FontWeights.Bold };
                 sprintLabel.ContextMenu = new ContextMenu();
-                sprintLabel.ContextMenu.Items.Add(createMenuItem("Edit", () => editEntity<Sprint>(sprint)));
-                sprintLabel.ContextMenu.Items.Add(createMenuItem("Remove", () => removeEntity<Sprint>(sprint)));
+                sprintLabel.ContextMenu.Items.Add(Common.CreateMenuItem("Edit", () => editEntity<Sprint>(sprint)));
+                sprintLabel.ContextMenu.Items.Add(Common.CreateMenuItem("Remove", () => removeEntity<Sprint>(sprint)));
                 AddToGrid(sprintLabel, i + 1, 0);
 
                 i++;
@@ -139,12 +139,11 @@ namespace Scrumr
 
             foreach (var ticket in tickets)
             {
-                var newItem = new ListBoxItem { Content = ticket.Name, Tag = ticket };
-                newItem.PreviewMouseMove += newItem_PreviewMouseMove;
-                newItem.ContextMenu = new ContextMenu();
-                newItem.ContextMenu.Items.Add(createMenuItem("Edit", () => editEntity<Ticket>(ticket)));
-                newItem.ContextMenu.Items.Add(createMenuItem("Remove", () => removeEntity<Ticket>(ticket)));
-                newCell.Items.Add(newItem);
+                var ticketView = new TicketView(ticket);
+                newCell.Items.Add(ticketView);
+
+                ticketView.RequestEdit += (t) => editEntity(t);
+                ticketView.RequestRemove += (t) => editEntity(t);
             }
         }
 
@@ -173,27 +172,9 @@ namespace Scrumr
             Update();
         }
 
-        private MenuItem createMenuItem(string text, System.Action action)
-        {
-            var newItem = new MenuItem();
-            newItem.Header = text;
-            newItem.Click += (s, e) => action.Invoke();
-
-            return newItem;
-        }
-
         #endregion
 
         #region event handlers
-
-        void newItem_PreviewMouseMove(object sender, MouseEventArgs e)
-        {
-            if (e.LeftButton == MouseButtonState.Pressed)
-            {
-                var thisControl = sender as ListBoxItem;
-                DragDrop.DoDragDrop(thisControl, new DataObject(typeof(Ticket), thisControl.Tag as Ticket), DragDropEffects.Move);
-            }
-        }
 
         void newCell_Drop(object sender, DragEventArgs e)
         {
