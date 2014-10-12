@@ -12,6 +12,8 @@ namespace Scrumr
         public PropertyItem Property { get; private set; }
         public UIElement View { get; protected set; }
         public abstract object Value { get; }
+        public abstract bool IsValid { get; }
+        public bool IsNew { get; private set; }
         public virtual bool IsHidden { get; protected set; }
 
         protected PropertyView(PropertyItem propertyItem)
@@ -22,7 +24,7 @@ namespace Scrumr
         public static PropertyView Create(PropertyItem propertyItem, Context context)
         {
             if (propertyItem.Attributes.Any(x => x is KeyAttribute))
-                return new HiddenKeyPropertyView(propertyItem);
+                return new HiddenKeyPropertyView(propertyItem, context);
 
             if (propertyItem.Attributes.Any(x => x is ForeignAttribute))
                 return new DataListPropertyView(propertyItem, context);
@@ -47,15 +49,20 @@ namespace Scrumr
     {
         public string Name { get; set; }
         public Type Type { get; set; }
+        public Type EntityType { get; set; }
         public Attribute[] Attributes { get; set; }
         public object Value { get; set; }
-
-        public PropertyItem(string name, Type type, Attribute[] attributes, object value = null)
+        public bool IsNew { get; set; }
+        
+        public PropertyItem(string name, Type type, Type entityType, Attribute[] attributes, object value = null)
         {
             Name = name;
             Type = type;
+            EntityType = entityType;
             Attributes = attributes;
             Value = value;
+
+            IsNew = (value == null);
         }
     }
 }

@@ -27,5 +27,13 @@ namespace Scrumr
         {
             get { return Enum.Parse(_enum, (View as ComboBox).SelectedItem.ToString()); }
         }
+
+        public override bool IsValid
+        {
+            get
+            {
+                return false;
+            }
+        }
     }
 }

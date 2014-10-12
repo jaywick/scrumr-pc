@@ -35,5 +35,13 @@ namespace Scrumr
         {
             get { return Convert.ToDouble((View as TextBox).Text); }
         }
+
+        public override bool IsValid
+        {
+            get
+            {
+                return false;
+            }
+        }
     }
 }

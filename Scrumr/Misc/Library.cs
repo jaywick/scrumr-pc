@@ -73,7 +73,7 @@ namespace Scrumr
             Tickets = new List<Ticket>();
         }
 
-        public IEnumerable<Entity> GetForeign(Type type)
+        public IEnumerable<Entity> GetCollection(Type type)
         {
             if (type == typeof(Sprint))
                 return Sprints;
@@ -83,6 +83,12 @@ namespace Scrumr
                 return Tickets;
 
             return null;
+        }
+
+        public int GetNextId(Type type)
+        {
+            var lastId = GetCollection(type).Max(x => x.ID);
+            return lastId + 1;
         }
     }
 }

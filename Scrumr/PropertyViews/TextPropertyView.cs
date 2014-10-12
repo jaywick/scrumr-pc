@@ -12,15 +12,22 @@ namespace Scrumr
         public TextPropertyView(PropertyItem propertyItem)
             : base(propertyItem)
         {
+            string value = propertyItem.IsNew ? "" : propertyItem.Value.ToString();
+
             View = new TextBox
             {
-                Text = propertyItem.Value.ToString(),
+                Text = value,
             };
         }
 
         public override object Value
         {
             get { return (View as TextBox).Text; }
+        }
+
+        public override bool IsValid
+        {
+            get { return true; }
         }
     }
 }

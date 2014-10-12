@@ -22,5 +22,13 @@ namespace Scrumr
         {
             get { return (View as CheckBox).IsChecked; }
         }
+
+        public override bool IsValid
+        {
+            get
+            {
+                return false;
+            }
+        }
     }
 }

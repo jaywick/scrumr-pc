@@ -16,7 +16,7 @@ namespace Scrumr
 {
     public partial class PropertiesView : Window
     {
-        private Type _valueType;
+        private Type _entityType;
         private Entity _entity;
         private Context _context;
         private List<PropertyItem> _items;
@@ -32,7 +32,7 @@ namespace Scrumr
         public PropertiesView(Type type, Context context, Entity entity = null)
             : this()
         {
-            _valueType = type;
+            _entityType = type;
             _entity = entity;
             _context = context;
             _items = loadItems();
@@ -59,12 +59,12 @@ namespace Scrumr
         private List<PropertyItem> loadItems()
         {
             var items = new List<PropertyItem>();
-            foreach (var property in _valueType.GetProperties())
+            foreach (var property in _entityType.GetProperties())
             {
                 var currentValue = (Mode == Modes.Existing) ? property.GetValue(_entity) : null;
                 var attributes = Attribute.GetCustomAttributes(property);
 
-                items.Add(new PropertyItem(property.Name, property.PropertyType, attributes, currentValue));
+                items.Add(new PropertyItem(property.Name, property.PropertyType, _entityType, attributes, currentValue));
             }
 
             return items;
@@ -72,11 +72,11 @@ namespace Scrumr
 
         private object getResult()
         {
-            var result = (Mode == Modes.Existing) ? _entity : Activator.CreateInstance(_valueType);
+            var result = (Mode == Modes.Existing) ? _entity : Activator.CreateInstance(_entityType);
 
             foreach (var item in _items)
             {
-                var property = _valueType.GetProperty(item.Name);
+                var property = _entityType.GetProperty(item.Name);
                 var rawValue = PropertyValueMap[item.Name].Invoke();
                 try
                 {
