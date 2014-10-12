@@ -87,8 +87,8 @@ namespace Scrumr
                 FeatureToRowMap.Add(feature, i);
 
                 var headerView = new HeaderView(feature);
-                headerView.RequestEdit += (h) => editEntity(h);
-                headerView.RequestRemove += (h) => removeEntity(h);
+                headerView.RequestEdit += (h) => editEntity(h as Feature);
+                headerView.RequestRemove += (h) => removeEntity(h as Feature);
 
                 AddToGrid(headerView, 0, i + 1);
 
@@ -108,8 +108,8 @@ namespace Scrumr
                 SprintToColumnMap.Add(sprint, i);
 
                 var headerView = new HeaderView(sprint);
-                headerView.RequestEdit += (h) => editEntity(h);
-                headerView.RequestRemove += (h) => removeEntity(h);
+                headerView.RequestEdit += (h) => editEntity(h as Sprint);
+                headerView.RequestRemove += (h) => removeEntity(h as Sprint);
 
                 AddToGrid(headerView, i + 1, 0);
 
