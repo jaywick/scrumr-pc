@@ -32,7 +32,20 @@ namespace Scrumr
         {
             get
             {
-                return false;
+                var selection = (View as ComboBox).SelectedItem;
+
+                if (selection == null)
+                    return false;
+
+                try
+                {
+                    var result = Enum.Parse(_enum, selection.ToString());
+                    return result != null;
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
             }
         }
     }

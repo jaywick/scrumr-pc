@@ -20,15 +20,20 @@ namespace Scrumr
 
             View.PreviewTextInput += (s, e) =>
             {
-                var pattern = @"^"          // start of string
-                            + @"[-+]?"      // optional plus or minus sign
-                            + @"[0-9]*"     // 0 or more digits
-                            + @"\.?"        // optional decimal point
-                            + @"[0-9]+"     // 1 or more digits
-                            + @"$";         // end of string
-
-                e.Handled = new Regex(pattern).IsMatch(e.Text);
+                e.Handled = isNumericOnly(e.Text);
             };
+        }
+
+        private static bool isNumericOnly(string text)
+        {
+            var pattern = @"^"          // start of string
+                        + @"[-+]?"      // optional plus or minus sign
+                        + @"[0-9]*"     // 0 or more digits
+                        + @"\.?"        // optional decimal point
+                        + @"[0-9]+"     // 1 or more digits
+                        + @"$";         // end of string
+
+            return new Regex(pattern).IsMatch(text);
         }
 
         public override object Value
@@ -40,7 +45,7 @@ namespace Scrumr
         {
             get
             {
-                return false;
+                return isNumericOnly((View as TextBox).Text);
             }
         }
     }

@@ -21,13 +21,9 @@ namespace Scrumr
 
     class InvalidInputException : Exception
     {
-        private PropertyItem item;
-        private object rawValue;
-
-        public InvalidInputException(PropertyItem item, object rawValue, Exception innerException)
-            : base(String.Format("Cannot convert {0} to an {1} using the value {2}", item.Name, item.Type.Name, rawValue.ToString()), innerException)
+        public InvalidInputException(PropertyItem item)
+            : base(String.Format("Please enter a valid value for {0}", item.Name))
         {
         }
-
     }
 }

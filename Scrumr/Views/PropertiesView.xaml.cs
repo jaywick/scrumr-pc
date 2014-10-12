@@ -21,7 +21,7 @@ namespace Scrumr
         private Context _context;
         private List<PropertyItem> _items;
 
-        public Dictionary<string, Func<object>> PropertyValueMap { get; private set; }
+        public List<PropertyView> PropertyViews { get; private set; }
         public object Result { get; private set; }
 
         public PropertiesView()
@@ -77,15 +77,14 @@ namespace Scrumr
             foreach (var item in _items)
             {
                 var property = _entityType.GetProperty(item.Name);
-                var rawValue = PropertyValueMap[item.Name].Invoke();
-                try
-                {
-                    property.SetValue(result, Convert.ChangeType(rawValue, item.Type));
-                }
-                catch (FormatException ex)
-                {
-                    throw new InvalidInputException(item, rawValue, ex);
-                }
+                var propertyView = PropertyViews.Single(x => x.Property.Name == property.Name);
+
+                if (!propertyView.IsValid)
+                    throw new InvalidInputException(item);
+
+                var rawValue = propertyView.Value;
+
+                property.SetValue(result, rawValue);
             }
 
             return result;
@@ -93,14 +92,14 @@ namespace Scrumr
 
         private void drawItems()
         {
-            PropertyValueMap = new Dictionary<string, Func<object>>();
+            PropertyViews = new List<PropertyView>();
 
             Contents.Children.Clear();
             foreach (var item in _items)
             {
-                var newInput = PropertyView.Create(item, _context);
+                var propertyView = PropertyView.Create(item, _context);
 
-                if (!newInput.IsHidden)
+                if (!propertyView.IsHidden)
                 {
                     // grid
                     var itemGrid = new Grid();
@@ -114,12 +113,12 @@ namespace Scrumr
                     Grid.SetColumn(newLabel, 0);
 
                     // input
-                    itemGrid.Children.Add(newInput.View);
-                    Grid.SetColumn(newInput.View, 1);
+                    itemGrid.Children.Add(propertyView.View);
+                    Grid.SetColumn(propertyView.View, 1);
                     Contents.Children.Add(itemGrid);
                 }
 
-                PropertyValueMap.Add(item.Name, () => newInput.Value);
+                PropertyViews.Add(propertyView);
             }
         }
 

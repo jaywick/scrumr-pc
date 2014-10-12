@@ -25,10 +25,7 @@ namespace Scrumr
 
         public override bool IsValid
         {
-            get
-            {
-                return false;
-            }
+            get { return true; }
         }
     }
 }
