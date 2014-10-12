@@ -17,9 +17,18 @@ namespace Scrumr
             var enumInfo = propertyItem.Attributes.Single(x => x is EnumerationAttribute) as EnumerationAttribute;
             _enum = enumInfo.Enumeration;
 
+            var collection = Enum.GetNames(_enum).ToList();
+
+            string selected = null;
+            if (!propertyItem.IsNew)
+            {
+                selected = Enum.ToObject(_enum, propertyItem.Value).ToString();
+            }
+
             View = new ComboBox
             {
-                ItemsSource = Enum.GetNames(_enum).ToList(),
+                ItemsSource = collection,
+                SelectedItem = selected,
             };
         }
 
