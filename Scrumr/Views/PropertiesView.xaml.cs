@@ -105,16 +105,12 @@ namespace Scrumr
                 itemGrid.Children.Add(newLabel);
                 Grid.SetColumn(newLabel, 0);
 
-                var newInput = new TextBox();
-                newInput.Margin = new Thickness(0, 5, 0, 0);
+                var newInput = PropertyView.Create(item);
 
-                if (Mode == Modes.Existing)
-                    newInput.Text = item.Value.ToString();
+                itemGrid.Children.Add(newInput.View);
+                Grid.SetColumn(newInput.View, 1);
 
-                itemGrid.Children.Add(newInput);
-                Grid.SetColumn(newInput, 1);
-
-                PropertyValueMap.Add(item.Name, () => newInput.Text);
+                PropertyValueMap.Add(item.Name, () => newInput.Value);
                 Contents.Children.Add(itemGrid);
             }
         }
@@ -138,22 +134,6 @@ namespace Scrumr
             DialogResult = false;
             Result = null;
             Hide();
-        }
-
-        public class PropertyItem
-        {
-            public string Name { get; set; }
-            public Type Type { get; set; }
-            private Attribute[] Attributes;
-            public object Value { get; set; }
-
-            public PropertyItem(string name, Type type, Attribute[] attributes, object value = null)
-            {
-                Name = name;
-                Type = type;
-                Attributes = attributes;
-                Value = value;
-            }
         }
     }
 }

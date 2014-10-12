@@ -75,6 +75,7 @@
     <Compile Include="Entities\Feature.cs" />
     <Compile Include="Entities\Sprint.cs" />
     <Compile Include="Entities\Ticket.cs" />
+    <Compile Include="Views\PropertyView.cs" />
     <Compile Include="Views\TicketView.cs" />
     <Page Include="Views\PropertiesView.xaml">
       <SubType>Designer</SubType>
