@@ -56,33 +56,32 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
-    <Compile Include="AddEditItem.cs" />
-    <Compile Include="AddEditView.xaml.cs">
+    <Compile Include="Misc\AddEditItem.cs" />
+    <Compile Include="Views\AddEditView.xaml.cs">
       <DependentUpon>AddEditView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BoardView.xaml.cs">
+    <Compile Include="Views\BoardView.xaml.cs">
       <DependentUpon>BoardView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CellView.cs" />
-    <Compile Include="Common.cs" />
+    <Compile Include="Views\CellView.cs" />
+    <Compile Include="Misc\Common.cs" />
     <Compile Include="Entities\Linkers\SprintFeature.cs" />
-    <Compile Include="HeaderView.cs" />
-    <Compile Include="InvalidInputException.cs" />
-    <Compile Include="Library.cs" />
+    <Compile Include="Views\HeaderView.cs" />
+    <Compile Include="Misc\Library.cs" />
     <Compile Include="Entities\Entity.cs" />
     <Compile Include="Entities\Feature.cs" />
     <Compile Include="Entities\Sprint.cs" />
     <Compile Include="Entities\Ticket.cs" />
-    <Compile Include="TicketView.cs" />
-    <Page Include="AddEditView.xaml">
+    <Compile Include="Views\TicketView.cs" />
+    <Page Include="Views\AddEditView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="BoardView.xaml">
+    <Page Include="Views\BoardView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Views\ShellView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -90,8 +89,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
+    <Compile Include="Views\ShellView.xaml.cs">
+      <DependentUpon>ShellView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -122,6 +121,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Entities\Meta\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

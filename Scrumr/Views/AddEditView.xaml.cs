@@ -19,7 +19,6 @@ namespace Scrumr
         private List<AddEditItem> _items;
         private Dictionary<string, Func<object>> ContentMap;
         private Type _valueType;
-        private Type type;
         private Entity _entity;
 
         public object Result { get; set; }
