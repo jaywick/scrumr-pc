@@ -63,8 +63,10 @@
     <Compile Include="BoardView.xaml.cs">
       <DependentUpon>BoardView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CellView.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="Entities\Linkers\SprintFeature.cs" />
+    <Compile Include="HeaderView.cs" />
     <Compile Include="InvalidInputException.cs" />
     <Compile Include="Library.cs" />
     <Compile Include="Entities\Entity.cs" />

@@ -88,11 +88,11 @@ namespace Scrumr
                 Board.RowDefinitions.Add(new RowDefinition());
                 FeatureToRowMap.Add(feature, i);
 
-                var featureLabel = new Label { Content = feature.Name, FontWeight = FontWeights.Bold };
-                featureLabel.ContextMenu = new ContextMenu();
-                featureLabel.ContextMenu.Items.Add(Common.CreateMenuItem("Edit", () => editEntity<Feature>(feature)));
-                featureLabel.ContextMenu.Items.Add(Common.CreateMenuItem("Remove", () => removeEntity<Feature>(feature)));
-                AddToGrid(featureLabel, 0, i + 1);
+                var headerView = new HeaderView(feature);
+                headerView.RequestEdit += (h) => editEntity(h);
+                headerView.RequestRemove += (h) => editEntity(h);
+
+                AddToGrid(headerView, 0, i + 1);
 
                 i++;
             }
@@ -109,11 +109,11 @@ namespace Scrumr
                 Board.ColumnDefinitions.Add(new ColumnDefinition());
                 SprintToColumnMap.Add(sprint, i);
 
-                var sprintLabel = new Label { Content = sprint.Name, FontWeight = FontWeights.Bold };
-                sprintLabel.ContextMenu = new ContextMenu();
-                sprintLabel.ContextMenu.Items.Add(Common.CreateMenuItem("Edit", () => editEntity<Sprint>(sprint)));
-                sprintLabel.ContextMenu.Items.Add(Common.CreateMenuItem("Remove", () => removeEntity<Sprint>(sprint)));
-                AddToGrid(sprintLabel, i + 1, 0);
+                var headerView = new HeaderView(sprint);
+                headerView.RequestEdit += (h) => editEntity(h);
+                headerView.RequestRemove += (h) => editEntity(h);
+
+                AddToGrid(headerView, i + 1, 0);
 
                 i++;
             }
@@ -129,10 +129,11 @@ namespace Scrumr
 
         private void CreateTicketCell(int sprintId, int featureId)
         {
-            var newCell = new ListBox { AllowDrop = true, Background = Brushes.Transparent };
-            CellMap.Add(newCell, new SprintFeature(sprintId, featureId));
-            AddToGrid(newCell, sprintId + 1, featureId + 1);
-            newCell.Drop += newCell_Drop;
+            var sprintFeature = new SprintFeature(sprintId, featureId);
+            var cellView = new CellView(sprintFeature);
+            CellMap.Add(cellView, sprintFeature);
+            AddToGrid(cellView, sprintId + 1, featureId + 1);
+            cellView.Drop += newCell_Drop;
 
             var tickets = VisibleTickets.Where(t => t.SprintId == sprintId)
                                         .Where(t => t.FeatureId == featureId);
@@ -140,7 +141,7 @@ namespace Scrumr
             foreach (var ticket in tickets)
             {
                 var ticketView = new TicketView(ticket);
-                newCell.Items.Add(ticketView);
+                cellView.Items.Add(ticketView);
 
                 ticketView.RequestEdit += (t) => editEntity(t);
                 ticketView.RequestRemove += (t) => editEntity(t);
