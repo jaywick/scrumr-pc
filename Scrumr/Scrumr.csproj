@@ -56,6 +56,10 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Compile Include="Entities\Meta\KeyAttribute.cs" />
+    <Compile Include="Entities\Meta\EnumerationAttribute.cs" />
+    <Compile Include="Entities\Enums\TicketTypes.cs" />
+    <Compile Include="Entities\Meta\ForeignAttribute.cs" />
     <Compile Include="Misc\AddEditItem.cs" />
     <Compile Include="Views\AddEditView.xaml.cs">
       <DependentUpon>AddEditView.xaml</DependentUpon>
@@ -122,9 +126,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Entities\Meta\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
