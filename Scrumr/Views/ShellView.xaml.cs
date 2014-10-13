@@ -31,7 +31,8 @@ namespace Scrumr
         private void load()
         {
             Board.Context = Library.Load();
-            
+            Board.Project = Board.Context.Projects.First(); // debug: get first project in list
+
             Board.Update();
         }
 

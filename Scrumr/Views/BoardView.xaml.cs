@@ -42,17 +42,31 @@ namespace Scrumr
             get { return Context.Tickets.Where(TicketFilter); }
         }
 
+        private Project _project;
+        public Project Project
+        {
+            get { return _project; }
+            set
+            {
+                _project = value;
+                Update();
+            }
+        }
+
         public BoardView()
         {
             InitializeComponent();
-
-            SprintFilter = (x) => true;
-            FeatureFilter = (x) => true;
-            TicketFilter = (x) => true;
         }
 
         public void Update()
         {
+            if (Project == null) throw new InvalidOperationException("Project is missing");
+            if (Context == null) throw new InvalidOperationException("Context is missing");
+
+            SprintFilter = x => x.ProjectId == Project.ID;
+            FeatureFilter = x => x.ProjectId == Project.ID;
+            TicketFilter = x => true;
+
             SprintToColumnMap = new Dictionary<Sprint, int>();
             FeatureToRowMap = new Dictionary<Feature, int>();
             CellMap = new Dictionary<ListBox, SprintFeature>();
