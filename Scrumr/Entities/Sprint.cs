@@ -7,5 +7,7 @@ namespace Scrumr
 {
     public class Sprint : Entity
     {
+        [Foreign(typeof(Project))]
+        public int ProjectId { get; set; }
     }
 }

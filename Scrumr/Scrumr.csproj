@@ -60,6 +60,8 @@
     <Compile Include="Entities\Meta\EnumerationAttribute.cs" />
     <Compile Include="Entities\Enums\TicketTypes.cs" />
     <Compile Include="Entities\Meta\ForeignAttribute.cs" />
+    <Compile Include="Entities\Project.cs" />
+    <Compile Include="Misc\Context.cs" />
     <Compile Include="PropertyViews\CheckPropertyView.cs" />
     <Compile Include="PropertyViews\DataListPropertyView.cs" />
     <Compile Include="PropertyViews\EnumListPropertyView.cs" />
