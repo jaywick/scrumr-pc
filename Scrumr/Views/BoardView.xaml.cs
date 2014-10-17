@@ -17,7 +17,7 @@ namespace Scrumr
 {
     public partial class BoardView : UserControl
     {
-        public Context Context { get; set; }
+        public ScrumrContext Context { get; set; }
 
         public Dictionary<Sprint, int> SprintToColumnMap;
         public Dictionary<Feature, int> FeatureToRowMap;
@@ -101,7 +101,7 @@ namespace Scrumr
                 FeatureToRowMap.Add(feature, i);
 
                 var headerView = new HeaderView(feature);
-                headerView.RequestEdit += (h) => editEntity(h as Feature);
+                //headerView.RequestEdit += (h) => editEntity(h as Feature);
                 headerView.RequestRemove += (h) => removeEntity(h as Feature);
 
                 AddToGrid(headerView, 0, i + 1);
@@ -122,7 +122,7 @@ namespace Scrumr
                 SprintToColumnMap.Add(sprint, i);
 
                 var headerView = new HeaderView(sprint);
-                headerView.RequestEdit += (h) => editEntity(h as Sprint);
+                //headerView.RequestEdit += (h) => editEntity(h as Sprint);
                 headerView.RequestRemove += (h) => removeEntity(h as Sprint);
 
                 AddToGrid(headerView, i + 1, 0);
@@ -155,20 +155,12 @@ namespace Scrumr
                 var ticketView = new TicketView(ticket);
                 cellView.Items.Add(ticketView);
 
-                ticketView.RequestEdit += (t) => editEntity(t);
+                //ticketView.RequestEdit += (t) => editEntity(t);
                 ticketView.RequestRemove += (t) => removeEntity(t);
             }
         }
 
         #region Editing + Removing
-
-        private void editEntity<T>(T entity) where T : Entity
-        {
-            var propertiesView = new PropertiesView(typeof(T), Context, entity);
-            propertiesView.ShowDialog();
-
-            Update();
-        }
 
         private void removeEntity<T>(T entity) where T : Entity
         {

@@ -14,7 +14,7 @@ namespace Scrumr
 
         public Entity Entity { get; private set; }
 
-        public HeaderView(Entity entity)
+        public HeaderView(dynamic entity)
         {
             Content = entity.Name;
             Entity = entity;

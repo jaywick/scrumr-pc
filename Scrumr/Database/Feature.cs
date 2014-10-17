@@ -7,7 +7,10 @@ namespace Scrumr
 {
     public class Feature : Entity
     {
-        [Foreign(typeof(Project))]
-        public int ProjectId { get; set; }
+        public Int64 ID { get; set; }
+
+        public string Name { get; set; }
+
+        public Int64 ProjectId { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace Scrumr
         public MainWindow()
         {
             InitializeComponent();
-            load();
+            this.Loaded += (s, e) => load();
         }
 
         ~MainWindow()
@@ -30,41 +31,27 @@ namespace Scrumr
 
         private void load()
         {
-            Board.Context = Library.Load();
+            using (var context = new ScrumrContext())
+            {
+                var objectContext = ((IObjectContextAdapter)context).ObjectContext;
+
+                var project = new Project();
+                project.Name = "Project 2";
+                var k = context.TicketTypes;
+                context.Project.Add(project);
+                context.SaveChanges();
+            }
+
+            /*Board.Context = 
             Board.Project = Board.Context.Projects.First(); // debug: get first project in list
 
-            Board.Update();
+            Board.Update();*/
         }
 
         private void save()
         {
-            Library.Save(Board.Context);
+            //Library.Save(Board.Context);
         }
 
-        private void MenuNewSprint_Click(object sender, RoutedEventArgs e)
-        {
-            add(Board.Context.Sprints);
-        }
-
-        private void MenuNewFeature_Click(object sender, RoutedEventArgs e)
-        {
-            add(Board.Context.Features);
-        }
-
-        private void MenuNewTicket_Click(object sender, RoutedEventArgs e)
-        {
-            add(Board.Context.Tickets);
-        }
-
-        private void add<T>(List<T> list) where T : Entity
-        {
-            var propertiesView = new PropertiesView(typeof(T), Board.Context);
-            if (propertiesView.ShowDialog() == true)
-            {
-                list.Add(propertiesView.Result as T);
-            }
-
-            Board.Update();
-        }
     }
 }

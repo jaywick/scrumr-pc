@@ -5,7 +5,10 @@ using System.Text;
 
 namespace Scrumr
 {
-    class GeneratedReadOnlyAttribute : Attribute
+    public class TicketType
     {
+        public Int64 ID { get; set; }
+
+        public string Name { get; set; }
     }
 }
