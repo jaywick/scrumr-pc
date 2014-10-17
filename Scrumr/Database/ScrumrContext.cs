@@ -9,7 +9,7 @@ namespace Scrumr
 {
     public class ScrumrContext : DbContext
     {
-        public DbSet<Project> Project { get; set; }
+        public DbSet<Project> Projects { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Feature> Features { get; set; }
         public DbSet<Sprint> Sprints { get; set; }

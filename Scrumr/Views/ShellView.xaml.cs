@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Runtime;
 
 namespace Scrumr
 {
@@ -22,35 +23,20 @@ namespace Scrumr
         {
             InitializeComponent();
             this.Loaded += (s, e) => load();
+            this.Closing += (s, e) => save();
         }
 
-        ~MainWindow()
+        private async void load()
         {
-            save();
-        }
+            Board.Context = new ScrumrContext();
+            Board.Project = await Task.Run(() => Board.Context.Projects.First());
 
-        private void load()
-        {
-            using (var context = new ScrumrContext())
-            {
-                var objectContext = ((IObjectContextAdapter)context).ObjectContext;
-
-                var project = new Project();
-                project.Name = "Project 2";
-                var k = context.TicketTypes;
-                context.Project.Add(project);
-                context.SaveChanges();
-            }
-
-            /*Board.Context = 
-            Board.Project = Board.Context.Projects.First(); // debug: get first project in list
-
-            Board.Update();*/
+            Board.Update();
         }
 
         private void save()
         {
-            //Library.Save(Board.Context);
+            Board.Context.SaveChanges();
         }
 
     }
