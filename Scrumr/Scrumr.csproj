@@ -56,6 +56,7 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Compile Include="Entities\Meta\GeneratedReadOnlyAttribute.cs" />
     <Compile Include="Entities\Meta\KeyAttribute.cs" />
     <Compile Include="Entities\Meta\EnumerationAttribute.cs" />
     <Compile Include="Entities\Enums\TicketTypes.cs" />
@@ -63,12 +64,13 @@
     <Compile Include="Entities\Project.cs" />
     <Compile Include="Misc\Context.cs" />
     <Compile Include="PropertyViews\CheckPropertyView.cs" />
+    <Compile Include="PropertyViews\TextPropertyView.cs" />
     <Compile Include="PropertyViews\DataListPropertyView.cs" />
     <Compile Include="PropertyViews\EnumListPropertyView.cs" />
     <Compile Include="PropertyViews\HiddenKeyPropertyView.cs" />
     <Compile Include="PropertyViews\NumericPropertyView.cs" />
     <Compile Include="PropertyViews\PropertyView.cs" />
-    <Compile Include="PropertyViews\TextPropertyView.cs" />
+    <Compile Include="PropertyViews\GeneratedKeyPropertyView.cs" />
     <Compile Include="Views\PropertiesView.xaml.cs">
       <DependentUpon>PropertiesView.xaml</DependentUpon>
     </Compile>

@@ -16,5 +16,8 @@ namespace Scrumr
 
         [Enumeration(typeof(TicketTypes))]
         public int TypeId { get; set; }
+
+        [GeneratedReadOnly]
+        public int ProjectBasedId { get; set; }
     }
 }

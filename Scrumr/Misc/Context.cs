@@ -39,5 +39,17 @@ namespace Scrumr
             var lastId = GetCollection(type).Max(x => x.ID);
             return lastId + 1;
         }
+
+        public int GetNextTicketId(int projectId)
+        {
+            var projectBasedIds = from t in Tickets
+                                  join s in Sprints on t.SprintId equals s.ID
+                                  join p in Projects on s.ProjectId equals projectId
+                                  select t.ProjectBasedId;
+            
+            var lastId = projectBasedIds.Max();
+
+            return lastId + 1;
+        }
     }
 }

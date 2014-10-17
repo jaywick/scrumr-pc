@@ -23,6 +23,9 @@ namespace Scrumr
 
         public static PropertyView Create(PropertyItem propertyItem, Context context)
         {
+            if (propertyItem.Attributes.Any(x => x is GeneratedReadOnlyAttribute))
+                return new GeneratedKeyPropertyView(propertyItem, context);
+
             if (propertyItem.Attributes.Any(x => x is KeyAttribute))
                 return new HiddenKeyPropertyView(propertyItem, context);
 
