@@ -111,7 +111,7 @@ namespace Scrumr
                 {
                     // grid
                     var itemGrid = new Grid();
-                    itemGrid.ColumnDefinitions.Add(new ColumnDefinition());
+                    itemGrid.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(100) });
                     itemGrid.ColumnDefinitions.Add(new ColumnDefinition());
 
                     // label
@@ -123,6 +123,7 @@ namespace Scrumr
                     // input
                     itemGrid.Children.Add(propertyView.View);
                     Grid.SetColumn(propertyView.View, 1);
+                    (propertyView.View as Control).Margin = new Thickness(10, 5, 10, 5);
                     Contents.Children.Add(itemGrid);
                 }
 
