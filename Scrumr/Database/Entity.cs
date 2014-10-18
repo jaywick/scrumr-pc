@@ -7,8 +7,11 @@ using System.Threading.Tasks;
 
 namespace Scrumr
 {
-    public class Project : Entity
+    public class Entity
     {
-        public Int64 NextProjectTicketId { get; set; }
+        [Key]
+        public Int64 ID { get; set; }
+
+        public string Name { get; set; }
     }
 }

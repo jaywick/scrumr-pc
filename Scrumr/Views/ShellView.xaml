@@ -10,9 +10,9 @@
         </Grid.RowDefinitions>
         <Menu Grid.Row="0">
             <MenuItem Header="New">
-                <MenuItem Header="Sprint"/>
-                <MenuItem Header="Feature"/>
-                <MenuItem Header="Ticket"/>
+                <MenuItem Header="Sprint" Click="NewSprint"/>
+                <MenuItem Header="Feature" Click="NewFeature"/>
+                <MenuItem Header="Ticket" Click="NewTicket"/>
             </MenuItem>
         </Menu>
         <local:BoardView x:Name="Board" Grid.Row="1"/>

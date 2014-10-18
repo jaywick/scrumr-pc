@@ -17,5 +17,13 @@ namespace Scrumr
 
             return newItem;
         }
+
+        public class InvalidInputException : Exception
+        {
+            public InvalidInputException(PropertyItem item)
+                : base(String.Format("Please enter a valid value for {0}", item.Name))
+            {
+            }
+        }
     }
 }

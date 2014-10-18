@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Runtime;
+using System.Data.Entity;
 
 namespace Scrumr
 {
@@ -38,6 +39,34 @@ namespace Scrumr
         {
             Board.Context.SaveChanges();
         }
+
+        private void NewSprint(object sender, RoutedEventArgs e)
+        {
+            add(Board.Context.Sprints);
+        }
+
+        private void NewFeature(object sender, RoutedEventArgs e)
+        {
+            add(Board.Context.Features);
+        }
+
+        private void NewTicket(object sender, RoutedEventArgs e)
+        {
+            add(Board.Context.Tickets);
+        }
+
+        private void add<T>(DbSet<T> list) where T : Entity
+        {
+            var propertiesView = new PropertiesView(typeof(T), Board.Context);
+
+            if (propertiesView.ShowDialog() == true)
+            {
+                list.Add(propertiesView.Result as T);
+            }
+            
+            Board.Update();
+        }
+
 
     }
 }
