@@ -15,6 +15,7 @@
                 <MenuItem Header="Ticket" Click="NewTicket"/>
             </MenuItem>
         </Menu>
-        <local:BoardView x:Name="Board" Grid.Row="1"/>
+        <ProgressBar x:Name="ProgressBusy" Grid.Row="1" Width="400" Height="20" IsIndeterminate="True"/>
+        <local:BoardView x:Name="Board" Grid.Row="1" Visibility="Collapsed"/>
     </Grid>
 </Window>

@@ -23,20 +23,21 @@ namespace Scrumr
         public MainWindow()
         {
             InitializeComponent();
+
             this.Loaded += (s, e) => Load();
             this.Closing += (s, e) => Save();
         }
 
         private async void Load()
         {
-            Board.Context = new ScrumrContext();
-            Board.Context.LoadAll();
+            using (BusyDisplay)
+            {
+                Board.Context = new ScrumrContext();
 
-            MainMenu.IsEnabled = false;
-            Board.Project = await GetDefaultProject();
-            MainMenu.IsEnabled = true;
-
-            Board.Update();
+                await Board.Context.LoadAllAsync();
+                Board.Project = await GetDefaultProject();
+                Board.Update();
+            }
         }
 
         private void Save()
@@ -61,10 +62,36 @@ namespace Scrumr
             ViewHelper.AddEntity<Ticket>(Board.Context.Tickets, Board.Context);
             Board.Update();
         }
-        
+
         private async Task<Project> GetDefaultProject()
         {
             return await Task.Run(() => Board.Context.Projects.First());
+        }
+
+        public DisposableBusyDisplay BusyDisplay
+        {
+            get { return new DisposableBusyDisplay(this); }
+        }
+
+        public class DisposableBusyDisplay : IDisposable
+        {
+            MainWindow _mainWindow;
+
+            public DisposableBusyDisplay(MainWindow mainWindow)
+            {
+                _mainWindow = mainWindow;
+
+                _mainWindow.MainMenu.IsEnabled = false;
+                _mainWindow.ProgressBusy.Visibility = System.Windows.Visibility.Visible;
+                _mainWindow.Board.Visibility = System.Windows.Visibility.Collapsed;
+            }
+
+            public void Dispose()
+            {
+                _mainWindow.MainMenu.IsEnabled = true;
+                _mainWindow.ProgressBusy.Visibility = System.Windows.Visibility.Collapsed;
+                _mainWindow.Board.Visibility = System.Windows.Visibility.Visible;
+            }
         }
     }
 }
