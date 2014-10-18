@@ -22,8 +22,8 @@ namespace Scrumr
             Content = ticket.Name;
             
             ContextMenu = new ContextMenu();
-            ContextMenu.Items.Add(Common.CreateMenuItem("Edit",  () => RequestEdit(ticket)));
-            ContextMenu.Items.Add(Common.CreateMenuItem("Remove", () => RequestRemove(ticket)));
+            ContextMenu.Items.Add(ViewHelper.CreateMenuItem("Edit",  () => RequestEdit(ticket)));
+            ContextMenu.Items.Add(ViewHelper.CreateMenuItem("Remove", () => RequestRemove(ticket)));
 
             PreviewMouseMove += UserControl_PreviewMouseMove;
         }

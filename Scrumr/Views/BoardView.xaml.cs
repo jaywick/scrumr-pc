@@ -26,6 +26,9 @@ namespace Scrumr
         public Func<Feature, bool> FeatureFilter { get; set; }
         public Func<Ticket, bool> TicketFilter { get; set; }
 
+        private Project _project;
+        private ContextMenu _addMenu;
+
         public IEnumerable<Sprint> VisibleSprints
         {
             get { return Context.Sprints.Where(SprintFilter); }
@@ -41,7 +44,6 @@ namespace Scrumr
             get { return Context.Tickets.Where(TicketFilter); }
         }
 
-        private Project _project;
         public Project Project
         {
             get { return _project; }
@@ -73,7 +75,25 @@ namespace Scrumr
 
             CreateSprintColumns();
             CreateFeatureRows();
+            CreateAddButton();
             CreateTicketCells();
+        }
+
+        private void CreateAddButton()
+        {
+            var addButton = new Button { Content = "+" };
+
+            _addMenu = new ContextMenu();
+            _addMenu.Items.Add(ViewHelper.CreateMenuItem("New Ticket", () => NewTicket()));
+            _addMenu.Items.Add(new Separator());
+            _addMenu.Items.Add(ViewHelper.CreateMenuItem("New Ticket", () => NewSprint()));
+            _addMenu.Items.Add(ViewHelper.CreateMenuItem("New Ticket", () => NewFeature()));
+
+            addButton.Click += (s, e) => _addMenu.IsOpen = true;
+            _addMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+            _addMenu.PlacementTarget = addButton;
+
+            AddToGrid(addButton, 0, 0);
         }
 
         private void CreateTicketCells()
@@ -181,6 +201,24 @@ namespace Scrumr
             ticket.SprintId = sprintId;
             ticket.FeatureId = featureId;
 
+            Update();
+        }
+
+        private void NewSprint()
+        {
+            ViewHelper.AddEntity<Sprint>(Context.Sprints, Context);
+            Update();
+        }
+
+        private void NewFeature()
+        {
+            ViewHelper.AddEntity<Feature>(Context.Features, Context);
+            Update();
+        }
+
+        private void NewTicket()
+        {
+            ViewHelper.AddEntity<Ticket>(Context.Tickets, Context);
             Update();
         }
     }

@@ -87,7 +87,7 @@ namespace Scrumr
                                                 .Single(x => x.Property.Name == property.Name);
 
                 if (!propertyView.IsValid)
-                    throw new Common.InvalidInputException(item);
+                    throw new InvalidInputException(item);
 
                 var rawValue = propertyView.Value;
                 var finalValue = Convert.ChangeType(rawValue, item.Type);
@@ -138,7 +138,7 @@ namespace Scrumr
                 DialogResult = true;
                 Hide();
             }
-            catch (Common.InvalidInputException ex)
+            catch (InvalidInputException ex)
             {
                 MessageBox.Show(ex.Message, "Scrumr", MessageBoxButton.OK, MessageBoxImage.Error);
             }

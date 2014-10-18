@@ -22,8 +22,8 @@ namespace Scrumr
             FontWeight = FontWeights.Bold;
 
             ContextMenu = new ContextMenu();
-            ContextMenu.Items.Add(Common.CreateMenuItem("Edit", () => RequestEdit(Entity)));
-            ContextMenu.Items.Add(Common.CreateMenuItem("Remove", () => RequestRemove(Entity)));
+            ContextMenu.Items.Add(ViewHelper.CreateMenuItem("Edit", () => RequestEdit(Entity)));
+            ContextMenu.Items.Add(ViewHelper.CreateMenuItem("Remove", () => RequestRemove(Entity)));
         }
     }
 }

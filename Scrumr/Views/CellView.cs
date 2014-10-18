@@ -23,7 +23,7 @@ namespace Scrumr
             Background = Brushes.Transparent;
 
             ContextMenu = new ContextMenu();
-            ContextMenu.Items.Add(Common.CreateMenuItem("New Ticket", () => RequestNewTicket(SprintId, FeatureId)));
+            ContextMenu.Items.Add(ViewHelper.CreateMenuItem("New Ticket", () => RequestNewTicket(SprintId, FeatureId)));
         }
     }
 }

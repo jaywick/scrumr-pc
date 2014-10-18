@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Scrumr
 {
@@ -45,6 +46,15 @@ namespace Scrumr
                 throw new NotSupportedException("Unexpected entity being removed. Operation failed.");
 
             context.SaveChanges();
+        }
+
+        public static MenuItem CreateMenuItem(string text, System.Action action)
+        {
+            var newItem = new MenuItem();
+            newItem.Header = text;
+            newItem.Click += (s, e) => action.Invoke();
+
+            return newItem;
         }
     }
 }

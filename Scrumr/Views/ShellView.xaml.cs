@@ -45,24 +45,6 @@ namespace Scrumr
             Board.Context.SaveChanges();
         }
 
-        private void NewSprint(object sender, RoutedEventArgs e)
-        {
-            ViewHelper.AddEntity<Sprint>(Board.Context.Sprints, Board.Context);
-            Board.Update();
-        }
-
-        private void NewFeature(object sender, RoutedEventArgs e)
-        {
-            ViewHelper.AddEntity<Feature>(Board.Context.Features, Board.Context);
-            Board.Update();
-        }
-
-        private void NewTicket(object sender, RoutedEventArgs e)
-        {
-            ViewHelper.AddEntity<Ticket>(Board.Context.Tickets, Board.Context);
-            Board.Update();
-        }
-
         private async Task<Project> GetDefaultProject()
         {
             return await Task.Run(() => Board.Context.Projects.First());
@@ -81,14 +63,12 @@ namespace Scrumr
             {
                 _mainWindow = mainWindow;
 
-                _mainWindow.MainMenu.IsEnabled = false;
                 _mainWindow.ProgressBusy.Visibility = System.Windows.Visibility.Visible;
                 _mainWindow.Board.Visibility = System.Windows.Visibility.Collapsed;
             }
 
             public void Dispose()
             {
-                _mainWindow.MainMenu.IsEnabled = true;
                 _mainWindow.ProgressBusy.Visibility = System.Windows.Visibility.Collapsed;
                 _mainWindow.Board.Visibility = System.Windows.Visibility.Visible;
             }

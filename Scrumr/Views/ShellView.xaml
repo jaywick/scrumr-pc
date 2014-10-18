@@ -4,18 +4,7 @@
         xmlns:local="clr-namespace:Scrumr"
         Title="Scrumr for Desktop" Height="571" Width="1008">
     <Grid Background="White">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
-        <Menu Grid.Row="0" x:Name="MainMenu">
-            <MenuItem Header="New">
-                <MenuItem Header="Sprint" Click="NewSprint"/>
-                <MenuItem Header="Feature" Click="NewFeature"/>
-                <MenuItem Header="Ticket" Click="NewTicket"/>
-            </MenuItem>
-        </Menu>
-        <ProgressBar x:Name="ProgressBusy" Grid.Row="1" Width="400" Height="20" IsIndeterminate="True"/>
-        <local:BoardView x:Name="Board" Grid.Row="1" Visibility="Collapsed"/>
+        <ProgressBar x:Name="ProgressBusy" Width="400" Height="20" IsIndeterminate="True"/>
+        <local:BoardView x:Name="Board" Visibility="Collapsed"/>
     </Grid>
 </Window>
