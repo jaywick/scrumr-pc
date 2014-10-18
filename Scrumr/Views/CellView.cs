@@ -9,14 +9,21 @@ namespace Scrumr
 {
     class CellView : ListBox
     {
-        public SprintFeature SprintFeature { get; private set; }
+        public event Action<int, int> RequestNewTicket;
 
-        public CellView(SprintFeature sprintFeature)
+        public int SprintId { get; private set; }
+        public int FeatureId { get; private set; }
+
+        public CellView(int sprintId, int featureId)
         {
-            SprintFeature = sprintFeature;
+            SprintId = sprintId;
+            FeatureId = featureId;
 
             AllowDrop = true;
             Background = Brushes.Transparent;
+
+            ContextMenu = new ContextMenu();
+            ContextMenu.Items.Add(Common.CreateMenuItem("New Ticket", () => RequestNewTicket(SprintId, FeatureId)));
         }
     }
 }

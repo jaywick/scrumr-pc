@@ -46,29 +46,19 @@ namespace Scrumr
 
         private void NewSprint(object sender, RoutedEventArgs e)
         {
-            Add<Sprint>(Board.Context.Sprints);
+            ViewHelper.AddEntity<Sprint>(Board.Context.Sprints, Board.Context);
+            Board.Update();
         }
 
         private void NewFeature(object sender, RoutedEventArgs e)
         {
-            Add<Feature>(Board.Context.Features);
+            ViewHelper.AddEntity<Feature>(Board.Context.Features, Board.Context);
+            Board.Update();
         }
 
         private void NewTicket(object sender, RoutedEventArgs e)
         {
-            Add<Ticket>(Board.Context.Tickets);
-        }
-
-        private void Add<T>(DbSet<T> table) where T : Entity
-        {
-            var propertiesView = new PropertiesView(typeof(T), Board.Context);
-
-            if (propertiesView.ShowDialog() == true)
-            {
-                table.Add(propertiesView.Result as T);
-            }
-
-            Save();
+            ViewHelper.AddEntity<Ticket>(Board.Context.Tickets, Board.Context);
             Board.Update();
         }
         

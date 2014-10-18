@@ -21,7 +21,6 @@ namespace Scrumr
 
         public Dictionary<Sprint, int> SprintToColumnMap;
         public Dictionary<Feature, int> FeatureToRowMap;
-        public Dictionary<ListBox, SprintFeature> CellMap;
 
         public Func<Sprint, bool> SprintFilter { get; set; }
         public Func<Feature, bool> FeatureFilter { get; set; }
@@ -69,7 +68,6 @@ namespace Scrumr
 
             SprintToColumnMap = new Dictionary<Sprint, int>();
             FeatureToRowMap = new Dictionary<Feature, int>();
-            CellMap = new Dictionary<ListBox, SprintFeature>();
 
             Board.Children.Clear();
 
@@ -141,66 +139,49 @@ namespace Scrumr
 
         private void CreateTicketCell(int sprintId, int featureId)
         {
-            var sprintFeature = new SprintFeature(sprintId, featureId);
-            var cellView = new CellView(sprintFeature);
-            CellMap.Add(cellView, sprintFeature);
+            var cellView = new CellView(sprintId, featureId);
             AddToGrid(cellView, sprintId, featureId);
-            cellView.Drop += newCell_Drop;
+            cellView.Drop += (s, e) => MoveTicket(e.Data.GetData(typeof(Ticket)) as Ticket, sprintId, featureId);
+            cellView.RequestNewTicket += (s, f) => NewTicket(s, f);
 
-            var tickets = VisibleTickets.Where(t => t.SprintId == sprintId)
-                                        .Where(t => t.FeatureId == featureId);
+            var tickets = VisibleTickets
+                .Where(t => t.SprintId == sprintId)
+                .Where(t => t.FeatureId == featureId);
 
             foreach (var ticket in tickets)
             {
                 var ticketView = new TicketView(ticket);
                 cellView.Items.Add(ticketView);
 
-                ticketView.RequestEdit += (t) => EditEntity(t);
-                ticketView.RequestRemove += (t) => RemoveEntity(t);
+                ticketView.RequestEdit += (t) => EditEntity(t as Ticket);
+                ticketView.RequestRemove += (t) => RemoveEntity(t as Ticket);
             }
         }
 
-        #region Editing + Removing
-
         private void EditEntity<T>(T entity) where T : Entity
         {
-            var propertiesView = new PropertiesView(typeof(T), Context, entity);
-            propertiesView.ShowDialog();
-
+            ViewHelper.EditEntity(entity, Context);
             Update();
         }
 
         private void RemoveEntity<T>(T entity) where T : Entity
         {
-            if (MessageBox.Show("Are you sure you wish to delete this " + entity.GetType().Name + "?", "Scrumr", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
-                return;
-
-            if (typeof(T) == typeof(Sprint))
-                Context.Sprints.Remove(entity as Sprint);
-            else if (typeof(T) == typeof(Feature))
-                Context.Features.Remove(entity as Feature);
-            else if (typeof(T) == typeof(Ticket))
-                Context.Tickets.Remove(entity as Ticket);
-
+            ViewHelper.RemoveEntity(entity, Context);
             Update();
         }
 
-        #endregion
-
-        #region event handlers
-
-        void newCell_Drop(object sender, DragEventArgs e)
+        private void NewTicket(int sprintId, int featureId)
         {
-            var cell = sender as ListBox;
-            var targetSprintFeature = CellMap[cell];
-            var ticket = e.Data.GetData(typeof(Ticket)) as Ticket;
-
-            ticket.SprintId = targetSprintFeature.Sprint;
-            ticket.FeatureId = targetSprintFeature.Feature;
-
+            ViewHelper.AddEntity(Context.Tickets, Context);
             Update();
         }
 
-        #endregion
+        private void MoveTicket(Ticket ticket, int sprintId, int featureId)
+        {
+            ticket.SprintId = sprintId;
+            ticket.FeatureId = featureId;
+
+            Update();
+        }
     }
 }
