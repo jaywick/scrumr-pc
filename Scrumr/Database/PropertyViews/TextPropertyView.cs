@@ -9,7 +9,7 @@ namespace Scrumr
 {
     public class TextPropertyView : PropertyView
     {
-        public TextPropertyView(PropertyItem propertyItem)
+        public TextPropertyView(PropertyItem propertyItem, bool isLongAnswer = false)
             : base(propertyItem)
         {
             string value = propertyItem.IsNew ? "" : propertyItem.Value.ToString();
@@ -17,6 +17,7 @@ namespace Scrumr
             View = new TextBox
             {
                 Text = value,
+                Height = isLongAnswer ? 100 : double.NaN,
             };
         }
 

@@ -35,7 +35,10 @@ namespace Scrumr
                 return new CheckPropertyView(propertyItem);
 
             if (propertyItem.Type == typeof(string))
-                return new TextPropertyView(propertyItem);
+            {
+                var isLongAnswer = (propertyItem.Attributes.Any(x => x is LongAnswerAttribute));
+                return new TextPropertyView(propertyItem, isLongAnswer);
+            }
 
             if (propertyItem.Type == typeof(int) || propertyItem.Type  == typeof(Int64) || propertyItem.Type == typeof(double) || propertyItem.Type == typeof(float) || propertyItem.Type == typeof(decimal))
                 return new NumericPropertyView(propertyItem);

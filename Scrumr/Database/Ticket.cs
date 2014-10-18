@@ -10,6 +10,7 @@ namespace Scrumr
 {
     public class Ticket : Entity
     {
+        [LongAnswer]
         public string Description { get; set; }
 
         [IgnoreRender]

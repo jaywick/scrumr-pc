@@ -78,6 +78,7 @@
     </ApplicationDefinition>
     <Compile Include="Database\Helpers\IgnoreRenderAttribute.cs" />
     <Compile Include="Database\Entity.cs" />
+    <Compile Include="Database\Helpers\LongAnswerAttribute.cs" />
     <Compile Include="Database\TicketType.cs" />
     <Compile Include="Database\Project.cs" />
     <Compile Include="Database\Helpers\ScrumrContext.cs" />
