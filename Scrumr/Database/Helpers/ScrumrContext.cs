@@ -35,6 +35,11 @@ namespace Scrumr
             throw new ArgumentException(string.Format("Collection of '{0}' does not exist in Context", type.Name));
         }
 
+        public async Task LoadAllAsync()
+        {
+            await Task.Run(() => LoadAll());
+        }
+
         public void LoadAll()
         {
             Projects.Load();
