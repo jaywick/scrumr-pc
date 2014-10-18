@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,15 +11,15 @@ namespace Scrumr
 {
     public class DataListPropertyView : PropertyView
     {
-        private IEnumerable<Entity> _collection;
+        private List<Entity> _collection;
 
-        public DataListPropertyView(PropertyItem propertyItem, Context context)
+        public DataListPropertyView(PropertyItem propertyItem, ScrumrContext context)
             : base(propertyItem)
         {
-            var foreignSource = propertyItem.Attributes.Single(x => x is ForeignAttribute) as ForeignAttribute;
-            _collection = context.GetCollection(foreignSource.ForeignEntity);
-
-            var selected = propertyItem.IsNew ? null : _collection.Single(x => x.ID == (int)propertyItem.Value);
+            var foreignSource = propertyItem.Attributes.Single(x => x is ForeignKeyAttribute) as ForeignKeyAttribute;
+            _collection = context.GetCollection(propertyItem.Type);
+            
+            var selected = propertyItem.IsNew ? null : _collection.Single(x => x.ID == (propertyItem.Value as Entity).ID);
 
             View = new ComboBox
             {
@@ -31,8 +33,7 @@ namespace Scrumr
         {
             get
             {
-                var listBox = View as ComboBox;
-                return (listBox.SelectedItem as Entity).ID;
+                return ((View as ComboBox).SelectedItem as Entity);
             }
         }
 
@@ -40,8 +41,7 @@ namespace Scrumr
         {
             get
             {
-                var listBox = View as ComboBox;
-                var entity = listBox.SelectedItem as Entity;
+                var entity = (View as ComboBox).SelectedItem as Entity;
 
                 if (entity == null)
                     return false;

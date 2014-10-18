@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 
 namespace Scrumr
 {
-    class GeneratedReadOnlyAttribute : Attribute
+    public class TicketType : Entity
     {
     }
 }

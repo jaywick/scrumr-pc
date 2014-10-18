@@ -15,12 +15,7 @@ namespace Scrumr
         {
             View = new TextBox
             {
-                Text = propertyItem.Value.ToString(),
-            };
-
-            View.PreviewTextInput += (s, e) =>
-            {
-                e.Handled = isNumericOnly(e.Text);
+                Text = propertyItem.IsNew ? "0" : propertyItem.Value.ToString(),
             };
         }
 

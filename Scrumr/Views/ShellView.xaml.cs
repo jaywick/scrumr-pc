@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Runtime;
+using System.Data.Entity;
 
 namespace Scrumr
 {
@@ -20,51 +23,58 @@ namespace Scrumr
         public MainWindow()
         {
             InitializeComponent();
-            load();
+            this.Loaded += (s, e) => Load();
+            this.Closing += (s, e) => Save();
         }
 
-        ~MainWindow()
+        private async void Load()
         {
-            save();
-        }
+            Board.Context = new ScrumrContext();
+            Board.Context.LoadAll();
 
-        private void load()
-        {
-            Board.Context = Library.Load();
-            Board.Project = Board.Context.Projects.First(); // debug: get first project in list
+            MainMenu.IsEnabled = false;
+            Board.Project = await GetDefaultProject();
+            MainMenu.IsEnabled = true;
 
             Board.Update();
         }
 
-        private void save()
+        private void Save()
         {
-            Library.Save(Board.Context);
+            Board.Context.SaveChanges();
         }
 
-        private void MenuNewSprint_Click(object sender, RoutedEventArgs e)
+        private void NewSprint(object sender, RoutedEventArgs e)
         {
-            add(Board.Context.Sprints);
+            Add<Sprint>(Board.Context.Sprints);
         }
 
-        private void MenuNewFeature_Click(object sender, RoutedEventArgs e)
+        private void NewFeature(object sender, RoutedEventArgs e)
         {
-            add(Board.Context.Features);
+            Add<Feature>(Board.Context.Features);
         }
 
-        private void MenuNewTicket_Click(object sender, RoutedEventArgs e)
+        private void NewTicket(object sender, RoutedEventArgs e)
         {
-            add(Board.Context.Tickets);
+            Add<Ticket>(Board.Context.Tickets);
         }
 
-        private void add<T>(List<T> list) where T : Entity
+        private void Add<T>(DbSet<T> table) where T : Entity
         {
             var propertiesView = new PropertiesView(typeof(T), Board.Context);
+
             if (propertiesView.ShowDialog() == true)
             {
-                list.Add(propertiesView.Result as T);
+                table.Add(propertiesView.Result as T);
             }
 
+            Save();
             Board.Update();
+        }
+        
+        private async Task<Project> GetDefaultProject()
+        {
+            return await Task.Run(() => Board.Context.Projects.First());
         }
     }
 }

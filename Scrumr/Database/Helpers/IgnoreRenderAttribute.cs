@@ -2,14 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Scrumr
 {
-    public class Entity
+    class IgnoreRenderAttribute : System.Attribute
     {
-        [Key]
-        public int ID { get; set; }
-
-        public string Name { get; set; }
     }
 }

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace Scrumr
 {
@@ -21,19 +23,13 @@ namespace Scrumr
             Property = propertyItem;
         }
 
-        public static PropertyView Create(PropertyItem propertyItem, Context context)
+        public static PropertyView Create(PropertyItem propertyItem, ScrumrContext context)
         {
-            if (propertyItem.Attributes.Any(x => x is GeneratedReadOnlyAttribute))
-                return new GeneratedKeyPropertyView(propertyItem, context);
+            if (propertyItem.Attributes.Any(x => x is KeyAttribute || x is IgnoreRenderAttribute))
+                return null;
 
-            if (propertyItem.Attributes.Any(x => x is KeyAttribute))
-                return new HiddenKeyPropertyView(propertyItem, context);
-
-            if (propertyItem.Attributes.Any(x => x is ForeignAttribute))
+            if (propertyItem.Attributes.Any(x => x is ForeignKeyAttribute))
                 return new DataListPropertyView(propertyItem, context);
-
-            if (propertyItem.Attributes.Any(x => x is EnumerationAttribute))
-                return new EnumListPropertyView(propertyItem);
 
             if (propertyItem.Type == typeof(bool))
                 return new CheckPropertyView(propertyItem);
@@ -41,7 +37,7 @@ namespace Scrumr
             if (propertyItem.Type == typeof(string))
                 return new TextPropertyView(propertyItem);
 
-            if (propertyItem.Type == typeof(int) || propertyItem.Type == typeof(double) || propertyItem.Type == typeof(float) || propertyItem.Type == typeof(decimal))
+            if (propertyItem.Type == typeof(int) || propertyItem.Type  == typeof(Int64) || propertyItem.Type == typeof(double) || propertyItem.Type == typeof(float) || propertyItem.Type == typeof(decimal))
                 return new NumericPropertyView(propertyItem);
 
             return null;

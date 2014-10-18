@@ -17,7 +17,7 @@ namespace Scrumr
 {
     public partial class BoardView : UserControl
     {
-        public Context Context { get; set; }
+        public ScrumrContext Context { get; set; }
 
         public Dictionary<Sprint, int> SprintToColumnMap;
         public Dictionary<Feature, int> FeatureToRowMap;
@@ -84,14 +84,14 @@ namespace Scrumr
             {
                 for (int row = 0; row < VisibleFeatures.Count(); row++)
                 {
-                    CreateTicketCell(column, row);
+                    CreateTicketCell(column + 1, row + 1);
                 }
             }
         }
 
         private void CreateFeatureRows()
         {
-            int i = 0;
+            int i = 1;
             Board.RowDefinitions.Clear();
             Board.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
@@ -101,10 +101,10 @@ namespace Scrumr
                 FeatureToRowMap.Add(feature, i);
 
                 var headerView = new HeaderView(feature);
-                headerView.RequestEdit += (h) => editEntity(h as Feature);
-                headerView.RequestRemove += (h) => removeEntity(h as Feature);
+                headerView.RequestEdit += (h) => EditEntity(h as Feature);
+                headerView.RequestRemove += (h) => RemoveEntity(h as Feature);
 
-                AddToGrid(headerView, 0, i + 1);
+                AddToGrid(headerView, 0, i);
 
                 i++;
             }
@@ -112,7 +112,7 @@ namespace Scrumr
 
         private void CreateSprintColumns()
         {
-            int i = 0;
+            int i = 1;
             Board.ColumnDefinitions.Clear();
             Board.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
 
@@ -122,10 +122,10 @@ namespace Scrumr
                 SprintToColumnMap.Add(sprint, i);
 
                 var headerView = new HeaderView(sprint);
-                headerView.RequestEdit += (h) => editEntity(h as Sprint);
-                headerView.RequestRemove += (h) => removeEntity(h as Sprint);
+                headerView.RequestEdit += (h) => EditEntity(h as Sprint);
+                headerView.RequestRemove += (h) => RemoveEntity(h as Sprint);
 
-                AddToGrid(headerView, i + 1, 0);
+                AddToGrid(headerView, i, 0);
 
                 i++;
             }
@@ -144,7 +144,7 @@ namespace Scrumr
             var sprintFeature = new SprintFeature(sprintId, featureId);
             var cellView = new CellView(sprintFeature);
             CellMap.Add(cellView, sprintFeature);
-            AddToGrid(cellView, sprintId + 1, featureId + 1);
+            AddToGrid(cellView, sprintId, featureId);
             cellView.Drop += newCell_Drop;
 
             var tickets = VisibleTickets.Where(t => t.SprintId == sprintId)
@@ -155,14 +155,14 @@ namespace Scrumr
                 var ticketView = new TicketView(ticket);
                 cellView.Items.Add(ticketView);
 
-                ticketView.RequestEdit += (t) => editEntity(t);
-                ticketView.RequestRemove += (t) => removeEntity(t);
+                ticketView.RequestEdit += (t) => EditEntity(t);
+                ticketView.RequestRemove += (t) => RemoveEntity(t);
             }
         }
 
         #region Editing + Removing
 
-        private void editEntity<T>(T entity) where T : Entity
+        private void EditEntity<T>(T entity) where T : Entity
         {
             var propertiesView = new PropertiesView(typeof(T), Context, entity);
             propertiesView.ShowDialog();
@@ -170,7 +170,7 @@ namespace Scrumr
             Update();
         }
 
-        private void removeEntity<T>(T entity) where T : Entity
+        private void RemoveEntity<T>(T entity) where T : Entity
         {
             if (MessageBox.Show("Are you sure you wish to delete this " + entity.GetType().Name + "?", "Scrumr", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                 return;

@@ -8,11 +8,11 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Menu Grid.Row="0">
+        <Menu Grid.Row="0" x:Name="MainMenu">
             <MenuItem Header="New">
-                <MenuItem Header="Sprint" Click="MenuNewSprint_Click"/>
-                <MenuItem Header="Feature" Click="MenuNewFeature_Click"/>
-                <MenuItem Header="Ticket" Click="MenuNewTicket_Click"/>
+                <MenuItem Header="Sprint" Click="NewSprint"/>
+                <MenuItem Header="Feature" Click="NewFeature"/>
+                <MenuItem Header="Ticket" Click="NewTicket"/>
             </MenuItem>
         </Menu>
         <local:BoardView x:Name="Board" Grid.Row="1"/>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,18 +19,18 @@ namespace Scrumr
     {
         private Type _entityType;
         private Entity _entity;
-        private Context _context;
+        private ScrumrContext _context;
         private List<PropertyItem> _items;
 
         public List<PropertyView> PropertyViews { get; private set; }
-        public object Result { get; private set; }
+        public Entity Result { get; private set; }
 
         public PropertiesView()
         {
             InitializeComponent();
         }
 
-        public PropertiesView(Type type, Context context, Entity entity = null)
+        public PropertiesView(Type type, ScrumrContext context, Entity entity = null)
             : this()
         {
             _entityType = type;
@@ -70,21 +71,28 @@ namespace Scrumr
             return items;
         }
 
-        private object getResult()
+        private Entity getResult()
         {
-            var result = (Mode == Modes.Existing) ? _entity : Activator.CreateInstance(_entityType);
+            Entity result = (Mode == Modes.Existing) ? _entity : Activator.CreateInstance(_entityType) as Entity;
 
             foreach (var item in _items)
             {
                 var property = _entityType.GetProperty(item.Name);
-                var propertyView = PropertyViews.Single(x => x.Property.Name == property.Name);
+                
+                // skip primary keys and ignored
+                var attributes = Attribute.GetCustomAttributes(property);
+                if (attributes.Any(x => x is KeyAttribute || x is IgnoreRenderAttribute)) continue;
+
+                var propertyView = PropertyViews.Where(x => x != null)
+                                                .Single(x => x.Property.Name == property.Name);
 
                 if (!propertyView.IsValid)
-                    throw new InvalidInputException(item);
+                    throw new Common.InvalidInputException(item);
 
                 var rawValue = propertyView.Value;
+                var finalValue = Convert.ChangeType(rawValue, item.Type);
 
-                property.SetValue(result, rawValue);
+                property.SetValue(result, finalValue);
             }
 
             return result;
@@ -99,7 +107,7 @@ namespace Scrumr
             {
                 var propertyView = PropertyView.Create(item, _context);
 
-                if (!propertyView.IsHidden)
+                if (propertyView != null && propertyView.View != null)
                 {
                     // grid
                     var itemGrid = new Grid();
@@ -130,7 +138,7 @@ namespace Scrumr
                 DialogResult = true;
                 Hide();
             }
-            catch (InvalidInputException ex)
+            catch (Common.InvalidInputException ex)
             {
                 MessageBox.Show(ex.Message, "Scrumr", MessageBoxButton.OK, MessageBoxImage.Error);
             }
