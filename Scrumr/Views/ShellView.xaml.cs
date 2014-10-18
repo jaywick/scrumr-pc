@@ -30,7 +30,10 @@ namespace Scrumr
         private async void load()
         {
             Board.Context = new ScrumrContext();
+
+            MainMenu.IsEnabled = false;
             Board.Project = await Task.Run(() => Board.Context.Projects.First());
+            MainMenu.IsEnabled = true;
 
             Board.Update();
         }
@@ -42,28 +45,29 @@ namespace Scrumr
 
         private void NewSprint(object sender, RoutedEventArgs e)
         {
-            add(Board.Context.Sprints);
+            add<Sprint>(Board.Context.Sprints);
         }
 
         private void NewFeature(object sender, RoutedEventArgs e)
         {
-            add(Board.Context.Features);
+            add<Feature>(Board.Context.Features);
         }
 
         private void NewTicket(object sender, RoutedEventArgs e)
         {
-            add(Board.Context.Tickets);
+            add<Ticket>(Board.Context.Tickets);
         }
 
-        private void add<T>(DbSet<T> list) where T : Entity
+        private void add<T>(DbSet<T> table) where T : Entity
         {
             var propertiesView = new PropertiesView(typeof(T), Board.Context);
 
             if (propertiesView.ShowDialog() == true)
             {
-                list.Add(propertiesView.Result as T);
+                table.Add(propertiesView.Result as T);
             }
-            
+
+            save();
             Board.Update();
         }
 

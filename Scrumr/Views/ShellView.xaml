@@ -8,7 +8,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Menu Grid.Row="0">
+        <Menu Grid.Row="0" x:Name="MainMenu">
             <MenuItem Header="New">
                 <MenuItem Header="Sprint" Click="NewSprint"/>
                 <MenuItem Header="Feature" Click="NewFeature"/>

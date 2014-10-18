@@ -23,7 +23,7 @@ namespace Scrumr
         private List<PropertyItem> _items;
 
         public List<PropertyView> PropertyViews { get; private set; }
-        public object Result { get; private set; }
+        public Entity Result { get; private set; }
 
         public PropertiesView()
         {
@@ -71,9 +71,9 @@ namespace Scrumr
             return items;
         }
 
-        private object getResult()
+        private Entity getResult()
         {
-            var result = (Mode == Modes.Existing) ? _entity : Activator.CreateInstance(_entityType);
+            Entity result = (Mode == Modes.Existing) ? _entity : Activator.CreateInstance(_entityType) as Entity;
 
             foreach (var item in _items)
             {
