@@ -20,6 +20,9 @@ namespace Scrumr
             if (type == typeof(Project))
                 return Projects.ToList<Entity>();
 
+            if (type == typeof(TicketType))
+                return TicketTypes.ToList<Entity>();
+
             if (type == typeof(Ticket))
                 return Tickets.ToList<Entity>();
 
@@ -29,10 +32,16 @@ namespace Scrumr
             if (type == typeof(Sprint))
                 return Sprints.ToList<Entity>();
 
-            if (type == typeof(TicketType))
-                return TicketTypes.ToList<Entity>();
-
             throw new ArgumentException(string.Format("Collection of '{0}' does not exist in Context", type.Name));
+        }
+
+        public void LoadAll()
+        {
+            Projects.Load();
+            Tickets.Load();
+            Features.Load();
+            Sprints.Load();
+            TicketTypes.Load();
         }
     }
 }

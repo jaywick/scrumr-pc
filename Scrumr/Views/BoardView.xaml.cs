@@ -101,8 +101,8 @@ namespace Scrumr
                 FeatureToRowMap.Add(feature, i);
 
                 var headerView = new HeaderView(feature);
-                headerView.RequestEdit += (h) => editEntity(h as Feature);
-                headerView.RequestRemove += (h) => removeEntity(h as Feature);
+                headerView.RequestEdit += (h) => EditEntity(h as Feature);
+                headerView.RequestRemove += (h) => RemoveEntity(h as Feature);
 
                 AddToGrid(headerView, 0, i);
 
@@ -122,8 +122,8 @@ namespace Scrumr
                 SprintToColumnMap.Add(sprint, i);
 
                 var headerView = new HeaderView(sprint);
-                headerView.RequestEdit += (h) => editEntity(h as Sprint);
-                headerView.RequestRemove += (h) => removeEntity(h as Sprint);
+                headerView.RequestEdit += (h) => EditEntity(h as Sprint);
+                headerView.RequestRemove += (h) => RemoveEntity(h as Sprint);
 
                 AddToGrid(headerView, i, 0);
 
@@ -155,14 +155,14 @@ namespace Scrumr
                 var ticketView = new TicketView(ticket);
                 cellView.Items.Add(ticketView);
 
-                ticketView.RequestEdit += (t) => editEntity(t);
-                ticketView.RequestRemove += (t) => removeEntity(t);
+                ticketView.RequestEdit += (t) => EditEntity(t);
+                ticketView.RequestRemove += (t) => RemoveEntity(t);
             }
         }
 
         #region Editing + Removing
 
-        private void editEntity<T>(T entity) where T : Entity
+        private void EditEntity<T>(T entity) where T : Entity
         {
             var propertiesView = new PropertiesView(typeof(T), Context, entity);
             propertiesView.ShowDialog();
@@ -170,7 +170,7 @@ namespace Scrumr
             Update();
         }
 
-        private void removeEntity<T>(T entity) where T : Entity
+        private void RemoveEntity<T>(T entity) where T : Entity
         {
             if (MessageBox.Show("Are you sure you wish to delete this " + entity.GetType().Name + "?", "Scrumr", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
                 return;

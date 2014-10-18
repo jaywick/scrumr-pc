@@ -23,42 +23,43 @@ namespace Scrumr
         public MainWindow()
         {
             InitializeComponent();
-            this.Loaded += (s, e) => load();
-            this.Closing += (s, e) => save();
+            this.Loaded += (s, e) => Load();
+            this.Closing += (s, e) => Save();
         }
 
-        private async void load()
+        private async void Load()
         {
             Board.Context = new ScrumrContext();
+            Board.Context.LoadAll();
 
             MainMenu.IsEnabled = false;
-            Board.Project = await Task.Run(() => Board.Context.Projects.First());
+            Board.Project = await GetDefaultProject();
             MainMenu.IsEnabled = true;
 
             Board.Update();
         }
 
-        private void save()
+        private void Save()
         {
             Board.Context.SaveChanges();
         }
 
         private void NewSprint(object sender, RoutedEventArgs e)
         {
-            add<Sprint>(Board.Context.Sprints);
+            Add<Sprint>(Board.Context.Sprints);
         }
 
         private void NewFeature(object sender, RoutedEventArgs e)
         {
-            add<Feature>(Board.Context.Features);
+            Add<Feature>(Board.Context.Features);
         }
 
         private void NewTicket(object sender, RoutedEventArgs e)
         {
-            add<Ticket>(Board.Context.Tickets);
+            Add<Ticket>(Board.Context.Tickets);
         }
 
-        private void add<T>(DbSet<T> table) where T : Entity
+        private void Add<T>(DbSet<T> table) where T : Entity
         {
             var propertiesView = new PropertiesView(typeof(T), Board.Context);
 
@@ -67,10 +68,13 @@ namespace Scrumr
                 table.Add(propertiesView.Result as T);
             }
 
-            save();
+            Save();
             Board.Update();
         }
-
-
+        
+        private async Task<Project> GetDefaultProject()
+        {
+            return await Task.Run(() => Board.Context.Projects.First());
+        }
     }
 }
