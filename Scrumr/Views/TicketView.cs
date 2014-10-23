@@ -19,7 +19,7 @@ namespace Scrumr
         {
             Ticket = ticket;
 
-            Content = ticket.Name;
+            Content = string.Format("#{0}: {1}", ticket.ProjectTicketId, ticket.Name);
             
             ContextMenu = new ContextMenu();
             ContextMenu.Items.Add(ViewHelper.CreateMenuItem("Edit",  () => RequestEdit(ticket)));

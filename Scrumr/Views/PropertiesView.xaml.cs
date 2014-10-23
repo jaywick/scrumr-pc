@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -21,48 +22,73 @@ namespace Scrumr
         private Entity _entity;
         private ScrumrContext _context;
         private List<PropertyItem> _items;
+        private Action<Entity> _preLoadAction;
+        private Action<Entity> _postSaveAction;
 
         public List<PropertyView> PropertyViews { get; private set; }
         public Entity Result { get; private set; }
 
-        public PropertiesView()
+        public PropertiesView(Type type, ScrumrContext context, Action<Entity> preLoadAction = null, Action<Entity> postSaveAction = null)
+            : this(context, type)
         {
-            InitializeComponent();
+            Mode = Modes.NewWithData;
+
+            _preLoadAction = preLoadAction;
+            _postSaveAction = postSaveAction;
+
+            render();
         }
 
-        public PropertiesView(Type type, ScrumrContext context, Entity entity = null)
-            : this()
+        public PropertiesView(Type type, ScrumrContext context, Entity entity)
+            : this(context, type)
         {
-            _entityType = type;
+            Mode = Modes.Existing;
+
             _entity = entity;
+
+            render();
+        }
+
+        public PropertiesView(Type type, ScrumrContext context)
+            : this(context, type)
+        {
+            Mode = Modes.New;
+
+            _entityType = type;
             _context = context;
+
+            render();
+        }
+
+        private void render()
+        {
             _items = loadItems();
             drawItems();
         }
 
+        private PropertiesView(ScrumrContext context, Type type)
+        {
+            InitializeComponent();
+            _entityType = type;
+            _context = context;
+        }
+
         public enum Modes
         {
+            NotSet,
             New,
+            NewWithData,
             Existing
         }
 
-        public Modes Mode
-        {
-            get
-            {
-                if (_entity == null)
-                    return Modes.New;
-                else
-                    return Modes.Existing;
-            }
-        }
+        public Modes Mode { get; private set; }
 
         private List<PropertyItem> loadItems()
         {
             var items = new List<PropertyItem>();
             foreach (var property in _entityType.GetProperties())
             {
-                var currentValue = (Mode == Modes.Existing) ? property.GetValue(_entity) : null;
+                var currentValue = getInitialValue(property);
                 var attributes = Attribute.GetCustomAttributes(property);
 
                 items.Add(new PropertyItem(property.Name, property.PropertyType, _entityType, attributes, currentValue));
@@ -71,9 +97,24 @@ namespace Scrumr
             return items;
         }
 
+        private object getInitialValue(PropertyInfo property)
+        {
+            switch (Mode)
+            {
+                case Modes.New:
+                    return null;
+                case Modes.NewWithData:
+                    return null; //todo: preLoad actions
+                case Modes.Existing:
+                    return property.GetValue(_entity);
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
         private Entity getResult()
         {
-            Entity result = (Mode == Modes.Existing) ? _entity : Activator.CreateInstance(_entityType) as Entity;
+            Entity result = getEntity();
 
             foreach (var item in _items)
             {
@@ -96,6 +137,23 @@ namespace Scrumr
             }
 
             return result;
+        }
+
+        private Entity getEntity()
+        {
+            switch (Mode)
+            {
+                case Modes.New:
+                    return Activator.CreateInstance(_entityType) as Entity;
+                case Modes.NewWithData:
+                    var instance = Activator.CreateInstance(_entityType) as Entity;
+                    if (_postSaveAction != null) _postSaveAction.Invoke(instance);
+                    return instance;
+                case Modes.Existing:
+                    return _entity;
+                default:
+                    throw new NotSupportedException();
+            }
         }
 
         private void drawItems()
