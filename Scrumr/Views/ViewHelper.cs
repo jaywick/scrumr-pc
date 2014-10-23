@@ -13,12 +13,36 @@ namespace Scrumr
     {
         public static void AddEntity<T>(DbSet<T> table, ScrumrContext context) where T : Entity
         {
-            var propertiesView = new PropertiesView(typeof(T), context);
+            AddEntityBase<T>(table, context, new PropertiesView(typeof(T), context));
+        }
 
-            if (propertiesView.ShowDialog() == true)
+        public static void AddTicket<T>(DbSet<T> table, ScrumrContext context, Int64? sprintId = null, Int64? featureId = null) where T : Entity
+        {
+            var preLoadAction = new Action<Entity>(x =>
             {
+                var ticket = x as Ticket;
+
+                if (sprintId.HasValue)
+                    ticket.Sprint = context.Sprints.SingleOrDefault(y => y.ID == sprintId.Value);
+
+                if (featureId.HasValue)
+                    ticket.Feature = context.Features.SingleOrDefault(y => y.ID == featureId.Value);
+            });
+
+            var postSaveAction = new Action<Entity>(x =>
+            {
+                var ticket = x as Ticket;
+                var nextId = ticket.Sprint.Project.NextProjectTicketId++;
+                ticket.ProjectTicketId = nextId;
+            });
+
+            AddEntityBase<T>(table, context, new PropertiesView(typeof(T), context, preLoadAction, postSaveAction));
+        }
+
+        private static void AddEntityBase<T>(DbSet<T> table, ScrumrContext context, PropertiesView propertiesView) where T : Entity
+        {
+            if (propertiesView.ShowDialog() == true)
                 table.Add(propertiesView.Result as T);
-            }
 
             context.SaveChanges();
         }

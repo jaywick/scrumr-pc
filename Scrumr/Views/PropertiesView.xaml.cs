@@ -136,6 +136,9 @@ namespace Scrumr
                 property.SetValue(result, finalValue);
             }
 
+            if (_postSaveAction != null)
+                _postSaveAction.Invoke(result);
+
             return result;
         }
 
@@ -144,11 +147,8 @@ namespace Scrumr
             switch (Mode)
             {
                 case Modes.New:
-                    return Activator.CreateInstance(_entityType) as Entity;
                 case Modes.NewWithData:
-                    var instance = Activator.CreateInstance(_entityType) as Entity;
-                    if (_postSaveAction != null) _postSaveAction.Invoke(instance);
-                    return instance;
+                    return Activator.CreateInstance(_entityType) as Entity;
                 case Modes.Existing:
                     return _entity;
                 default:

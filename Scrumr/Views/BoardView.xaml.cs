@@ -192,7 +192,7 @@ namespace Scrumr
 
         private void NewTicket(int sprintId, int featureId)
         {
-            ViewHelper.AddEntity(Context.Tickets, Context);
+            ViewHelper.AddTicket(Context.Tickets, Context, sprintId, featureId);
             Update();
         }
 
@@ -218,7 +218,7 @@ namespace Scrumr
 
         private void NewTicket()
         {
-            ViewHelper.AddEntity<Ticket>(Context.Tickets, Context);
+            ViewHelper.AddTicket(Context.Tickets, Context);
             Update();
         }
     }
