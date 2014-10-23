@@ -18,7 +18,7 @@ namespace Scrumr
 
         public static void AddTicket<T>(DbSet<T> table, ScrumrContext context, Int64? sprintId = null, Int64? featureId = null) where T : Entity
         {
-            var preLoadAction = new Action<Entity>(x =>
+            var onLoad = new Action<Entity>(x =>
             {
                 var ticket = x as Ticket;
 
@@ -29,14 +29,14 @@ namespace Scrumr
                     ticket.Feature = context.Features.SingleOrDefault(y => y.ID == featureId.Value);
             });
 
-            var postSaveAction = new Action<Entity>(x =>
+            var onSave = new Action<Entity>(x =>
             {
                 var ticket = x as Ticket;
                 var nextId = ticket.Sprint.Project.NextProjectTicketId++;
                 ticket.ProjectTicketId = nextId;
             });
 
-            AddEntityBase<T>(table, context, new PropertiesView(typeof(T), context, preLoadAction, postSaveAction));
+            AddEntityBase<T>(table, context, new PropertiesView(typeof(T), context, onLoad, onSave));
         }
 
         private static void AddEntityBase<T>(DbSet<T> table, ScrumrContext context, PropertiesView propertiesView) where T : Entity

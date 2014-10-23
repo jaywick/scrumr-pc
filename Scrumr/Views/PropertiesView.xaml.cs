@@ -22,19 +22,19 @@ namespace Scrumr
         private Entity _entity;
         private ScrumrContext _context;
         private List<PropertyItem> _items;
-        private Action<Entity> _preLoadAction;
-        private Action<Entity> _postSaveAction;
+        private Action<Entity> _onLoadAction;
+        private Action<Entity> _onSaveAction;
 
         public List<PropertyView> PropertyViews { get; private set; }
         public Entity Result { get; private set; }
 
-        public PropertiesView(Type type, ScrumrContext context, Action<Entity> preLoadAction = null, Action<Entity> postSaveAction = null)
+        public PropertiesView(Type type, ScrumrContext context, Action<Entity> onLoad = null, Action<Entity> onSave = null)
             : this(context, type)
         {
             Mode = Modes.NewWithData;
 
-            _preLoadAction = preLoadAction;
-            _postSaveAction = postSaveAction;
+            _onLoadAction = onLoad;
+            _onSaveAction = onSave;
 
             render();
         }
@@ -104,7 +104,7 @@ namespace Scrumr
                 case Modes.New:
                     return null;
                 case Modes.NewWithData:
-                    return null; //todo: preLoad actions
+                    return null; //todo: onLoad actions
                 case Modes.Existing:
                     return property.GetValue(_entity);
                 default:
@@ -136,8 +136,8 @@ namespace Scrumr
                 property.SetValue(result, finalValue);
             }
 
-            if (_postSaveAction != null)
-                _postSaveAction.Invoke(result);
+            if (_onSaveAction != null)
+                _onSaveAction.Invoke(result);
 
             return result;
         }
