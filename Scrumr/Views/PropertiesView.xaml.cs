@@ -161,7 +161,9 @@ namespace Scrumr
             PropertyViews = new List<PropertyView>();
 
             Contents.Children.Clear();
-            foreach (var item in _items)
+
+            var orderedItems = _items.OrderBy(x => x.Order);
+            foreach (var item in orderedItems)
             {
                 var propertyView = PropertyView.Create(item, _context);
 

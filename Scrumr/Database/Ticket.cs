@@ -11,6 +11,7 @@ namespace Scrumr
     public class Ticket : Entity
     {
         [LongAnswer]
+        [RenderOrder(2)]
         public string Description { get; set; }
 
         [IgnoreRender]
@@ -31,6 +32,7 @@ namespace Scrumr
         public Sprint Sprint { get; set; }
 
         [ForeignKey("TypeId")]
+        [RenderOrder(3)]
         public TicketType Type { get; set; }
     }
 }

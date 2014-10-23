@@ -12,6 +12,7 @@ namespace Scrumr
         [Key]
         public Int64 ID { get; set; }
 
+        [RenderOrder(1)]
         public string Name { get; set; }
     }
 }

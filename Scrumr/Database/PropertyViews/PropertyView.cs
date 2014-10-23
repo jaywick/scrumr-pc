@@ -66,5 +66,18 @@ namespace Scrumr
 
             IsNew = (value == null);
         }
+
+        public int Order
+        {
+            get
+            {
+                var orderAttribute = Attributes.SingleOrDefault(x => x is RenderOrderAttribute) as RenderOrderAttribute;
+
+                if (orderAttribute == null)
+                    return int.MaxValue;
+                else
+                    return orderAttribute.Order;
+            }
+        }
     }
 }

@@ -9,11 +9,6 @@ namespace Scrumr
 {
     public class Sprint : Entity
     {
-        //[Key]
-        //public Int64 ID { get; set; }
-        //
-        //public string Name { get; set; }
-
         [IgnoreRender]
         public Int64 ProjectId { get; set; }
 
