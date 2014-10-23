@@ -86,8 +86,9 @@ namespace Scrumr
             _addMenu = new ContextMenu();
             _addMenu.Items.Add(ViewHelper.CreateMenuItem("New Ticket", () => NewTicket()));
             _addMenu.Items.Add(new Separator());
-            _addMenu.Items.Add(ViewHelper.CreateMenuItem("New Ticket", () => NewSprint()));
-            _addMenu.Items.Add(ViewHelper.CreateMenuItem("New Ticket", () => NewFeature()));
+            _addMenu.Items.Add(ViewHelper.CreateMenuItem("New Sprint", () => NewSprint()));
+            _addMenu.Items.Add(ViewHelper.CreateMenuItem("New Feature", () => NewFeature()));
+            _addMenu.Items.Add(ViewHelper.CreateMenuItem("New Project", () => NewProject()));
 
             addButton.Click += (s, e) => _addMenu.IsOpen = true;
             _addMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
@@ -221,5 +222,12 @@ namespace Scrumr
             ViewHelper.AddTicket(Context.Tickets, Context);
             Update();
         }
+
+        private void NewProject()
+        {
+            ViewHelper.AddEntity<Project>(Context.Projects, Context);
+            Update();
+        }
+
     }
 }
