@@ -18,16 +18,14 @@ namespace Scrumr
 
         public static void AddTicket<T>(DbSet<T> table, ScrumrContext context, Int64? sprintId = null, Int64? featureId = null) where T : Entity
         {
-            var onLoad = new Action<Entity>(x =>
+            Dictionary<string, object> initialValues = null;
+
+            if (sprintId.HasValue && featureId.HasValue)
             {
-                var ticket = x as Ticket;
-
-                if (sprintId.HasValue)
-                    ticket.Sprint = context.Sprints.SingleOrDefault(y => y.ID == sprintId.Value);
-
-                if (featureId.HasValue)
-                    ticket.Feature = context.Features.SingleOrDefault(y => y.ID == featureId.Value);
-            });
+                initialValues = new Dictionary<string, object>();
+                initialValues.Add("Sprint", context.Sprints.Single(x => x.ID == sprintId.Value));
+                initialValues.Add("Feature", context.Features.Single(x => x.ID == featureId.Value));
+            }
 
             var onSave = new Action<Entity>(x =>
             {
@@ -36,7 +34,7 @@ namespace Scrumr
                 ticket.ProjectTicketId = nextId;
             });
 
-            AddEntityBase<T>(table, context, new PropertiesView(typeof(T), context, onLoad, onSave));
+            AddEntityBase<T>(table, context, new PropertiesView(typeof(T), context, initialValues, onSave));
         }
 
         private static void AddEntityBase<T>(DbSet<T> table, ScrumrContext context, PropertiesView propertiesView) where T : Entity

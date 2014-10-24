@@ -22,18 +22,18 @@ namespace Scrumr
         private Entity _entity;
         private ScrumrContext _context;
         private List<PropertyItem> _items;
-        private Action<Entity> _onLoadAction;
+        private Dictionary<string, object> _initialValues;
         private Action<Entity> _onSaveAction;
 
         public List<PropertyView> PropertyViews { get; private set; }
         public Entity Result { get; private set; }
 
-        public PropertiesView(Type type, ScrumrContext context, Action<Entity> onLoad = null, Action<Entity> onSave = null)
+        public PropertiesView(Type type, ScrumrContext context, Dictionary<string, object> initialValues, Action<Entity> onSave = null)
             : this(context, type)
         {
             Mode = Modes.NewWithData;
 
-            _onLoadAction = onLoad;
+            _initialValues = initialValues;
             _onSaveAction = onSave;
 
             render();
@@ -104,7 +104,8 @@ namespace Scrumr
                 case Modes.New:
                     return null;
                 case Modes.NewWithData:
-                    return null; //todo: onLoad actions
+                    if (_initialValues == null || !_initialValues.ContainsKey(property.Name)) return null;
+                    return _initialValues[property.Name];
                 case Modes.Existing:
                     return property.GetValue(_entity);
                 default:
