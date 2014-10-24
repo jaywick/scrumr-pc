@@ -15,10 +15,11 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Runtime;
 using System.Data.Entity;
+using MahApps.Metro.Controls;
 
 namespace Scrumr
 {
-    public partial class MainWindow : Window
+    public partial class MainWindow : MetroWindow
     {
         public MainWindow()
         {

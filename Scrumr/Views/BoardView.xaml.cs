@@ -81,7 +81,7 @@ namespace Scrumr
 
         private void CreateAddButton()
         {
-            var addButton = new Button { Content = "+" };
+            var addButton = new Button { Content = "+", Style = (Style)FindResource("SquareButtonStyle") };
 
             _addMenu = new ContextMenu();
             _addMenu.Items.Add(ViewHelper.CreateMenuItem("New Ticket", () => NewTicket()));

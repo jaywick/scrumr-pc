@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MahApps.Metro.Controls;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -14,10 +15,11 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace Scrumr
 {
-    public partial class PropertiesView : Window
+    public partial class PropertiesView : MetroWindow
     {
         private Type _entityType;
         private Entity _entity;
@@ -204,7 +206,7 @@ namespace Scrumr
             }
             catch (InvalidInputException ex)
             {
-                MessageBox.Show(ex.Message, "Scrumr", MessageBoxButton.OK, MessageBoxImage.Error);
+                this.ShowMessageAsync("Scrumr", ex.Message);
             }
         }
 

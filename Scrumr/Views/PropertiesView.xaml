@@ -1,6 +1,7 @@
-﻿<Window x:Class="Scrumr.PropertiesView"
+﻿<Controls:MetroWindow  x:Class="Scrumr.PropertiesView"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         Title="PropertiesView" Height="356" Width="554" WindowStartupLocation="CenterScreen">
     <Grid>
         <Grid.RowDefinitions>
@@ -15,4 +16,4 @@
             <Button Margin="5" Width="150" Click="Cancel_Click">Discard</Button>
         </StackPanel>
     </Grid>
-</Window>
+</Controls:MetroWindow >

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace Scrumr
 {
@@ -53,9 +54,9 @@ namespace Scrumr
                 context.SaveChanges();
         }
 
-        public static void RemoveEntity<T>(T entity, ScrumrContext context) where T : Entity
+        public static async void RemoveEntity<T>(T entity, ScrumrContext context) where T : Entity
         {
-            if (MessageBox.Show("Are you sure you wish to delete this " + entity.GetType().Name + "?", "Scrumr", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.No)
+            if (await (App.Current.MainWindow as MainWindow).ShowMessageAsync("Scrumr", "Are you sure you wish to delete this " + entity.GetType().Name + "?", MessageDialogStyle.AffirmativeAndNegative) == MessageDialogResult.Negative)
                 return;
 
             if (typeof(T) == typeof(Sprint))
