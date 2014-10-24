@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -22,13 +23,13 @@ namespace Scrumr
         private Entity _entity;
         private ScrumrContext _context;
         private List<PropertyItem> _items;
-        private Dictionary<string, object> _initialValues;
+        private Dictionary<Expression<Func<Ticket, object>>, object> _initialValues;
         private Action<Entity> _onSaveAction;
 
         public List<PropertyView> PropertyViews { get; private set; }
         public Entity Result { get; private set; }
 
-        public PropertiesView(Type type, ScrumrContext context, Dictionary<string, object> initialValues, Action<Entity> onSave = null)
+        public PropertiesView(Type type, ScrumrContext context, Dictionary<Expression<Func<Ticket, object>>, object> initialValues, Action<Entity> onSave = null)
             : this(context, type)
         {
             Mode = Modes.NewWithData;
@@ -104,8 +105,9 @@ namespace Scrumr
                 case Modes.New:
                     return null;
                 case Modes.NewWithData:
-                    if (_initialValues == null || !_initialValues.ContainsKey(property.Name)) return null;
-                    return _initialValues[property.Name];
+                    if (_initialValues == null) return null;
+                    var result = _initialValues.SingleOrDefault(x => (x.Key.Body as System.Linq.Expressions.MemberExpression).Member.Name == property.Name); //todo: refactor
+                    return result.Value;
                 case Modes.Existing:
                     return property.GetValue(_entity);
                 default:

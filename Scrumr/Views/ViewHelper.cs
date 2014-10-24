@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -18,13 +19,12 @@ namespace Scrumr
 
         public static void AddTicket<T>(DbSet<T> table, ScrumrContext context, Int64? sprintId = null, Int64? featureId = null) where T : Entity
         {
-            Dictionary<string, object> initialValues = null;
+            var initialValues = new Dictionary<Expression<Func<Ticket, object>>, object>();
 
             if (sprintId.HasValue && featureId.HasValue)
             {
-                initialValues = new Dictionary<string, object>();
-                initialValues.Add("Sprint", context.Sprints.Single(x => x.ID == sprintId.Value));
-                initialValues.Add("Feature", context.Features.Single(x => x.ID == featureId.Value));
+                initialValues.Add(t => t.Sprint, context.Sprints.Single(x => x.ID == sprintId.Value));
+                initialValues.Add(t => t.Feature, context.Features.Single(x => x.ID == featureId.Value));
             }
 
             var onSave = new Action<Entity>(x =>
