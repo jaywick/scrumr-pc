@@ -75,26 +75,7 @@ namespace Scrumr
 
             CreateSprintColumns();
             CreateFeatureRows();
-            CreateAddButton();
             CreateTicketCells();
-        }
-
-        private void CreateAddButton()
-        {
-            var addButton = new Button { Content = "+", Style = (Style)FindResource("SquareButtonStyle") };
-
-            _addMenu = new ContextMenu();
-            _addMenu.Items.Add(ViewHelper.CreateMenuItem("New Ticket", () => NewTicket()));
-            _addMenu.Items.Add(new Separator());
-            _addMenu.Items.Add(ViewHelper.CreateMenuItem("New Sprint", () => NewSprint()));
-            _addMenu.Items.Add(ViewHelper.CreateMenuItem("New Feature", () => NewFeature()));
-            _addMenu.Items.Add(ViewHelper.CreateMenuItem("New Project", () => NewProject()));
-
-            addButton.Click += (s, e) => _addMenu.IsOpen = true;
-            _addMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
-            _addMenu.PlacementTarget = addButton;
-
-            AddToGrid(addButton, 0, 0);
         }
 
         private void CreateTicketCells()
@@ -191,7 +172,7 @@ namespace Scrumr
             Update();
         }
 
-        private void NewTicket(int sprintId, int featureId)
+        public void NewTicket(int sprintId, int featureId)
         {
             ViewHelper.AddTicket(Context.Tickets, Context, sprintId, featureId);
             Update();
@@ -205,25 +186,25 @@ namespace Scrumr
             Update();
         }
 
-        private void NewSprint()
+        public void NewSprint()
         {
             ViewHelper.AddEntity<Sprint>(Context.Sprints, Context);
             Update();
         }
 
-        private void NewFeature()
+        public void NewFeature()
         {
             ViewHelper.AddEntity<Feature>(Context.Features, Context);
             Update();
         }
 
-        private void NewTicket()
+        public void NewTicket()
         {
             ViewHelper.AddTicket(Context.Tickets, Context);
             Update();
         }
 
-        private void NewProject()
+        public void NewProject()
         {
             ViewHelper.AddEntity<Project>(Context.Projects, Context);
             Update();

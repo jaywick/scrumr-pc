@@ -13,10 +13,15 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10 0" >
-            <Label Content="Scrumr" FontSize="22" FontFamily="Segoe UI Semibold" VerticalAlignment="Center"/>
-            <Label Content="for PC"  FontSize="22" Foreground="Gray" VerticalAlignment="Center"/>
-        </StackPanel>
+        <Grid Grid.Row="0" Margin="10,0,165,0" >
+            <Label Content="Scrumr" FontSize="22" FontFamily="Segoe UI Semibold" HorizontalAlignment="Left"/>
+            <Label Content="for PC" FontSize="22" Foreground="Gray" Margin="76,0,0,0" HorizontalAlignment="Left" />
+            <DockPanel HorizontalAlignment="Right" Margin="0,0,0,10">
+                <Button x:Name="AddButton" Content="+" FontSize="20" Width="75" BorderBrush="{x:Null}" Background="{x:Null}"/>
+                <ComboBox x:Name="ProjectsList" DisplayMemberPath="Name" Width="200" BorderBrush="{x:Null}" Background="{x:Null}"/>
+            </DockPanel>
+        </Grid>
+        
         <local:BoardView Grid.Row="1" x:Name="Board" Visibility="Collapsed" />
         <Controls:ProgressRing Grid.Row="1" x:Name="ProgressBusy" IsActive="True" />
     </Grid>

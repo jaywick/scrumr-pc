@@ -24,9 +24,32 @@ namespace Scrumr
         public MainWindow()
         {
             InitializeComponent();
-
+            this.LeftWindowCommands = new WindowCommands();
+            
             this.Loaded += (s, e) => Load();
             this.Closing += (s, e) => Save();
+
+            loadAddButton();
+            setupProjectsList();
+        }
+
+        private void setupProjectsList()
+        {
+            this.ProjectsList.Items.Clear();
+            this.ProjectsList.SelectionChanged += (s, e) => SwitchProject(e.AddedItems[0] as Project);
+        }
+
+        private void loadAddButton()
+        {
+            var _addMenu = new ContextMenu();
+            _addMenu.Items.Add(ViewHelper.CreateMenuItem("Ticket", Board.NewTicket));
+            _addMenu.Items.Add(ViewHelper.CreateMenuItem("Feature", Board.NewFeature));
+            _addMenu.Items.Add(ViewHelper.CreateMenuItem("Sprint", Board.NewSprint));
+            _addMenu.Items.Add(ViewHelper.CreateMenuItem("Project", Board.NewProject));
+
+            AddButton.Click += (s, e) => _addMenu.IsOpen = true;
+            _addMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+            _addMenu.PlacementTarget = AddButton;
         }
 
         private async void Load()
@@ -38,7 +61,14 @@ namespace Scrumr
                 await Board.Context.LoadAllAsync();
                 Board.Project = await GetDefaultProject();
                 Board.Update();
+
+                Board.Context.Projects.ToList().ForEach(x => this.ProjectsList.Items.Add(x));
             }
+        }
+
+        private void SwitchProject(Project project)
+        {
+            Board.Project = project;
         }
 
         private void Save()
