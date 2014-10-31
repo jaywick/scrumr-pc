@@ -60,6 +60,7 @@ namespace Scrumr
 
                 await Board.Context.LoadAllAsync();
                 Board.Project = await GetDefaultProject();
+                this.ProjectsList.SelectedItem = Board.Project;
                 Board.Update();
 
                 Board.Context.Projects.ToList().ForEach(x => this.ProjectsList.Items.Add(x));
