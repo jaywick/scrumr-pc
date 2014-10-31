@@ -23,6 +23,10 @@ namespace Scrumr
         [IgnoreRender]
         public Int64 TypeId { get; set; }
 
+        [IgnoreRender]
+        public Int64 StateId { get; set; }
+
+        [IgnoreRender]
         public Int64 ProjectTicketId { get; set; }
 
         [ForeignKey("FeatureId")]
@@ -34,5 +38,9 @@ namespace Scrumr
         [ForeignKey("TypeId")]
         [RenderOrder(3)]
         public TicketType Type { get; set; }
+
+        [ForeignKey("StateId")]
+        [RenderOrder(4)]
+        public TicketState State { get; set; }
     }
 }

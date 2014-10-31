@@ -14,6 +14,7 @@ namespace Scrumr
         public DbSet<Feature> Features { get; set; }
         public DbSet<Sprint> Sprints { get; set; }
         public DbSet<TicketType> TicketTypes { get; set; }
+        public DbSet<TicketState> TicketStates { get; set; }
 
         public List<Entity> GetCollection(Type type)
         {
@@ -22,6 +23,9 @@ namespace Scrumr
 
             if (type == typeof(TicketType))
                 return TicketTypes.ToList<Entity>();
+
+            if (type == typeof(TicketState))
+                return TicketStates.ToList<Entity>();
 
             if (type == typeof(Ticket))
                 return Tickets.ToList<Entity>();
@@ -47,6 +51,7 @@ namespace Scrumr
             Features.Load();
             Sprints.Load();
             TicketTypes.Load();
+            TicketStates.Load();
         }
     }
 }

@@ -82,6 +82,7 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Compile Include="Database\TicketState.cs" />
     <Compile Include="Database\Helpers\IgnoreRenderAttribute.cs" />
     <Compile Include="Database\Entity.cs" />
     <Compile Include="Database\Helpers\LongAnswerAttribute.cs" />
@@ -148,7 +149,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="scrumr.sqlite">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
