@@ -100,7 +100,7 @@ namespace Scrumr
                 Board.RowDefinitions.Add(new RowDefinition());
                 FeatureToRowMap.Add(feature, i);
 
-                var headerView = new HeaderView(feature);
+                var headerView = new HeaderView(feature, Orientation.Vertical);
                 headerView.RequestEdit += (h) => EditEntity(h as Feature);
                 headerView.RequestRemove += (h) => RemoveEntity(h as Feature);
 
@@ -121,7 +121,7 @@ namespace Scrumr
                 Board.ColumnDefinitions.Add(new ColumnDefinition());
                 SprintToColumnMap.Add(sprint, i);
 
-                var headerView = new HeaderView(sprint);
+                var headerView = new HeaderView(sprint, Orientation.Horizontal);
                 headerView.RequestEdit += (h) => EditEntity(h as Sprint);
                 headerView.RequestRemove += (h) => RemoveEntity(h as Sprint);
 
@@ -153,7 +153,7 @@ namespace Scrumr
             foreach (var ticket in tickets)
             {
                 var ticketView = new TicketView(ticket);
-                cellView.Items.Add(ticketView);
+                cellView.Add(ticketView);
 
                 ticketView.RequestEdit += (t) => EditEntity(t as Ticket);
                 ticketView.RequestRemove += (t) => RemoveEntity(t as Ticket);

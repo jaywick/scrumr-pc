@@ -2,14 +2,20 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
 
 namespace Scrumr
 {
-    class TicketView : ListBoxItem
+    partial class TicketView : UserControl
     {
         public event Action<Ticket> RequestEdit;
         public event Action<Ticket> RequestRemove;
@@ -18,9 +24,11 @@ namespace Scrumr
 
         public TicketView(Ticket ticket)
         {
+            InitializeComponent();
+
             Ticket = ticket;
 
-            Content = string.Format("#{0}: {1}", ticket.ProjectTicketId, ticket.Name);
+            labelName.Content = string.Format("#{0}: {1}", ticket.ProjectTicketId, ticket.Name);
 
             Foreground = ticket.StateId == 1 ? Brushes.Black : Brushes.Gray;
 
