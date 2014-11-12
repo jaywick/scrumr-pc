@@ -19,46 +19,26 @@ using MahApps.Metro.Controls.Dialogs;
 
 namespace Scrumr
 {
-    public partial class PropertiesView : MetroWindow
+    public partial class EditView : MetroWindow
     {
         private Type _entityType;
         private Entity _entity;
         private ScrumrContext _context;
         private List<PropertyItem> _items;
-        private Dictionary<Expression<Func<Ticket, object>>, object> _initialValues;
-        private Action<Entity> _onSaveAction;
 
         public List<PropertyView> PropertyViews { get; private set; }
         public Entity Result { get; private set; }
 
-        public PropertiesView(Type type, ScrumrContext context, Dictionary<Expression<Func<Ticket, object>>, object> initialValues, Action<Entity> onSave = null)
-            : this(context, type)
+        public EditView(Type type, ScrumrContext context, Entity entity = null)
+            : this()
         {
-            Mode = Modes.NewWithData;
-
-            _initialValues = initialValues;
-            _onSaveAction = onSave;
-
-            render();
-        }
-
-        public PropertiesView(Type type, ScrumrContext context, Entity entity)
-            : this(context, type)
-        {
-            Mode = Modes.Existing;
-
-            _entity = entity;
-
-            render();
-        }
-
-        public PropertiesView(Type type, ScrumrContext context)
-            : this(context, type)
-        {
-            Mode = Modes.New;
+            Mode = entity == null
+                ? Modes.New
+                : Modes.Existing;
 
             _entityType = type;
             _context = context;
+            _entity = entity;
 
             render();
         }
@@ -69,11 +49,9 @@ namespace Scrumr
             drawItems();
         }
 
-        private PropertiesView(ScrumrContext context, Type type)
+        private EditView()
         {
             InitializeComponent();
-            _entityType = type;
-            _context = context;
         }
 
         public enum Modes
@@ -106,10 +84,6 @@ namespace Scrumr
             {
                 case Modes.New:
                     return null;
-                case Modes.NewWithData:
-                    if (_initialValues == null) return null;
-                    var result = _initialValues.SingleOrDefault(x => (x.Key.Body as System.Linq.Expressions.MemberExpression).Member.Name == property.Name); //todo: refactor
-                    return result.Value;
                 case Modes.Existing:
                     return property.GetValue(_entity);
                 default:
@@ -124,7 +98,7 @@ namespace Scrumr
             foreach (var item in _items)
             {
                 var property = _entityType.GetProperty(item.Name);
-                
+
                 // skip primary keys and ignored
                 var attributes = Attribute.GetCustomAttributes(property);
                 if (attributes.Any(x => x is KeyAttribute || x is IgnoreRenderAttribute)) continue;
@@ -141,8 +115,8 @@ namespace Scrumr
                 property.SetValue(result, finalValue);
             }
 
-            if (_onSaveAction != null)
-                _onSaveAction.Invoke(result);
+            //if (_onSaveAction != null)
+            //   _onSaveAction.Invoke(result);
 
             return result;
         }
@@ -215,6 +189,20 @@ namespace Scrumr
             DialogResult = false;
             Result = null;
             Hide();
+        }
+
+        public static EditView Create<T>(ScrumrContext context, Entity entity = null)
+        {
+            if (typeof(T) == typeof(Feature))
+                return new EditFeature(context, entity);
+            else if (typeof(T) == typeof(Sprint))
+                return new EditSprint(context, entity);
+            else if (typeof(T) == typeof(Project))
+                return new EditProject(context, entity);
+            else if (typeof(T) == typeof(Ticket))
+                return new EditTicket(context, entity);
+            else
+                throw new NotSupportedException("EditView.Create does not support this type");
         }
     }
 }
