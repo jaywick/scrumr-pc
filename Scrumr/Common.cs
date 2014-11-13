@@ -19,9 +19,14 @@ namespace Scrumr
 
     public static class Extensions
     {
-        public static T Get<T>(this DbSet<T> target, Int64 id) where T : Entity
+        public static T Get<T>(this IEnumerable<T> target, Int64 id) where T : Entity
         {
             return target.SingleOrDefault(x => x.ID == id);
+        }
+
+        public static bool Has<T>(this IEnumerable<T> target, Int64 id) where T : Entity
+        {
+            return target.Get(id) != null;
         }
     }
 }

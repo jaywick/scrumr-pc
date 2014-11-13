@@ -23,13 +23,13 @@ namespace Scrumr
             Property = propertyItem;
         }
 
-        public static PropertyView Create(PropertyItem propertyItem)
+        public static PropertyView Create(PropertyItem propertyItem, ScrumrContext context)
         {
             if (propertyItem.Attributes.Any(x => x is KeyAttribute || x is IgnoreRenderAttribute))
                 return null;
 
             if (propertyItem.Attributes.Any(x => x is ForeignKeyAttribute))
-                return new DataListPropertyView(propertyItem);
+                return new DataListPropertyView(propertyItem, context);
 
             if (propertyItem.Type == typeof(bool))
                 return new CheckPropertyView(propertyItem);

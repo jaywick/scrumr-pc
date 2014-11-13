@@ -13,25 +13,38 @@ namespace Scrumr
     {
         private IEnumerable<Entity> _source = Enumerable.Empty<Entity>();
 
-        public DataListPropertyView(PropertyItem propertyItem)
+        public DataListPropertyView(PropertyItem propertyItem, ScrumrContext context)
             : base(propertyItem)
         {
+            var foreignSource = propertyItem.Attributes.Single(x => x is ForeignKeyAttribute) as ForeignKeyAttribute;
+            var defaultSource = context.GetCollection(propertyItem.Type);
+
+            var selected = propertyItem.IsNew
+                ? null
+                : defaultSource.Get((propertyItem.Value as Entity).ID);
+
             View = new ComboBox
             {
-                ItemsSource = Source,
+                ItemsSource = defaultSource,
                 DisplayMemberPath = "Name",
+                SelectedItem = selected,
             };
+        }
+
+        private ComboBox ActualView
+        {
+            get { return View as ComboBox; }
         }
 
         public override object Value
         {
             get
             {
-                return ((View as ComboBox).SelectedItem as Entity);
+                return ActualView.SelectedItem as Entity;
             }
             set
             {
-                (View as ComboBox).SelectedItem = value as Entity;
+                ActualView.SelectedItem = value as Entity;
             }
         }
 
@@ -41,7 +54,7 @@ namespace Scrumr
             set
             {
                 _source = value;
-                (View as ComboBox).ItemsSource = _source.ToList();
+                ActualView.ItemsSource = _source.ToList();
             }
         }
 
@@ -54,7 +67,7 @@ namespace Scrumr
                 if (entity == null)
                     return false;
 
-                return _source.Count(x => x.ID == entity.ID) == 1;
+                return _source.Has(entity.ID) != null;
             }
         }
     }

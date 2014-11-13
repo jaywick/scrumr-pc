@@ -140,7 +140,7 @@ namespace Scrumr
             var orderedItems = Items.OrderBy(x => x.Order);
             foreach (var item in orderedItems)
             {
-                var propertyView = PropertyView.Create(item);
+                var propertyView = PropertyView.Create(item, Context);
 
                 if (propertyView != null && propertyView.View != null)
                 {
