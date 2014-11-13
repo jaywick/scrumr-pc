@@ -10,10 +10,5 @@ namespace Scrumr
     {
         public EditProject(ScrumrContext context, Entity entity = null)
             : base(typeof(Project), context, entity) { }
-
-        protected override void OnSave(Entity entity)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

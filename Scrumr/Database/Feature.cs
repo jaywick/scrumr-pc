@@ -10,7 +10,7 @@ namespace Scrumr
     public class Feature : Entity
     {
         [IgnoreRender]
-        public Int64 ProjectId { get; set; }
+        public long ProjectId { get; set; }
 
         [ForeignKey("ProjectId")]
         public Project Project { get; set; }

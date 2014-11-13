@@ -15,19 +15,19 @@ namespace Scrumr
         public string Description { get; set; }
 
         [IgnoreRender]
-        public Int64 FeatureId { get; set; }
+        public long FeatureId { get; set; }
 
         [IgnoreRender]
-        public Int64 SprintId { get; set; }
+        public long SprintId { get; set; }
 
         [IgnoreRender]
-        public Int64 TypeId { get; set; }
+        public long TypeId { get; set; }
 
         [IgnoreRender]
-        public Int64 StateId { get; set; }
+        public long StateId { get; set; }
 
         [IgnoreRender]
-        public Int64 ProjectTicketId { get; set; }
+        public long ProjectTicketId { get; set; }
 
         [ForeignKey("FeatureId")]
         public Feature Feature { get; set; }

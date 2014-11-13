@@ -10,6 +10,6 @@ namespace Scrumr
     public class Project : Entity
     {
         [IgnoreRender]
-        public Int64 NextProjectTicketId { get; set; }
+        public long NextProjectTicketId { get; set; }
     }
 }

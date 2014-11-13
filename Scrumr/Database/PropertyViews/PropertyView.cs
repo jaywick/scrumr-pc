@@ -40,7 +40,7 @@ namespace Scrumr
                 return new TextPropertyView(propertyItem, isLongAnswer);
             }
 
-            if (propertyItem.Type == typeof(int) || propertyItem.Type  == typeof(Int64) || propertyItem.Type == typeof(double) || propertyItem.Type == typeof(float) || propertyItem.Type == typeof(decimal))
+            if (propertyItem.Type == typeof(int) || propertyItem.Type  == typeof(long) || propertyItem.Type == typeof(double) || propertyItem.Type == typeof(float) || propertyItem.Type == typeof(decimal))
                 return new NumericPropertyView(propertyItem);
 
             return null;

@@ -10,7 +10,7 @@ namespace Scrumr
     public class Entity
     {
         [Key]
-        public Int64 ID { get; set; }
+        public long ID { get; set; }
 
         [RenderOrder(1)]
         public string Name { get; set; }

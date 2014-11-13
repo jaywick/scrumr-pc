@@ -10,37 +10,42 @@ namespace Scrumr
 {
     class EditTicket : EditView
     {
-        public EditTicket(ScrumrContext context, Int64? projectId = null, Int64? sprintId = null, Int64? featureId = null)
+        public EditTicket(ScrumrContext context, long? projectId = null, long? sprintId = null, long? featureId = null)
             : base(typeof(Ticket), context)
         {
-            var sprint = PropertyViews.SingleOrDefault(x => x.Property.Name == "Sprint") as DataListPropertyView;
-            var feature = PropertyViews.SingleOrDefault(x => x.Property.Name == "Feature") as DataListPropertyView;
+            var sprintView = GetDataListFromType<Sprint>();
+            var featureView = GetDataListFromType<Feature>();
 
-            SetSourceItems(context, projectId, sprint, feature);
-            SetSelectedValues(sprintId, featureId, sprint, feature);
+            SetSourceItems(projectId, sprintView, featureView);
+            SetSelectedValues(sprintId, featureId, sprintView, featureView);
         }
 
-        private static void SetSourceItems(ScrumrContext context, Int64? projectId, DataListPropertyView sprint, DataListPropertyView feature)
+        private DataListPropertyView GetDataListFromType<T>()
+        {
+            return PropertyViews.SingleOrDefault(x => x.Property.Type == typeof(T)) as DataListPropertyView;
+        }
+
+        private void SetSourceItems(long? projectId, DataListPropertyView sprint, DataListPropertyView feature)
         {
             if (projectId.HasValue)
             {
-                sprint.Source = context.Sprints.Where(x => x.ProjectId == projectId.Value);
-                feature.Source = context.Features.Where(x => x.ProjectId == projectId.Value);
+                sprint.Source = Context.Sprints.Where(x => x.ProjectId == projectId.Value);
+                feature.Source = Context.Features.Where(x => x.ProjectId == projectId.Value);
             }
             else
             {
-                sprint.Source = context.Sprints;
-                feature.Source = context.Features;
+                sprint.Source = Context.Sprints;
+                feature.Source = Context.Features;
             }
         }
 
-        private void SetSelectedValues(Int64? sprintId, Int64? featureId, DataListPropertyView sprint, DataListPropertyView feature)
+        private void SetSelectedValues(long? sprintId, long? featureId, DataListPropertyView sprintView, DataListPropertyView featureView)
         {
             if (sprintId.HasValue)
-                sprint.Value = Context.Sprints.Get(sprintId.Value);
+                sprintView.Value = Context.Sprints.Get(sprintId.Value);
 
             if (featureId.HasValue)
-                feature.Value = Context.Features.Get(featureId.Value);
+                featureView.Value = Context.Features.Get(featureId.Value);
         }
 
         public EditTicket(ScrumrContext context, Entity entity)
