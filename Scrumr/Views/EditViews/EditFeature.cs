@@ -9,9 +9,11 @@ namespace Scrumr
     class EditFeature : EditView
     {
         public EditFeature(ScrumrContext context, Entity entity = null)
-            : base(typeof(Feature), context, entity)
-        {
+            : base(typeof(Feature), context, entity) { }
 
+        protected override void OnSave(Entity entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -11,21 +11,15 @@ namespace Scrumr
 {
     public class DataListPropertyView : PropertyView
     {
-        private List<Entity> _collection;
+        private IEnumerable<Entity> _source = Enumerable.Empty<Entity>();
 
-        public DataListPropertyView(PropertyItem propertyItem, ScrumrContext context)
+        public DataListPropertyView(PropertyItem propertyItem)
             : base(propertyItem)
         {
-            var foreignSource = propertyItem.Attributes.Single(x => x is ForeignKeyAttribute) as ForeignKeyAttribute;
-            _collection = context.GetCollection(propertyItem.Type);
-            
-            var selected = propertyItem.IsNew ? null : _collection.Single(x => x.ID == (propertyItem.Value as Entity).ID);
-
             View = new ComboBox
             {
-                ItemsSource = _collection,
+                ItemsSource = Source,
                 DisplayMemberPath = "Name",
-                SelectedItem = selected,
             };
         }
 
@@ -34,6 +28,20 @@ namespace Scrumr
             get
             {
                 return ((View as ComboBox).SelectedItem as Entity);
+            }
+            set
+            {
+                (View as ComboBox).SelectedItem = value as Entity;
+            }
+        }
+
+        public IEnumerable<Entity> Source
+        {
+            get { return _source; }
+            set
+            {
+                _source = value;
+                (View as ComboBox).ItemsSource = _source.ToList();
             }
         }
 
@@ -46,7 +54,7 @@ namespace Scrumr
                 if (entity == null)
                     return false;
 
-                return _collection.Where(x => x.ID == entity.ID).Count() == 1;
+                return _source.Count(x => x.ID == entity.ID) == 1;
             }
         }
     }

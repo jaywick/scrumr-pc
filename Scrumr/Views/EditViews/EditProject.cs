@@ -9,9 +9,11 @@ namespace Scrumr
     class EditProject : EditView
     {
         public EditProject(ScrumrContext context, Entity entity = null)
-            : base(typeof(Project), context, entity)
-        {
+            : base(typeof(Project), context, entity) { }
 
+        protected override void OnSave(Entity entity)
+        {
+            throw new NotImplementedException();
         }
     }
 }

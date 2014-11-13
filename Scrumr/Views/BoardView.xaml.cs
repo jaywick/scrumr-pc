@@ -174,7 +174,7 @@ namespace Scrumr
 
         public void NewTicket(int sprintId, int featureId)
         {
-            ViewHelper.AddTicket(Context.Tickets, Context, sprintId, featureId);
+            ViewHelper.AddTicket(Context.Tickets, Context, Project.ID, sprintId, featureId);
             Update();
         }
 

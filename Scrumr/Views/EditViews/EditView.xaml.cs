@@ -19,14 +19,14 @@ using MahApps.Metro.Controls.Dialogs;
 
 namespace Scrumr
 {
-    public partial class EditView : MetroWindow
+    public abstract partial class EditView : MetroWindow
     {
-        private Type _entityType;
-        private Entity _entity;
-        private ScrumrContext _context;
-        private List<PropertyItem> _items;
+        protected Type EntityType { get; set; }
+        protected Entity Entity { get; set; }
+        protected ScrumrContext Context { get; set; }
+        private List<PropertyItem> Items { get; set; }
 
-        public List<PropertyView> PropertyViews { get; private set; }
+        protected List<PropertyView> PropertyViews { get; private set; }
         public Entity Result { get; private set; }
 
         public EditView(Type type, ScrumrContext context, Entity entity = null)
@@ -36,16 +36,16 @@ namespace Scrumr
                 ? Modes.New
                 : Modes.Existing;
 
-            _entityType = type;
-            _context = context;
-            _entity = entity;
+            EntityType = type;
+            Context = context;
+            Entity = entity;
 
             render();
         }
 
         private void render()
         {
-            _items = loadItems();
+            Items = loadItems();
             drawItems();
         }
 
@@ -64,15 +64,17 @@ namespace Scrumr
 
         public Modes Mode { get; private set; }
 
+        protected virtual void OnSave(Entity entity) { }
+
         private List<PropertyItem> loadItems()
         {
             var items = new List<PropertyItem>();
-            foreach (var property in _entityType.GetProperties())
+            foreach (var property in EntityType.GetProperties())
             {
                 var currentValue = getInitialValue(property);
                 var attributes = Attribute.GetCustomAttributes(property);
 
-                items.Add(new PropertyItem(property.Name, property.PropertyType, _entityType, attributes, currentValue));
+                items.Add(new PropertyItem(property.Name, property.PropertyType, EntityType, attributes, currentValue));
             }
 
             return items;
@@ -80,24 +82,19 @@ namespace Scrumr
 
         private object getInitialValue(PropertyInfo property)
         {
-            switch (Mode)
-            {
-                case Modes.New:
-                    return null;
-                case Modes.Existing:
-                    return property.GetValue(_entity);
-                default:
-                    throw new NotSupportedException();
-            }
+            if (Mode == Modes.Existing)
+                return property.GetValue(Entity);
+            
+            return null;
         }
 
         private Entity getResult()
         {
             Entity result = getEntity();
 
-            foreach (var item in _items)
+            foreach (var item in Items)
             {
-                var property = _entityType.GetProperty(item.Name);
+                var property = EntityType.GetProperty(item.Name);
 
                 // skip primary keys and ignored
                 var attributes = Attribute.GetCustomAttributes(property);
@@ -115,8 +112,7 @@ namespace Scrumr
                 property.SetValue(result, finalValue);
             }
 
-            //if (_onSaveAction != null)
-            //   _onSaveAction.Invoke(result);
+            OnSave(result);
 
             return result;
         }
@@ -127,9 +123,9 @@ namespace Scrumr
             {
                 case Modes.New:
                 case Modes.NewWithData:
-                    return Activator.CreateInstance(_entityType) as Entity;
+                    return Activator.CreateInstance(EntityType) as Entity;
                 case Modes.Existing:
-                    return _entity;
+                    return Entity;
                 default:
                     throw new NotSupportedException();
             }
@@ -141,10 +137,10 @@ namespace Scrumr
 
             Contents.Children.Clear();
 
-            var orderedItems = _items.OrderBy(x => x.Order);
+            var orderedItems = Items.OrderBy(x => x.Order);
             foreach (var item in orderedItems)
             {
-                var propertyView = PropertyView.Create(item, _context);
+                var propertyView = PropertyView.Create(item);
 
                 if (propertyView != null && propertyView.View != null)
                 {
@@ -164,9 +160,9 @@ namespace Scrumr
                     Grid.SetColumn(propertyView.View, 1);
                     (propertyView.View as Control).Margin = new Thickness(10, 5, 10, 5);
                     Contents.Children.Add(itemGrid);
-                }
 
-                PropertyViews.Add(propertyView);
+                    PropertyViews.Add(propertyView);
+                }
             }
         }
 

@@ -21,6 +21,7 @@ namespace Scrumr
         public override object Value
         {
             get { return (View as CheckBox).IsChecked; }
+            set { (View as CheckBox).IsChecked = (bool)value; }
         }
 
         public override bool IsValid

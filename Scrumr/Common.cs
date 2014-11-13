@@ -16,4 +16,12 @@ namespace Scrumr
         {
         }
     }
+
+    public static class Extensions
+    {
+        public static T Get<T>(this DbSet<T> target, Int64 id) where T : Entity
+        {
+            return target.SingleOrDefault(x => x.ID == id);
+        }
+    }
 }

@@ -34,6 +34,7 @@ namespace Scrumr
         public override object Value
         {
             get { return Convert.ToDouble((View as TextBox).Text); }
+            set { (View as TextBox).Text = value.ToString(); }
         }
 
         public override bool IsValid

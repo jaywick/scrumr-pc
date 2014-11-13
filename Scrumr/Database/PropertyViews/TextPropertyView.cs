@@ -24,6 +24,7 @@ namespace Scrumr
         public override object Value
         {
             get { return (View as TextBox).Text; }
+            set { (View as TextBox).Text = value.ToString(); }
         }
 
         public override bool IsValid
