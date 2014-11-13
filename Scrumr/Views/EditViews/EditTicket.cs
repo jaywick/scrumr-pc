@@ -13,8 +13,8 @@ namespace Scrumr
         public EditTicket(ScrumrContext context, Int64? projectId = null, Int64? sprintId = null, Int64? featureId = null)
             : base(typeof(Ticket), context)
         {
-            var sprint = PropertyViews.SingleOrDefault(x => x.Property.Name == "Feature") as DataListPropertyView;
-            var feature = PropertyViews.SingleOrDefault(x => x.Property.Name == "Sprint") as DataListPropertyView;
+            var sprint = PropertyViews.SingleOrDefault(x => x.Property.Name == "Sprint") as DataListPropertyView;
+            var feature = PropertyViews.SingleOrDefault(x => x.Property.Name == "Feature") as DataListPropertyView;
 
             SetSourceItems(context, projectId, sprint, feature);
             SetSelectedValues(sprintId, featureId, sprint, feature);

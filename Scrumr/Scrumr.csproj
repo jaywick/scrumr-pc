@@ -95,7 +95,6 @@
     <Compile Include="Database\PropertyViews\NumericPropertyView.cs" />
     <Compile Include="Database\PropertyViews\PropertyView.cs" />
     <Compile Include="Database\PropertyViews\TextPropertyView.cs" />
-    <Compile Include="PropertyMap.cs" />
     <Compile Include="Views\BoardView.xaml.cs">
       <DependentUpon>BoardView.xaml</DependentUpon>
     </Compile>
