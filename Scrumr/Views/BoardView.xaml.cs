@@ -19,15 +19,11 @@ namespace Scrumr
     {
         public ScrumrContext Context { get; set; }
 
-        public Dictionary<Sprint, int> SprintToColumnMap;
-        public Dictionary<Feature, int> FeatureToRowMap;
-
         public Func<Sprint, bool> SprintFilter { get; set; }
         public Func<Feature, bool> FeatureFilter { get; set; }
         public Func<Ticket, bool> TicketFilter { get; set; }
 
         private Project _project;
-        private ContextMenu _addMenu;
 
         public IEnumerable<Sprint> VisibleSprints
         {
@@ -68,10 +64,9 @@ namespace Scrumr
             FeatureFilter = x => x.ProjectId == Project.ID;
             TicketFilter = x => true;
 
-            SprintToColumnMap = new Dictionary<Sprint, int>();
-            FeatureToRowMap = new Dictionary<Feature, int>();
-
             Board.Children.Clear();
+            Horizontal.Children.Clear();
+            Vertical.Children.Clear();
 
             CreateSprintColumns();
             CreateFeatureRows();
@@ -91,20 +86,20 @@ namespace Scrumr
 
         private void CreateFeatureRows()
         {
-            int i = 1;
+            int i = 0;
             Board.RowDefinitions.Clear();
-            Board.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
+            Vertical.RowDefinitions.Clear();
 
             foreach (var feature in VisibleFeatures)
             {
                 Board.RowDefinitions.Add(new RowDefinition());
-                FeatureToRowMap.Add(feature, i);
+                Vertical.RowDefinitions.Add(new RowDefinition());
 
                 var headerView = new HeaderView(feature, Orientation.Vertical);
                 headerView.RequestEdit += (h) => EditEntity(h as Feature);
                 headerView.RequestRemove += (h) => RemoveEntity(h as Feature);
 
-                AddToGrid(headerView, 0, i);
+                Vertical.InsertAt(headerView, 0, i);
 
                 i++;
             }
@@ -112,37 +107,29 @@ namespace Scrumr
 
         private void CreateSprintColumns()
         {
-            int i = 1;
+            int i = 0;
             Board.ColumnDefinitions.Clear();
-            Board.ColumnDefinitions.Add(new ColumnDefinition { Width = GridLength.Auto });
+            Horizontal.ColumnDefinitions.Clear();
 
             foreach (var sprint in VisibleSprints)
             {
                 Board.ColumnDefinitions.Add(new ColumnDefinition());
-                SprintToColumnMap.Add(sprint, i);
+                Horizontal.ColumnDefinitions.Add(new ColumnDefinition());
 
                 var headerView = new HeaderView(sprint, Orientation.Horizontal);
                 headerView.RequestEdit += (h) => EditEntity(h as Sprint);
                 headerView.RequestRemove += (h) => RemoveEntity(h as Sprint);
 
-                AddToGrid(headerView, i, 0);
+                Horizontal.InsertAt(headerView, i, 0);
 
                 i++;
             }
         }
 
-        private void AddToGrid(UIElement item, int column, int row)
-        {
-            Board.Children.Add(item);
-
-            Grid.SetColumn(item, column);
-            Grid.SetRow(item, row);
-        }
-
         private void CreateTicketCell(int sprintId, int featureId)
         {
             var cellView = new CellView(sprintId, featureId);
-            AddToGrid(cellView, sprintId, featureId);
+            Board.InsertAt(cellView, sprintId - 1, featureId - 1);
             cellView.Drop += (s, e) => MoveTicket(e.Data.GetData(typeof(Ticket)) as Ticket, sprintId, featureId);
             cellView.RequestNewTicket += (s, f) => NewTicket(s, f);
 

@@ -28,5 +28,12 @@ namespace Scrumr
         {
             return target.Get(id) != null;
         }
+
+        public static void InsertAt(this Grid target, UIElement element,  int column, int row)
+        {
+            target.Children.Add(element);
+            Grid.SetColumn(element, column);
+            Grid.SetRow(element, row);
+        }
     }
 }
