@@ -6,7 +6,9 @@ using System.Text;
 
 namespace Scrumr
 {
-    public class TicketType : Entity
+    public enum TicketType
     {
+        Task = 1,
+        Bug = 2,
     }
 }

@@ -25,25 +25,28 @@ namespace Scrumr
 
         public static PropertyView Create(PropertyItem propertyItem, ScrumrContext context)
         {
-            if (propertyItem.Attributes.Any(x => x is KeyAttribute || x is IgnoreRenderAttribute))
+            if (propertyItem.Attributes.Has<KeyAttribute>() || propertyItem.Attributes.Has<IgnoreRenderAttribute>())
                 return null;
 
-            if (propertyItem.Attributes.Any(x => x is ForeignKeyAttribute))
+            if (propertyItem.Attributes.Has<ForeignKeyAttribute>())
                 return new DataListPropertyView(propertyItem, context);
+
+            if (propertyItem.Type.BaseType == typeof(Enum))
+                return new EnumPropertyView(propertyItem);
 
             if (propertyItem.Type == typeof(bool))
                 return new CheckPropertyView(propertyItem);
 
             if (propertyItem.Type == typeof(string))
             {
-                var isLongAnswer = (propertyItem.Attributes.Any(x => x is LongAnswerAttribute));
+                var isLongAnswer = (propertyItem.Attributes.Has<LongAnswerAttribute>());
                 return new TextPropertyView(propertyItem, isLongAnswer);
             }
 
             if (propertyItem.Type == typeof(int) || propertyItem.Type  == typeof(long) || propertyItem.Type == typeof(double) || propertyItem.Type == typeof(float) || propertyItem.Type == typeof(decimal))
                 return new NumericPropertyView(propertyItem);
 
-            return null;
+            throw new NotSupportedException("Unknown property view");
         }
     }
 
@@ -71,7 +74,7 @@ namespace Scrumr
         {
             get
             {
-                var orderAttribute = Attributes.SingleOrDefault(x => x is RenderOrderAttribute) as RenderOrderAttribute;
+                var orderAttribute = Attributes.Get<RenderOrderAttribute>();
 
                 if (orderAttribute == null)
                     return int.MaxValue;

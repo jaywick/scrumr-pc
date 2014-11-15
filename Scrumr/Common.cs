@@ -29,11 +29,21 @@ namespace Scrumr
             return target.Get(id) != null;
         }
 
-        public static void InsertAt(this Grid target, UIElement element,  int column, int row)
+        public static void InsertAt(this Grid target, UIElement element, int column, int row)
         {
             target.Children.Add(element);
             Grid.SetColumn(element, column);
             Grid.SetRow(element, row);
+        }
+
+        public static T Get<T>(this Attribute[] target) where T : Attribute
+        {
+            return target.SingleOrDefault(x => x is T) as T;
+        }
+
+        public static bool Has<T>(this Attribute[] target) where T : Attribute
+        {
+            return target.Any(x => x is T);
         }
     }
 }

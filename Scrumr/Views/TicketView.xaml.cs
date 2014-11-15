@@ -30,7 +30,7 @@ namespace Scrumr
 
             labelName.Content = string.Format("#{0}: {1}", ticket.ProjectTicketId, ticket.Name);
 
-            Foreground = ticket.StateId == 1 ? Brushes.Black : Brushes.Gray;
+            Foreground = ticket.State == TicketState.Open ? Brushes.Black : Brushes.Gray;
 
             ContextMenu = new ContextMenu();
             ContextMenu.Items.Add(ViewHelper.CreateMenuItem("Edit",  () => RequestEdit(ticket)));

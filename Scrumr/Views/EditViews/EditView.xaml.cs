@@ -64,7 +64,7 @@ namespace Scrumr
 
         public Modes Mode { get; private set; }
 
-        protected virtual void OnSave(Entity entity) { }
+        protected virtual void OnSave(Entity entity, Modes mode) { }
 
         private List<PropertyItem> loadItems()
         {
@@ -112,7 +112,7 @@ namespace Scrumr
                 property.SetValue(result, finalValue);
             }
 
-            OnSave(result);
+            OnSave(result, Mode);
 
             return result;
         }

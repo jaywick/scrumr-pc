@@ -21,12 +21,6 @@ namespace Scrumr
         public long SprintId { get; set; }
 
         [IgnoreRender]
-        public long TypeId { get; set; }
-
-        [IgnoreRender]
-        public long StateId { get; set; }
-
-        [IgnoreRender]
         public long ProjectTicketId { get; set; }
 
         [ForeignKey("FeatureId")]
@@ -35,11 +29,9 @@ namespace Scrumr
         [ForeignKey("SprintId")]
         public Sprint Sprint { get; set; }
 
-        [ForeignKey("TypeId")]
         [RenderOrder(3)]
         public TicketType Type { get; set; }
 
-        [ForeignKey("StateId")]
         [RenderOrder(4)]
         public TicketState State { get; set; }
     }

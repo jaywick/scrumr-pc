@@ -13,52 +13,63 @@ namespace Scrumr
         public EditTicket(ScrumrContext context, long? projectId = null, long? sprintId = null, long? featureId = null)
             : base(typeof(Ticket), context)
         {
-            var sprintView = GetDataListFromType<Sprint>();
-            var featureView = GetDataListFromType<Feature>();
+            var sprintView = GetDataListFromType<Sprint>() as DataListPropertyView;
+            var featureView = GetDataListFromType<Feature>() as DataListPropertyView;
+            var stateView = GetDataListFromType<TicketState>();
+            var typeView = GetDataListFromType<TicketType>();
 
             SetSourceItems(projectId, sprintView, featureView);
-            SetSelectedValues(sprintId, featureId, sprintView, featureView);
-        }
-
-        private DataListPropertyView GetDataListFromType<T>()
-        {
-            return PropertyViews.SingleOrDefault(x => x.Property.Type == typeof(T)) as DataListPropertyView;
-        }
-
-        private void SetSourceItems(long? projectId, DataListPropertyView sprint, DataListPropertyView feature)
-        {
-            if (projectId.HasValue)
-            {
-                sprint.Source = Context.Sprints.Where(x => x.ProjectId == projectId.Value);
-                feature.Source = Context.Features.Where(x => x.ProjectId == projectId.Value);
-            }
-            else
-            {
-                sprint.Source = Context.Sprints;
-                feature.Source = Context.Features;
-            }
-        }
-
-        private void SetSelectedValues(long? sprintId, long? featureId, DataListPropertyView sprintView, DataListPropertyView featureView)
-        {
-            if (sprintId.HasValue)
-                sprintView.Value = Context.Sprints.Get(sprintId.Value);
-
-            if (featureId.HasValue)
-                featureView.Value = Context.Features.Get(featureId.Value);
+            SetSelectedValues(sprintId, featureId, sprintView, featureView, stateView, typeView);
         }
 
         public EditTicket(ScrumrContext context, Entity entity)
             : base(typeof(Ticket), context, entity)
         {
             var projectId = (entity as Ticket).Sprint.ProjectId;
+
+            var sprintView = GetDataListFromType<Sprint>() as DataListPropertyView;
+            var featureView = GetDataListFromType<Feature>() as DataListPropertyView;
+            SetSourceItems(projectId, sprintView, featureView);
         }
 
-        protected override void OnSave(Entity entity)
+        private PropertyView GetDataListFromType<T>()
         {
+            return PropertyViews.SingleOrDefault(x => x.Property.Type == typeof(T)) as PropertyView;
+        }
+
+        private void SetSourceItems(long? projectId, DataListPropertyView sprintView, DataListPropertyView featureView)
+        {
+            if (projectId.HasValue)
+            {
+                sprintView.Source = Context.Sprints.Where(x => x.ProjectId == projectId.Value);
+                featureView.Source = Context.Features.Where(x => x.ProjectId == projectId.Value);
+            }
+            else
+            {
+                sprintView.Source = Context.Sprints;
+                featureView.Source = Context.Features;
+            }
+        }
+
+        private void SetSelectedValues(long? sprintId, long? featureId, PropertyView sprintView, PropertyView featureView, PropertyView stateView, PropertyView typeView)
+        {
+            if (sprintId.HasValue)
+                sprintView.Value = Context.Sprints.Get(sprintId.Value);
+
+            if (featureId.HasValue)
+                featureView.Value = Context.Features.Get(featureId.Value);
+
+            typeView.Value = TicketType.Task;
+            stateView.Value = TicketState.Open;
+        }
+
+        protected override void OnSave(Entity entity, Modes mode)
+        {
+            if (mode != Modes.New)
+                return;
+
             var ticket = entity as Ticket;
-            var nextId = ticket.Sprint.Project.NextProjectTicketId++;
-            ticket.ProjectTicketId = nextId;
+            ticket.ProjectTicketId = ticket.Sprint.Project.NextProjectTicketId++;
         }
     }
 }
