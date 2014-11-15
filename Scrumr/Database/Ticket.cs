@@ -34,5 +34,17 @@ namespace Scrumr
 
         [RenderOrder(4)]
         public TicketState State { get; set; }
+
+        [NotMapped]
+        public Project Project
+        {
+            get { return Sprint.IfNotNull(x => x.Project); }
+        }
+
+        [NotMapped]
+        public long? ProjectId
+        {
+            get { return Sprint.IfNotNull(x => x.ProjectId); }
+        }
     }
 }

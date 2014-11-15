@@ -7,7 +7,7 @@ using System.Data.Entity;
 
 namespace Scrumr
 {
-    public class ScrumrContext : DbContext
+    public class Context : DbContext
     {
         public DbSet<Project> Projects { get; set; }
         public DbSet<Ticket> Tickets { get; set; }

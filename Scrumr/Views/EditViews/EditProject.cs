@@ -8,7 +8,7 @@ namespace Scrumr
 {
     class EditProject : EditView
     {
-        public EditProject(ScrumrContext context, Entity entity = null)
+        public EditProject(Context context, Entity entity = null)
             : base(typeof(Project), context, entity) { }
     }
 }

@@ -23,7 +23,7 @@ namespace Scrumr
             Property = propertyItem;
         }
 
-        public static PropertyView Create(PropertyItem propertyItem, ScrumrContext context)
+        public static PropertyView Create(PropertyItem propertyItem, Context context)
         {
             if (propertyItem.Attributes.Has<KeyAttribute>() || propertyItem.Attributes.Has<IgnoreRenderAttribute>())
                 return null;
@@ -38,12 +38,9 @@ namespace Scrumr
                 return new CheckPropertyView(propertyItem);
 
             if (propertyItem.Type == typeof(string))
-            {
-                var isLongAnswer = (propertyItem.Attributes.Has<LongAnswerAttribute>());
-                return new TextPropertyView(propertyItem, isLongAnswer);
-            }
+                return new TextPropertyView(propertyItem, isLongAnswer: propertyItem.Attributes.Has<LongAnswerAttribute>());
 
-            if (propertyItem.Type == typeof(int) || propertyItem.Type  == typeof(long) || propertyItem.Type == typeof(double) || propertyItem.Type == typeof(float) || propertyItem.Type == typeof(decimal))
+            if (propertyItem.Type.IsOneOf(typeof(int), typeof(long), typeof(double), typeof(float), typeof(decimal)))
                 return new NumericPropertyView(propertyItem);
 
             throw new NotSupportedException("Unknown property view");
@@ -58,7 +55,7 @@ namespace Scrumr
         public Attribute[] Attributes { get; set; }
         public object Value { get; set; }
         public bool IsNew { get; set; }
-        
+
         public PropertyItem(string name, Type type, Type entityType, Attribute[] attributes, object value = null)
         {
             Name = name;

@@ -13,13 +13,13 @@ namespace Scrumr
 {
     public class ViewHelper
     {
-        public static void AddTicket<T>(DbSet<T> table, ScrumrContext context, long? projectId = null, long? sprintId = null, long? featureId = null) where T : Entity
+        public static void AddTicket<T>(DbSet<T> table, Context context, long? projectId = null, long? sprintId = null, long? featureId = null) where T : Entity
         {
             var editView = new EditTicket(context, projectId, sprintId, featureId);
             AddEntity<T>(table, context, editView);
         }
 
-        public static void AddEntity<T>(DbSet<T> table, ScrumrContext context, EditView editView = null) where T : Entity
+        public static void AddEntity<T>(DbSet<T> table, Context context, EditView editView = null) where T : Entity
         {
             if (editView == null)
                 editView = EditView.Create<T>(context);
@@ -30,7 +30,7 @@ namespace Scrumr
             context.SaveChanges();
         }
 
-        public static void EditEntity<T>(T entity, ScrumrContext context, EditView editView = null) where T : Entity
+        public static void EditEntity<T>(T entity, Context context, EditView editView = null) where T : Entity
         {
             if (editView == null)
                 editView = EditView.Create<T>(context, entity);
@@ -39,7 +39,7 @@ namespace Scrumr
                 context.SaveChanges();
         }
 
-        public static async void RemoveEntity<T>(T entity, ScrumrContext context) where T : Entity
+        public static async void RemoveEntity<T>(T entity, Context context) where T : Entity
         {
             if (await (App.Current.MainWindow as MainWindow).ShowMessageAsync("Scrumr", "Are you sure you wish to delete this " + entity.GetType().Name + "?", MessageDialogStyle.AffirmativeAndNegative) == MessageDialogResult.Negative)
                 return;

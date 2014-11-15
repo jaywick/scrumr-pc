@@ -10,66 +10,74 @@ namespace Scrumr
 {
     class EditTicket : EditView
     {
-        public EditTicket(ScrumrContext context, long? projectId = null, long? sprintId = null, long? featureId = null)
+        DataListPropertyView SprintView;
+        DataListPropertyView FeatureView;
+        EnumPropertyView StateView;
+        EnumPropertyView TypeView;
+
+        long? _projectId;
+        long? _sprintId;
+        long? _featureId;
+
+        public EditTicket(Context context, long? projectId = null, long? sprintId = null, long? featureId = null)
             : base(typeof(Ticket), context)
         {
-            var sprintView = GetDataListFromType<Sprint>() as DataListPropertyView;
-            var featureView = GetDataListFromType<Feature>() as DataListPropertyView;
-            var stateView = GetDataListFromType<TicketState>();
-            var typeView = GetDataListFromType<TicketType>();
+            _projectId = projectId;
+            _sprintId = sprintId;
+            _featureId = featureId;
 
-            SetSourceItems(projectId, sprintView, featureView);
-            SetSelectedValues(sprintId, featureId, sprintView, featureView, stateView, typeView);
+            LoadViews();
+            LoadSources();
+            SetSelections();
         }
 
-        public EditTicket(ScrumrContext context, Entity entity)
+        public EditTicket(Context context, Entity entity)
             : base(typeof(Ticket), context, entity)
         {
-            var projectId = (entity as Ticket).Sprint.ProjectId;
+            _projectId = (entity as Ticket).Sprint.ProjectId;
 
-            var sprintView = GetDataListFromType<Sprint>() as DataListPropertyView;
-            var featureView = GetDataListFromType<Feature>() as DataListPropertyView;
-            SetSourceItems(projectId, sprintView, featureView);
+            LoadViews();
+            LoadSources();
         }
 
-        private PropertyView GetDataListFromType<T>()
+        private void LoadViews()
         {
-            return PropertyViews.SingleOrDefault(x => x.Property.Type == typeof(T)) as PropertyView;
+            SprintView = GetView<Sprint, DataListPropertyView>();
+            FeatureView = GetView<Feature, DataListPropertyView>();
+            StateView = GetView<TicketState, EnumPropertyView>();
+            TypeView = GetView<TicketType, EnumPropertyView>();
         }
 
-        private void SetSourceItems(long? projectId, DataListPropertyView sprintView, DataListPropertyView featureView)
+        private void LoadSources()
         {
-            if (projectId.HasValue)
+            if (_projectId.HasValue)
             {
-                sprintView.Source = Context.Sprints.Where(x => x.ProjectId == projectId.Value);
-                featureView.Source = Context.Features.Where(x => x.ProjectId == projectId.Value);
+                SprintView.Source = Context.Sprints.Where(x => x.ProjectId == _projectId.Value);
+                FeatureView.Source = Context.Features.Where(x => x.ProjectId == _projectId.Value);
             }
             else
             {
-                sprintView.Source = Context.Sprints;
-                featureView.Source = Context.Features;
+                SprintView.Source = Context.Sprints;
+                FeatureView.Source = Context.Features;
             }
         }
 
-        private void SetSelectedValues(long? sprintId, long? featureId, PropertyView sprintView, PropertyView featureView, PropertyView stateView, PropertyView typeView)
+        private void SetSelections()
         {
-            if (sprintId.HasValue)
-                sprintView.Value = Context.Sprints.Get(sprintId.Value);
+            if (_sprintId.HasValue)
+                SprintView.Value = Context.Sprints.Get(_sprintId.Value);
 
-            if (featureId.HasValue)
-                featureView.Value = Context.Features.Get(featureId.Value);
+            if (_featureId.HasValue)
+                FeatureView.Value = Context.Features.Get(_featureId.Value);
 
-            typeView.Value = TicketType.Task;
-            stateView.Value = TicketState.Open;
+            TypeView.Value = TicketType.Task;
+            StateView.Value = TicketState.Open;
         }
 
-        protected override void OnSave(Entity entity, Modes mode)
+        protected override void OnCreating(Entity entity)
         {
-            if (mode != Modes.New)
-                return;
-
             var ticket = entity as Ticket;
-            ticket.ProjectTicketId = ticket.Sprint.Project.NextProjectTicketId++;
+            ticket.ProjectTicketId = ticket.Project.NextProjectTicketId++;
         }
     }
 }

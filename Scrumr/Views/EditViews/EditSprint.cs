@@ -8,7 +8,7 @@ namespace Scrumr
 {
     class EditSprint : EditView
     {
-        public EditSprint(ScrumrContext context, Entity entity = null)
+        public EditSprint(Context context, Entity entity = null)
             : base(typeof(Sprint), context, entity) { }
     }
 }

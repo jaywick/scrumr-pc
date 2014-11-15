@@ -12,7 +12,9 @@ namespace Scrumr
         public TextPropertyView(PropertyItem propertyItem, bool isLongAnswer = false)
             : base(propertyItem)
         {
-            string value = propertyItem.IsNew ? "" : propertyItem.Value.ToString();
+            string value = propertyItem.IsNew
+                ? ""
+                : propertyItem.Value.ToString();
 
             View = new TextBox
             {

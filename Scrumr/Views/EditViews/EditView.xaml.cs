@@ -23,30 +23,36 @@ namespace Scrumr
     {
         protected Type EntityType { get; set; }
         protected Entity Entity { get; set; }
-        protected ScrumrContext Context { get; set; }
+        protected Context Context { get; set; }
         private List<PropertyItem> Items { get; set; }
 
         protected List<PropertyView> PropertyViews { get; private set; }
         public Entity Result { get; private set; }
 
-        public EditView(Type type, ScrumrContext context, Entity entity = null)
+        public enum Modes
+        {
+            Creating,
+            Updating,
+        }
+
+        public EditView(Type type, Context context, Entity entity = null)
             : this()
         {
             Mode = entity == null
-                ? Modes.New
-                : Modes.Existing;
+                ? Modes.Creating
+                : Modes.Updating;
 
             EntityType = type;
             Context = context;
             Entity = entity;
 
-            render();
+            Render();
         }
 
-        private void render()
+        private void Render()
         {
             Items = loadItems();
-            drawItems();
+            DrawItems();
         }
 
         private EditView()
@@ -54,24 +60,28 @@ namespace Scrumr
             InitializeComponent();
         }
 
-        public enum Modes
-        {
-            NotSet,
-            New,
-            NewWithData,
-            Existing
-        }
-
         public Modes Mode { get; private set; }
 
-        protected virtual void OnSave(Entity entity, Modes mode) { }
+        protected virtual void OnUpdating(Entity entity) { }
+
+        protected virtual void OnCreating(Entity entity) { }
+
+        protected PropertyView GetView<T>()
+        {
+            return PropertyViews.SingleOrDefault(x => x.Property.Type == typeof(T)) as PropertyView;
+        }
+
+        protected TView GetView<T, TView>() where TView : class
+        {
+            return PropertyViews.SingleOrDefault(x => x.Property.Type == typeof(T)) as TView;
+        }
 
         private List<PropertyItem> loadItems()
         {
             var items = new List<PropertyItem>();
             foreach (var property in EntityType.GetProperties())
             {
-                var currentValue = getInitialValue(property);
+                var currentValue = GetInitialValue(property);
                 var attributes = Attribute.GetCustomAttributes(property);
 
                 items.Add(new PropertyItem(property.Name, property.PropertyType, EntityType, attributes, currentValue));
@@ -80,17 +90,19 @@ namespace Scrumr
             return items;
         }
 
-        private object getInitialValue(PropertyInfo property)
+        private object GetInitialValue(PropertyInfo property)
         {
-            if (Mode == Modes.Existing)
-                return property.GetValue(Entity);
-            
-            return null;
+            switch (Mode)
+            {
+                case Modes.Creating: return null;
+                case Modes.Updating: return property.GetValue(Entity);
+                default: throw new NotSupportedException();
+            }
         }
 
-        private Entity getResult()
+        private Entity GetResult()
         {
-            Entity result = getEntity();
+            Entity result = GetEntity();
 
             foreach (var item in Items)
             {
@@ -98,10 +110,12 @@ namespace Scrumr
 
                 // skip primary keys and ignored
                 var attributes = Attribute.GetCustomAttributes(property);
-                if (attributes.Any(x => x is KeyAttribute || x is IgnoreRenderAttribute)) continue;
+                if (attributes.Has<KeyAttribute>() || attributes.Has<IgnoreRenderAttribute>())
+                    continue;
 
-                var propertyView = PropertyViews.Where(x => x != null)
-                                                .Single(x => x.Property.Name == property.Name);
+                var propertyView = PropertyViews
+                    .Where(x => x != null)
+                    .Single(x => x.Property.Name == property.Name);
 
                 if (!propertyView.IsValid)
                     throw new InvalidInputException(item);
@@ -112,26 +126,27 @@ namespace Scrumr
                 property.SetValue(result, finalValue);
             }
 
-            OnSave(result, Mode);
+            switch (Mode)
+            {
+                case Modes.Creating: OnCreating(result); break;
+                case Modes.Updating: OnUpdating(result); break;
+                default: throw new NotSupportedException();
+            }
 
             return result;
         }
 
-        private Entity getEntity()
+        private Entity GetEntity()
         {
             switch (Mode)
             {
-                case Modes.New:
-                case Modes.NewWithData:
-                    return Activator.CreateInstance(EntityType) as Entity;
-                case Modes.Existing:
-                    return Entity;
-                default:
-                    throw new NotSupportedException();
+                case Modes.Creating: return Activator.CreateInstance(EntityType) as Entity;
+                case Modes.Updating: return Entity;
+                default: throw new NotSupportedException();
             }
         }
 
-        private void drawItems()
+        private void DrawItems()
         {
             PropertyViews = new List<PropertyView>();
 
@@ -170,7 +185,7 @@ namespace Scrumr
         {
             try
             {
-                Result = getResult();
+                Result = GetResult();
                 DialogResult = true;
                 Hide();
             }
@@ -187,7 +202,7 @@ namespace Scrumr
             Hide();
         }
 
-        public static EditView Create<T>(ScrumrContext context, Entity entity = null)
+        public static EditView Create<T>(Context context, Entity entity = null)
         {
             if (typeof(T) == typeof(Feature))
                 return new EditFeature(context, entity);

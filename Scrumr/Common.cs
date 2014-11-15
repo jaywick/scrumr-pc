@@ -45,5 +45,18 @@ namespace Scrumr
         {
             return target.Any(x => x is T);
         }
+
+        public static bool IsOneOf<T>(this T target, params T[] alternatives) where T : class
+        {
+            return alternatives.Contains(target);
+        }
+
+        public static TResult IfNotNull<T, TResult>(this T target, Func<T, TResult> selector)
+        {
+            if (target != null)
+                return selector(target);
+            
+            return default(TResult);
+        }
     }
 }
