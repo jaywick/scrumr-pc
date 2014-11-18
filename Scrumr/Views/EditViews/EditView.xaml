@@ -11,8 +11,10 @@
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
 
-        <StackPanel x:Name="Contents" Grid.Row="0" Margin="10"/>
-
+        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" >
+            <StackPanel x:Name="Contents" Height="Auto" Grid.Row="0" Margin="10"/>
+        </ScrollViewer>
+        
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="1">
             <Button Margin="5" Width="150" Click="Cancel_Click" Style="{DynamicResource GenericButton}" IsCancel="True">Discard</Button>
             <Button Margin="5" Width="200" Click="Save_Click" Style="{DynamicResource AccentedButton}" IsDefault="True">Accept</Button>
