@@ -82,21 +82,21 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
-    <Compile Include="Database\Entity.cs" />
-    <Compile Include="Database\Helpers\FileSystem.cs" />
-    <Compile Include="Database\PropertyViews\EnumPropertyView.cs" />
-    <Compile Include="Database\TicketState.cs" />
-    <Compile Include="Database\Helpers\IgnoreRenderAttribute.cs" />
-    <Compile Include="Database\Helpers\LongAnswerAttribute.cs" />
-    <Compile Include="Database\Helpers\RenderOrderAttribute.cs" />
-    <Compile Include="Database\TicketType.cs" />
-    <Compile Include="Database\Project.cs" />
-    <Compile Include="Database\Helpers\ScrumrContext.cs" />
-    <Compile Include="Database\PropertyViews\CheckPropertyView.cs" />
-    <Compile Include="Database\PropertyViews\DataListPropertyView.cs" />
-    <Compile Include="Database\PropertyViews\NumericPropertyView.cs" />
-    <Compile Include="Database\PropertyViews\PropertyView.cs" />
-    <Compile Include="Database\PropertyViews\TextPropertyView.cs" />
+    <Compile Include="Database\Entities\Entity.cs" />
+    <Compile Include="Database\FileSystem.cs" />
+    <Compile Include="PropertyViews\EnumPropertyView.cs" />
+    <Compile Include="Database\Entities\TicketState.cs" />
+    <Compile Include="Database\Attributes\IgnoreRenderAttribute.cs" />
+    <Compile Include="Database\Attributes\LongAnswerAttribute.cs" />
+    <Compile Include="Database\Attributes\RenderOrderAttribute.cs" />
+    <Compile Include="Database\Entities\TicketType.cs" />
+    <Compile Include="Database\Entities\Project.cs" />
+    <Compile Include="Database\ScrumrContext.cs" />
+    <Compile Include="PropertyViews\CheckPropertyView.cs" />
+    <Compile Include="PropertyViews\DataListPropertyView.cs" />
+    <Compile Include="PropertyViews\NumericPropertyView.cs" />
+    <Compile Include="PropertyViews\PropertyView.cs" />
+    <Compile Include="PropertyViews\TextPropertyView.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Views\BoardView.xaml.cs">
       <DependentUpon>BoardView.xaml</DependentUpon>
@@ -115,9 +115,9 @@
     <Compile Include="Views\HeaderView.xaml.cs">
       <DependentUpon>HeaderView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Database\Feature.cs" />
-    <Compile Include="Database\Sprint.cs" />
-    <Compile Include="Database\Ticket.cs" />
+    <Compile Include="Database\Entities\Feature.cs" />
+    <Compile Include="Database\Entities\Sprint.cs" />
+    <Compile Include="Database\Entities\Ticket.cs" />
     <Compile Include="Views\TicketView.xaml.cs">
       <DependentUpon>TicketView.xaml</DependentUpon>
     </Compile>
