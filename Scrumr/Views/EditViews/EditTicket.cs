@@ -19,7 +19,7 @@ namespace Scrumr
         long? _sprintId;
         long? _featureId;
 
-        public EditTicket(Context context, long? projectId = null, long? sprintId = null, long? featureId = null)
+        public EditTicket(ScrumrContext context, long? projectId = null, long? sprintId = null, long? featureId = null)
             : base(typeof(Ticket), context)
         {
             _projectId = projectId;
@@ -31,7 +31,7 @@ namespace Scrumr
             SetSelections();
         }
 
-        public EditTicket(Context context, Entity entity)
+        public EditTicket(ScrumrContext context, Entity entity)
             : base(typeof(Ticket), context, entity)
         {
             _projectId = (entity as Ticket).Sprint.ProjectId;

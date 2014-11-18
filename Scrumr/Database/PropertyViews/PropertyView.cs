@@ -23,7 +23,7 @@ namespace Scrumr
             Property = propertyItem;
         }
 
-        public static PropertyView Create(PropertyItem propertyItem, Context context)
+        public static PropertyView Create(PropertyItem propertyItem, ScrumrContext context)
         {
             if (propertyItem.Attributes.Has<KeyAttribute>() || propertyItem.Attributes.Has<IgnoreRenderAttribute>())
                 return null;

@@ -13,7 +13,7 @@ namespace Scrumr
     {
         private IEnumerable<Entity> _source = Enumerable.Empty<Entity>();
 
-        public DataListPropertyView(PropertyItem propertyItem, Context context)
+        public DataListPropertyView(PropertyItem propertyItem, ScrumrContext context)
             : base(propertyItem)
         {
             var foreignSource = propertyItem.Attributes.Single(x => x is ForeignKeyAttribute) as ForeignKeyAttribute;

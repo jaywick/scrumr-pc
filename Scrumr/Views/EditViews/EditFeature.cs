@@ -8,7 +8,7 @@ namespace Scrumr
 {
     class EditFeature : EditView
     {
-        public EditFeature(Context context, Entity entity = null)
+        public EditFeature(ScrumrContext context, Entity entity = null)
             : base(typeof(Feature), context, entity) { }
     }
 }

@@ -17,7 +17,7 @@ namespace Scrumr
 {
     public partial class BoardView : UserControl
     {
-        public Context Context { get; set; }
+        public ScrumrContext Context { get; set; }
 
         public Func<Sprint, bool> SprintFilter { get; set; }
         public Func<Feature, bool> FeatureFilter { get; set; }

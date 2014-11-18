@@ -23,7 +23,7 @@ namespace Scrumr
     {
         protected Type EntityType { get; set; }
         protected Entity Entity { get; set; }
-        protected Context Context { get; set; }
+        protected ScrumrContext Context { get; set; }
         private List<PropertyItem> Items { get; set; }
 
         protected List<PropertyView> PropertyViews { get; private set; }
@@ -35,7 +35,7 @@ namespace Scrumr
             Updating,
         }
 
-        public EditView(Type type, Context context, Entity entity = null)
+        public EditView(Type type, ScrumrContext context, Entity entity = null)
             : this()
         {
             Mode = entity == null
@@ -202,7 +202,7 @@ namespace Scrumr
             Hide();
         }
 
-        public static EditView Create<T>(Context context, Entity entity = null)
+        public static EditView Create<T>(ScrumrContext context, Entity entity = null)
         {
             if (typeof(T) == typeof(Feature))
                 return new EditFeature(context, entity);

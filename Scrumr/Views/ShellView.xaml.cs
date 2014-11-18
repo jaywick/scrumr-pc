@@ -56,7 +56,7 @@ namespace Scrumr
         {
             using (BusyDisplay)
             {
-                Board.Context = new Context();
+                Board.Context = new ScrumrContext();
 
                 await Board.Context.LoadAllAsync();
                 Board.Project = await GetDefaultProject();
