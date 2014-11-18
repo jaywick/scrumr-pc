@@ -46,9 +46,9 @@ namespace Scrumr
         public void LoadAll()
         {
             Projects.Load();
-            Tickets.Load();
             Features.Load();
             Sprints.Load();
+            Tickets.Load();
         }
     }
 }

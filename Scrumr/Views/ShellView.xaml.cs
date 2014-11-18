@@ -56,7 +56,7 @@ namespace Scrumr
         {
             using (BusyDisplay)
             {
-                Board.Context = FileSystem.LoadContext();
+                Board.Context = FileSystem.LoadContext("test.sqlite");
 
                 await Board.Context.LoadAllAsync();
                 Board.Project = await GetDefaultProject();
