@@ -83,6 +83,7 @@
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
     <Compile Include="Database\Entity.cs" />
+    <Compile Include="Database\Helpers\FileSystem.cs" />
     <Compile Include="Database\PropertyViews\EnumPropertyView.cs" />
     <Compile Include="Database\TicketState.cs" />
     <Compile Include="Database\Helpers\IgnoreRenderAttribute.cs" />

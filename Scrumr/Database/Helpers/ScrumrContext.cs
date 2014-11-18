@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using System.Data.SQLite;
 
 namespace Scrumr
 {
@@ -13,6 +14,12 @@ namespace Scrumr
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Feature> Features { get; set; }
         public DbSet<Sprint> Sprints { get; set; }
+
+        public ScrumrContext(string filename)
+            : base(new SQLiteConnection()
+                {
+                    ConnectionString = new SQLiteConnectionStringBuilder() { DataSource = filename, ForeignKeys = true }.ConnectionString
+                }, true) { }
 
         public List<Entity> GetCollection(Type type)
         {
