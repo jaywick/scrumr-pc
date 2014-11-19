@@ -25,7 +25,7 @@ namespace Scrumr
 
         public static PropertyView Create(PropertyItem propertyItem, ScrumrContext context)
         {
-            if (propertyItem.Attributes.Has<KeyAttribute>() || propertyItem.Attributes.Has<IgnoreRenderAttribute>())
+            if (propertyItem.Attributes.IsOneOf(typeof(KeyAttribute), typeof(IgnoreRenderAttribute), typeof(NotMappedAttribute)))
                 return null;
 
             if (propertyItem.Attributes.Has<ForeignKeyAttribute>())

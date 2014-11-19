@@ -96,6 +96,7 @@
     <Compile Include="Database\PropertyViews\NumericPropertyView.cs" />
     <Compile Include="Database\PropertyViews\PropertyView.cs" />
     <Compile Include="Database\PropertyViews\TextPropertyView.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Views\BoardView.xaml.cs">
       <DependentUpon>BoardView.xaml</DependentUpon>
     </Compile>
@@ -172,7 +173,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="scrumr.sqlite">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

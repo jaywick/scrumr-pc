@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls.Dialogs;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Scrumr
 {
@@ -110,7 +111,7 @@ namespace Scrumr
 
                 // skip primary keys and ignored
                 var attributes = Attribute.GetCustomAttributes(property);
-                if (attributes.Has<KeyAttribute>() || attributes.Has<IgnoreRenderAttribute>())
+                if (attributes.IsOneOf(typeof(KeyAttribute), typeof(IgnoreRenderAttribute), typeof(NotMappedAttribute)))
                     continue;
 
                 var propertyView = PropertyViews
