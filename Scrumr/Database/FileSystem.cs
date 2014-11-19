@@ -47,7 +47,7 @@ namespace Scrumr
 
                 foreach (var item in entities)
                 {
-                    commandText.AppendLine(Schema.Create(item));
+                    commandText.AppendLine(SqlGenerator.GenerateCreateScriptFor(item));
                 }
 
                 command.CommandText = commandText.ToString();
