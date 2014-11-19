@@ -59,7 +59,7 @@ namespace Scrumr
             var name = info.GetAttribute<ForeignKeyAttribute>().Name;
             var primaryKey = info.PropertyType.GetProperties()
                 .Single(x => x.HasAttribute<KeyAttribute>());
-            return String.Format("`{0}` INTEGER REFERENCES {1} ({2})", name, info.Name, primaryKey.Name);
+            return String.Format("`{0}` INTEGER REFERENCES {1} ({2})", name, info.Name + "s", primaryKey.Name);
         }
 
         private static string GetDataFormat(PropertyInfo info)

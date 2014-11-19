@@ -13,12 +13,18 @@ namespace Scrumr
 {
     class FileSystem
     {
-        public const string DefaultDatabase = "scrumr.sqlite";
+        private const string DefaultDatabase = "scrumr.sqlite";
+        private const string SampleSprintName = "Backlog";
+        private const string SampleFeatureName = "General";
+        private const string SampleProjectName = "Project A";
 
         public static ScrumrContext LoadContext(string filename = DefaultDatabase)
         {
-            //if (!File.Exists(filename))
+            if (!File.Exists(filename))
+            {
                 Create(filename);
+                PopulateSampleData(filename);
+            }
 
             return new ScrumrContext(filename);
         }
@@ -31,7 +37,7 @@ namespace Scrumr
                 .Select(x => x.PropertyType.GetGenericArguments().First());
 
             SQLiteConnection.CreateFile(filename);
-            
+
             using (var connection = new SQLiteConnection("Data Source=" + filename))
             {
                 connection.Open();
@@ -40,17 +46,28 @@ namespace Scrumr
                 var commandText = new StringBuilder();
 
                 foreach (var item in entities)
+                {
                     commandText.AppendLine(Schema.Create(item));
+                }
 
-                commandText.AppendLine("INSERT INTO Projects (`ID`, `Name`, `NextProjectTicketId`) VALUES (1, 'Project A', 0);");
-                commandText.AppendLine("INSERT INTO Sprints (`Name`, `ProjectId`) VALUES ('Backlog', 1);");
-                commandText.AppendLine("INSERT INTO Features (`Name`, `ProjectId`) VALUES ('General', 1);");
-                
                 command.CommandText = commandText.ToString();
                 command.ExecuteNonQuery();
-                
+
                 connection.Close();
             }
+        }
+
+        private static void PopulateSampleData(string filename)
+        {
+            var context = new ScrumrContext(filename);
+            
+            var project = new Project { Name = SampleProjectName };
+            context.Projects.Add(project);
+
+            context.Sprints.Add(new Sprint { Name = SampleSprintName, ProjectId = project.ID });
+            context.Features.Add(new Feature { Name = SampleFeatureName, ProjectId = project.ID });
+
+            context.SaveChanges();
         }
     }
 }
