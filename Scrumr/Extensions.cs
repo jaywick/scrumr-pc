@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -32,12 +33,12 @@ namespace Scrumr
             return target.SingleOrDefault(x => x is T) as T;
         }
 
-        public static bool Has<T>(this Attribute[] target) where T : Attribute
+        public static bool Has<T>(this IEnumerable<Attribute> target) where T : Attribute
         {
             return target.Any(x => x is T);
         }
 
-        public static bool IsOneOf(this Attribute[] target, params Type[] attributeTypes)
+        public static bool IsOneOf(this IEnumerable<Attribute> target, params Type[] attributeTypes)
         {
             return attributeTypes.Any(a => target.Any(x => x.GetType() == a));
         }
@@ -55,6 +56,14 @@ namespace Scrumr
             return default(TResult);
         }
 
-        
+        public static T GetAttribute<T>(this PropertyInfo target) where T : Attribute
+        {
+            return Attribute.GetCustomAttributes(target).SingleOrDefault(x => x is T) as T;
+        }
+
+        public static bool HasAttribute<T>(this PropertyInfo target) where T : Attribute
+        {
+            return Attribute.GetCustomAttributes(target).Any(x => x is T);
+        }
     }
 }
