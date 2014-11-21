@@ -9,10 +9,10 @@ namespace Scrumr
 {
     public class Sprint : Entity
     {
-        [IgnoreRender]
+        [IgnoreRender, RefersTo("Project","ID")]
         public long ProjectId { get; set; }
 
-        [ForeignKey("ProjectId")]
+        [Required, ForeignKey("ProjectId")]
         public Project Project { get; set; }
     }
 }

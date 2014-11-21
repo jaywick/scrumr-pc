@@ -82,9 +82,10 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Compile Include="Database\Attributes\RefersToAttribute.cs" />
     <Compile Include="Database\Entities\Entity.cs" />
     <Compile Include="Database\FileSystem.cs" />
-    <Compile Include="Database\Schema.cs" />
+    <Compile Include="Database\SqlGenerator.cs" />
     <Compile Include="PropertyViews\EnumPropertyView.cs" />
     <Compile Include="Database\Entities\TicketState.cs" />
     <Compile Include="Database\Attributes\IgnoreRenderAttribute.cs" />

@@ -14,10 +14,10 @@ namespace Scrumr
         [RenderOrder(2)]
         public string Description { get; set; }
 
-        [IgnoreRender]
+        [IgnoreRender, RefersTo("Feature", "ID")]
         public long FeatureId { get; set; }
 
-        [IgnoreRender]
+        [IgnoreRender, RefersTo("Sprint", "ID")]
         public long SprintId { get; set; }
 
         [IgnoreRender]
