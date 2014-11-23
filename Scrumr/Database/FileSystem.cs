@@ -20,7 +20,7 @@ namespace Scrumr
 
         public static ScrumrContext LoadContext(string filename = DefaultDatabase)
         {
-            if (!File.Exists(filename))
+            if (!File.Exists(filename) || App.Overwrite)
             {
                 Create(filename);
                 PopulateSampleData(filename);
@@ -62,12 +62,12 @@ namespace Scrumr
             var context = new ScrumrContext(filename);
             
             var project = new Project { ID = 1, Name = SampleProjectName };
-            
+
             var backlogSprint = new Sprint { ID = 1, Name = SampleSprintName, ProjectId = 1 };
             var defaultFeature = new Feature { ID = 1, Name = SampleFeatureName, ProjectId = 1 };
 
             project.BacklogId = backlogSprint.ID;
-            project.DefaultFeatureId = defaultFeature.ID;
+            //project.DefaultFeatureId = defaultFeature.ID;
 
             context.Sprints.Add(backlogSprint);
             context.Features.Add(defaultFeature);

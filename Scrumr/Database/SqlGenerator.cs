@@ -12,7 +12,7 @@ namespace Scrumr
 {
     class SqlGenerator
     {
-        private static Dictionary<Type, string> _typeMap = _typeMap = new Dictionary<Type, string>
+        private static Dictionary<Type, string> _typeMap = new Dictionary<Type, string>
         {
             { typeof(byte), "TINYINT" },
             { typeof(bool), "BIT" },
@@ -94,8 +94,17 @@ namespace Scrumr
         {
             if (clrType.IsEnum)
                 return _typeMap[typeof(Enum)];
-            
-            return _typeMap[clrType];
+
+            if (clrType.IsGenericType && clrType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                return GetNullableType(clrType);
+
+            return _typeMap[clrType] + " NOT NULL";
+        }
+
+        private static string GetNullableType(Type clrType)
+        {
+            var innerType = clrType.GetGenericArguments().First();
+            return _typeMap[innerType];
         }
     }
 }

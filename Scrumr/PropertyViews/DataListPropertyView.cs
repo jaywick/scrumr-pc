@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
+using Scrumr;
 
 namespace Scrumr
 {
@@ -16,7 +17,6 @@ namespace Scrumr
         public DataListPropertyView(PropertyItem propertyItem, ScrumrContext context)
             : base(propertyItem)
         {
-            var foreignSource = propertyItem.Attributes.Single(x => x is ForeignKeyAttribute) as ForeignKeyAttribute;
             var defaultSource = context.GetCollection(propertyItem.Type);
 
             var selected = propertyItem.IsNew

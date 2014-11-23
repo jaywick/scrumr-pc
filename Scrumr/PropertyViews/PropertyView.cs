@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 
 namespace Scrumr
 {
@@ -28,7 +29,7 @@ namespace Scrumr
             if (propertyItem.Attributes.IsOneOf(typeof(KeyAttribute), typeof(IgnoreRenderAttribute), typeof(NotMappedAttribute)))
                 return null;
 
-            if (propertyItem.Attributes.Has<ForeignKeyAttribute>())
+            if (propertyItem.Attributes.Has<RefersToAttribute>())
                 return new DataListPropertyView(propertyItem, context);
 
             if (propertyItem.Type.BaseType == typeof(Enum))
@@ -47,11 +48,12 @@ namespace Scrumr
         }
     }
 
+    [DebuggerDisplay("{Name} ({Type}) = {Value}")]
     public class PropertyItem
     {
         public string Name { get; set; }
         public Type Type { get; set; }
-        public Type EntityType { get; set; }
+        public Type ParentEntityType { get; set; }
         public Attribute[] Attributes { get; set; }
         public object Value { get; set; }
         public bool IsNew { get; set; }
@@ -60,7 +62,7 @@ namespace Scrumr
         {
             Name = name;
             Type = type;
-            EntityType = entityType;
+            ParentEntityType = entityType;
             Attributes = attributes;
             Value = value;
 

@@ -50,5 +50,16 @@ namespace Scrumr
             Sprints.Load();
             Tickets.Load();
         }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Project>()
+                .HasMany(x => x.Sprints)
+                .WithRequired(x => x.Project);
+
+            modelBuilder.Entity<Project>()
+                .HasMany(x => x.Sprints)
+                .WithRequired(x => x.Project);
+        }
     }
 }

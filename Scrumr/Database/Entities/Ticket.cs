@@ -10,29 +10,25 @@ namespace Scrumr
 {
     public class Ticket : Entity
     {
-        [LongAnswer]
-        [RenderOrder(2)]
         public string Description { get; set; }
 
-        [IgnoreRender, RefersTo("Feature", "ID")]
+        [IgnoreRender]
         public long FeatureId { get; set; }
 
-        [IgnoreRender, RefersTo("Sprint", "ID")]
+        [IgnoreRender]
         public long SprintId { get; set; }
 
         [IgnoreRender]
         public long ProjectTicketId { get; set; }
 
-        [ForeignKey("FeatureId")]
+        [RefersTo("Features", "ID")]
         public Feature Feature { get; set; }
 
-        [ForeignKey("SprintId")]
+        [RefersTo("Sprints", "ID")]
         public Sprint Sprint { get; set; }
 
-        [RenderOrder(3)]
         public TicketType Type { get; set; }
 
-        [RenderOrder(4)]
         public TicketState State { get; set; }
 
         [NotMapped]

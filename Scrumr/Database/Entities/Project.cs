@@ -10,13 +10,16 @@ namespace Scrumr
 {
     public class Project : Entity
     {
-        [IgnoreRender]
         public long NextProjectTicketId { get; set; }
 
-        [IgnoreRender]
         public long BacklogId { get; set; }
 
-        [IgnoreRender]
-        public long DefaultFeatureId { get; set; }
+        public ICollection<Sprint> Sprints { get; set; }
+
+        //public long DefaultFeatureId { get; set; }
+
+        public virtual Sprint Backlog { get; set; }
+
+        //public virtual Feature DefaultFeature { get; set; }
     }
 }
