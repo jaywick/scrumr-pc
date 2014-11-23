@@ -67,7 +67,7 @@ namespace Scrumr
                 if (entity == null)
                     return false;
 
-                return _source.Has(entity.ID) != null;
+                return _source.Has(entity.ID);
             }
         }
     }

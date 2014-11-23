@@ -13,16 +13,10 @@ namespace Scrumr
         [IgnoreRender]
         public long NextProjectTicketId { get; set; }
 
-        [IgnoreRender, RefersTo("Sprint", "ID")]
-        public long? BacklogId { get; set; }
+        [IgnoreRender]
+        public long BacklogId { get; set; }
 
-        [IgnoreRender, RefersTo("Feature", "ID")]
-        public long? DefaultFeatureId { get; set; }
-
-        [ForeignKey("ID")]
-        public Sprint Backlog { get; set; }
-
-        [ForeignKey("ID")]
-        public Feature DefaultFeature { get; set; }
+        [IgnoreRender]
+        public long DefaultFeatureId { get; set; }
     }
 }

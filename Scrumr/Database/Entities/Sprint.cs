@@ -12,7 +12,7 @@ namespace Scrumr
         [IgnoreRender, RefersTo("Project","ID")]
         public long ProjectId { get; set; }
 
-        [Required, ForeignKey("ProjectId")]
+        [ForeignKey("ProjectId")]
         public Project Project { get; set; }
     }
 }
