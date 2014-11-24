@@ -26,22 +26,22 @@ namespace Scrumr
 
         public static PropertyView Create(PropertyItem propertyItem, ScrumrContext context)
         {
-            if (propertyItem.Attributes.IsOneOf(typeof(KeyAttribute), typeof(IgnoreRenderAttribute), typeof(NotMappedAttribute)))
+            if (propertyItem.IsRenderingIgnored)
                 return null;
 
-            if (propertyItem.Attributes.Has<RefersToAttribute>())
+            if (propertyItem.IsEntityType)
                 return new DataListPropertyView(propertyItem, context);
 
-            if (propertyItem.Type.BaseType == typeof(Enum))
+            if (propertyItem.IsEnumType)
                 return new EnumPropertyView(propertyItem);
 
-            if (propertyItem.Type == typeof(bool))
+            if (propertyItem.IsType<bool>())
                 return new CheckPropertyView(propertyItem);
 
-            if (propertyItem.Type == typeof(string))
+            if (propertyItem.IsType<string>())
                 return new TextPropertyView(propertyItem, isLongAnswer: propertyItem.Attributes.Has<LongAnswerAttribute>());
 
-            if (propertyItem.Type.IsOneOf(typeof(int), typeof(long), typeof(double), typeof(float), typeof(decimal)))
+            if (propertyItem.IsNumericType)
                 return new NumericPropertyView(propertyItem);
 
             throw new NotSupportedException("Unknown property view");
@@ -81,5 +81,31 @@ namespace Scrumr
                     return orderAttribute.Order;
             }
         }
+
+        public bool IsRenderingIgnored
+        {
+            get { return Attributes.IsOneOf(typeof(IgnoreRenderAttribute), typeof(NotMappedAttribute)); }
+        }
+
+        public bool IsEntityType
+        {
+            get { return Type.BaseType == typeof(Entity); }
+        }
+
+        public bool IsEnumType
+        {
+            get { return Type.BaseType == typeof(Enum); }
+        }
+
+        public bool IsType<T>()
+        {
+            return Type == typeof(T);
+        }
+
+        public bool IsNumericType
+        {
+            get { return Type.IsOneOf(typeof(int), typeof(long), typeof(double), typeof(float), typeof(decimal)); }
+        }
+
     }
 }

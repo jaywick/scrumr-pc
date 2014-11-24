@@ -22,10 +22,8 @@ namespace Scrumr
         [IgnoreRender]
         public long ProjectTicketId { get; set; }
 
-        [RefersTo("Features", "ID")]
         public Feature Feature { get; set; }
 
-        [RefersTo("Sprints", "ID")]
         public Sprint Sprint { get; set; }
 
         public TicketType Type { get; set; }

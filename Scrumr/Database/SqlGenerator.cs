@@ -51,7 +51,7 @@ namespace Scrumr
 
             // get all int columns that are the actual foreign keys
             var referenceIdentityColumns = entityType.GetProperties()
-                .Where(x => x.HasAttribute<RefersToAttribute>());
+                .Where(x => x.PropertyType.BaseType == typeof(Entity));
 
             // get all properties that aren't to be mapped
             var unmappedColumns = entityType.GetProperties()
@@ -80,9 +80,9 @@ namespace Scrumr
 
         private static string GenerateForeignKeyDefinition(PropertyInfo info)
         {
-            var reference = info.GetAttribute<RefersToAttribute>();
+            var type = info.PropertyType;
 
-            return String.Format(ForeignKeyColumnFormat, info.Name, reference.Table + "s", reference.Column);
+            return String.Format(ForeignKeyColumnFormat, info.Name, type.Name + "s", "ID");
         }
 
         private static string GenerateColumnDefinition(PropertyInfo info)

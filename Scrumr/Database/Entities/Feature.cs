@@ -13,7 +13,6 @@ namespace Scrumr
         [IgnoreRender]
         public long ProjectId { get; set; }
 
-        [RefersTo("Project", "Id")]
         public Project Project { get; set; }
     }
 }
