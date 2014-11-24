@@ -19,6 +19,16 @@ namespace Scrumr
         long? _sprintId;
         long? _featureId;
 
+        protected override IEnumerable<Expression<Func<Entity, object>>> OnRendering()
+        {
+            yield return x => (x as Ticket).Name;
+            yield return x => (x as Ticket).Description;
+            yield return x => (x as Ticket).Type;
+            yield return x => (x as Ticket).State;
+            yield return x => (x as Ticket).Sprint;
+            yield return x => (x as Ticket).Feature;
+        }
+
         public EditTicket(ScrumrContext context, long? projectId = null, long? sprintId = null, long? featureId = null)
             : base(typeof(Ticket), context)
         {
@@ -74,7 +84,7 @@ namespace Scrumr
             StateView.Value = TicketState.Open;
         }
 
-        protected override void OnCreating(Entity entity)
+        protected override void OnCreated(Entity entity)
         {
             var ticket = entity as Ticket;
             ticket.ProjectTicketId = ticket.Project.NextProjectTicketId++;

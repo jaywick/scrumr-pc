@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -10,5 +11,11 @@ namespace Scrumr
     {
         public EditFeature(ScrumrContext context, Entity entity = null)
             : base(typeof(Feature), context, entity) { }
+
+        protected override IEnumerable<Expression<Func<Entity, object>>> OnRendering()
+        {
+            yield return x => (x as Feature).Name;
+            yield return x => (x as Feature).Project;
+        }
     }
 }

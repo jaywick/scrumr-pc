@@ -10,7 +10,6 @@ namespace Scrumr
     [Table("Sprints")]
     public class Sprint : Entity
     {
-        [IgnoreRender]
         public long ProjectId { get; set; }
 
         public Project Project { get; set; }

@@ -10,7 +10,6 @@ namespace Scrumr
     [Table("Features")]
     public class Feature : Entity
     {
-        [IgnoreRender]
         public long ProjectId { get; set; }
 
         public Project Project { get; set; }

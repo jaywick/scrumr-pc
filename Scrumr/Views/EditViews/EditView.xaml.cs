@@ -63,9 +63,11 @@ namespace Scrumr
 
         public Modes Mode { get; private set; }
 
-        protected virtual void OnUpdating(Entity entity) { }
+        protected abstract IEnumerable<Expression<Func<Entity, object>>> OnRendering();
 
-        protected virtual void OnCreating(Entity entity) { }
+        protected virtual void OnUpdated(Entity entity) { }
+
+        protected virtual void OnCreated(Entity entity) { }
 
         protected PropertyView GetView<T>()
         {
@@ -80,8 +82,10 @@ namespace Scrumr
         private List<PropertyItem> loadItems()
         {
             var items = new List<PropertyItem>();
-            foreach (var property in EntityType.GetProperties())
+            foreach (var expression in OnRendering())
             {
+                var property = expression.GetExpressedProperty();
+
                 var currentValue = GetInitialValue(property);
                 var attributes = Attribute.GetCustomAttributes(property);
 
@@ -129,8 +133,8 @@ namespace Scrumr
 
             switch (Mode)
             {
-                case Modes.Creating: OnCreating(result); break;
-                case Modes.Updating: OnUpdating(result); break;
+                case Modes.Creating: OnCreated(result); break;
+                case Modes.Updating: OnUpdated(result); break;
                 default: throw new NotSupportedException();
             }
 
@@ -153,8 +157,7 @@ namespace Scrumr
 
             Contents.Children.Clear();
 
-            var orderedItems = Items.OrderBy(x => x.Order);
-            foreach (var item in orderedItems)
+            foreach (var item in Items)
             {
                 var propertyView = PropertyView.Create(item, Context);
 

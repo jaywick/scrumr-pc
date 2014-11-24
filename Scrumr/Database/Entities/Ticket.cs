@@ -13,13 +13,10 @@ namespace Scrumr
     {
         public string Description { get; set; }
 
-        [IgnoreRender]
         public long FeatureId { get; set; }
 
-        [IgnoreRender]
         public long SprintId { get; set; }
 
-        [IgnoreRender]
         public long ProjectTicketId { get; set; }
 
         public Feature Feature { get; set; }
@@ -30,13 +27,11 @@ namespace Scrumr
 
         public TicketState State { get; set; }
 
-        [NotMapped]
         public Project Project
         {
             get { return Sprint.IfNotNull(x => x.Project); }
         }
 
-        [NotMapped]
         public long? ProjectId
         {
             get { return Sprint.IfNotNull(x => x.ProjectId); }

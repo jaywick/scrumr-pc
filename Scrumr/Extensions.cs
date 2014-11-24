@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
@@ -64,6 +65,16 @@ namespace Scrumr
         public static bool HasAttribute<T>(this PropertyInfo target) where T : Attribute
         {
             return Attribute.GetCustomAttributes(target).Any(x => x is T);
+        }
+
+        public static PropertyInfo GetExpressedProperty(this LambdaExpression target)
+        {
+            var memberExpression = target.Body as MemberExpression;
+            var unaryExpression = target.Body as UnaryExpression;
+
+            var result = memberExpression ?? unaryExpression.IfNotNull(x => x.Operand) as MemberExpression;
+            
+            return result.Member as PropertyInfo;
         }
     }
 }
