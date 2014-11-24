@@ -53,13 +53,25 @@ namespace Scrumr
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Project>()
-                .HasMany(x => x.Sprints)
-                .WithRequired(x => x.Project);
+            modelBuilder.Entity<Sprint>()
+                .HasKey(s => s.ID)
+                .HasRequired(s => s.Project)
+                .WithMany(p => p.Sprints)
+                .HasForeignKey(s => s.ProjectId);
 
             modelBuilder.Entity<Project>()
-                .HasMany(x => x.Sprints)
-                .WithRequired(x => x.Project);
+                .HasKey(p => p.ID)
+                .HasRequired(p => p.Backlog);
+
+            modelBuilder.Entity<Feature>()
+                .HasKey(s => s.ID)
+                .HasRequired(s => s.Project)
+                .WithMany(p => p.Features)
+                .HasForeignKey(s => s.ProjectId);
+
+            modelBuilder.Entity<Project>()
+                .HasKey(p => p.ID)
+                .HasRequired(p => p.DefaultFeature);
         }
     }
 }

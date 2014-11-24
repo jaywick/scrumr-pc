@@ -8,18 +8,21 @@ using System.Threading.Tasks;
 
 namespace Scrumr
 {
+    [Table("Projects")]
     public class Project : Entity
     {
         public long NextProjectTicketId { get; set; }
 
-        public long BacklogId { get; set; }
-
         public ICollection<Sprint> Sprints { get; set; }
 
-        //public long DefaultFeatureId { get; set; }
+        public ICollection<Feature> Features { get; set; }
+
+        public long BacklogId { get; set; }
+
+        public long DefaultFeatureId { get; set; }
 
         public virtual Sprint Backlog { get; set; }
 
-        //public virtual Feature DefaultFeature { get; set; }
+        public virtual Feature DefaultFeature { get; set; }
     }
 }

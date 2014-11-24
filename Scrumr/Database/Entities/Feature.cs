@@ -7,6 +7,7 @@ using System.Text;
 
 namespace Scrumr
 {
+    [Table("Features")]
     public class Feature : Entity
     {
         [IgnoreRender]

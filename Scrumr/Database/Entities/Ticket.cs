@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Scrumr
 {
+    [Table("Tickets")]
     public class Ticket : Entity
     {
         public string Description { get; set; }
