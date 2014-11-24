@@ -8,10 +8,9 @@ using System.Threading.Tasks;
 
 namespace Scrumr
 {
+    [Table("Tickets")]
     public class Ticket : Entity
     {
-        [LongAnswer]
-        [RenderOrder(2)]
         public string Description { get; set; }
 
         [IgnoreRender]
@@ -23,16 +22,12 @@ namespace Scrumr
         [IgnoreRender]
         public long ProjectTicketId { get; set; }
 
-        [ForeignKey("FeatureId")]
         public Feature Feature { get; set; }
 
-        [ForeignKey("SprintId")]
         public Sprint Sprint { get; set; }
 
-        [RenderOrder(3)]
         public TicketType Type { get; set; }
 
-        [RenderOrder(4)]
         public TicketState State { get; set; }
 
         [NotMapped]

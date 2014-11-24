@@ -7,12 +7,12 @@ using System.Text;
 
 namespace Scrumr
 {
+    [Table("Sprints")]
     public class Sprint : Entity
     {
         [IgnoreRender]
         public long ProjectId { get; set; }
 
-        [ForeignKey("ProjectId")]
         public Project Project { get; set; }
     }
 }

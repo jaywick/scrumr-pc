@@ -34,6 +34,16 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Overwrite|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Overwrite\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;OVERWRITE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -84,7 +94,7 @@
     </ApplicationDefinition>
     <Compile Include="Database\Entities\Entity.cs" />
     <Compile Include="Database\FileSystem.cs" />
-    <Compile Include="Database\Schema.cs" />
+    <Compile Include="Database\SqlGenerator.cs" />
     <Compile Include="PropertyViews\EnumPropertyView.cs" />
     <Compile Include="Database\Entities\TicketState.cs" />
     <Compile Include="Database\Attributes\IgnoreRenderAttribute.cs" />
@@ -175,7 +185,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="scrumr.sqlite">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

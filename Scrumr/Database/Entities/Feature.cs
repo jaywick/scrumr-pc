@@ -7,12 +7,12 @@ using System.Text;
 
 namespace Scrumr
 {
+    [Table("Features")]
     public class Feature : Entity
     {
         [IgnoreRender]
         public long ProjectId { get; set; }
 
-        [ForeignKey("ProjectId")]
         public Project Project { get; set; }
     }
 }

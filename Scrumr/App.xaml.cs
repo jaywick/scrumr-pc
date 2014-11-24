@@ -8,10 +8,22 @@ using System.Windows;
 
 namespace Scrumr
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
     public partial class App : Application
     {
+        public static bool Overwrite { get; private set; }
+
+        public App()
+        {
+            CheckDirectives();
+        }
+
+        private static void CheckDirectives()
+        {
+#if OVERWRITE
+            Overwrite = true;
+#else
+            Overwrite = false;
+#endif
+        }
     }
 }

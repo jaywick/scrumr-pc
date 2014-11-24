@@ -1,16 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scrumr", "Scrumr\Scrumr.csproj", "{F78C363A-28B3-4509-AEDF-1DA1394C3100}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Overwrite|Any CPU = Overwrite|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{F78C363A-28B3-4509-AEDF-1DA1394C3100}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F78C363A-28B3-4509-AEDF-1DA1394C3100}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F78C363A-28B3-4509-AEDF-1DA1394C3100}.Overwrite|Any CPU.ActiveCfg = Overwrite|Any CPU
+		{F78C363A-28B3-4509-AEDF-1DA1394C3100}.Overwrite|Any CPU.Build.0 = Overwrite|Any CPU
 		{F78C363A-28B3-4509-AEDF-1DA1394C3100}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F78C363A-28B3-4509-AEDF-1DA1394C3100}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection

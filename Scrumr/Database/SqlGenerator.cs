@@ -12,7 +12,7 @@ namespace Scrumr
 {
     class SqlGenerator
     {
-        private static Dictionary<Type, string> _typeMap = _typeMap = new Dictionary<Type, string>
+        private static Dictionary<Type, string> _typeMap = new Dictionary<Type, string>
         {
             { typeof(byte), "TINYINT" },
             { typeof(bool), "BIT" },
@@ -29,8 +29,8 @@ namespace Scrumr
             { typeof(Enum), "INTEGER" },
         };
 
-        private static readonly string PrimaryKeyColumnFormat = "`{0}` INTEGER PRIMARY KEY AUTOINCREMENT";
-        private static readonly string ForeignKeyColumnFormat = "`{0}` INTEGER REFERENCES {1} ({2})";
+        private static readonly string PrimaryKeyColumnFormat = "`{0}` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT";
+        private static readonly string ForeignKeyColumnFormat = "`{0}` INTEGER NOT NULL REFERENCES {1} ({2})";
         private static readonly string GeneralColumnFormat = "`{0}` {1}";
 
         public static string GenerateCreateScriptFor(Type type)
@@ -49,11 +49,9 @@ namespace Scrumr
             var referenceColumns = entityType.GetProperties()
                 .Where(x => x.HasAttribute<ForeignKeyAttribute>());
 
-            // get all foreign key columns using the reference columns' foreign key metadata
+            // get all int columns that are the actual foreign keys
             var referenceIdentityColumns = entityType.GetProperties()
-                .Where(x => referenceColumns
-                    .Select(r => r.GetAttribute<ForeignKeyAttribute>().Name)
-                    .Contains(x.Name));
+                .Where(x => x.PropertyType.BaseType == typeof(Entity));
 
             // get all properties that aren't to be mapped
             var unmappedColumns = entityType.GetProperties()
@@ -68,7 +66,7 @@ namespace Scrumr
 
             yield return GeneratePrimaryKeyDefinition(identityColumn.Single());
 
-            foreach (var info in referenceColumns)
+            foreach (var info in referenceIdentityColumns)
                 yield return GenerateForeignKeyDefinition(info);
 
             foreach (var info in dataColumns)
@@ -82,12 +80,9 @@ namespace Scrumr
 
         private static string GenerateForeignKeyDefinition(PropertyInfo info)
         {
-            var name = info.GetAttribute<ForeignKeyAttribute>().Name;
+            var type = info.PropertyType;
 
-            var primaryKey = info.PropertyType.GetProperties()
-                .Single(x => x.HasAttribute<KeyAttribute>());
-
-            return String.Format(ForeignKeyColumnFormat, name, info.Name + "s", primaryKey.Name);
+            return String.Format(ForeignKeyColumnFormat, info.Name, type.Name + "s", "ID");
         }
 
         private static string GenerateColumnDefinition(PropertyInfo info)
@@ -99,8 +94,17 @@ namespace Scrumr
         {
             if (clrType.IsEnum)
                 return _typeMap[typeof(Enum)];
-            
-            return _typeMap[clrType];
+
+            if (clrType.IsGenericType && clrType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                return GetNullableType(clrType);
+
+            return _typeMap[clrType] + " NOT NULL";
+        }
+
+        private static string GetNullableType(Type clrType)
+        {
+            var innerType = clrType.GetGenericArguments().First();
+            return _typeMap[innerType];
         }
     }
 }
