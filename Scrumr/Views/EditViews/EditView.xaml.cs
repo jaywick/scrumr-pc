@@ -125,10 +125,7 @@ namespace Scrumr
                 if (!propertyView.IsValid)
                     throw new InvalidInputException(item);
 
-                var rawValue = propertyView.Value;
-                var finalValue = Convert.ChangeType(rawValue, item.Type);
-
-                property.SetValue(result, finalValue);
+                property.SetValue(result, propertyView.Value);
             }
 
             switch (Mode)

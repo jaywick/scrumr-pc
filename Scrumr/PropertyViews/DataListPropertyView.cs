@@ -25,10 +25,11 @@ namespace Scrumr
 
             View = new ComboBox
             {
-                ItemsSource = defaultSource,
                 DisplayMemberPath = "Name",
                 SelectedItem = selected,
             };
+
+            Source = defaultSource;
         }
 
         private ComboBox ActualView
