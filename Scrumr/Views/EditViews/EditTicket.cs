@@ -88,6 +88,8 @@ namespace Scrumr
         {
             var ticket = entity as Ticket;
             ticket.ProjectTicketId = ticket.Project.NextProjectTicketId++;
+
+            base.OnCreated(ticket);
         }
     }
 }

@@ -161,7 +161,7 @@ namespace Scrumr
 
         public void NewTicket(int sprintId, int featureId)
         {
-            ViewHelper.AddTicket(Context.Tickets, Context, Project.ID, sprintId, featureId);
+            ViewHelper.AddTicket(Context, Project.ID, sprintId, featureId);
             Update();
         }
 
@@ -175,25 +175,25 @@ namespace Scrumr
 
         public void NewSprint()
         {
-            ViewHelper.AddEntity<Sprint>(Context.Sprints, Context);
+            ViewHelper.AddEntity<Sprint>(Context);
             Update();
         }
 
         public void NewFeature()
         {
-            ViewHelper.AddEntity<Feature>(Context.Features, Context);
+            ViewHelper.AddEntity<Feature>(Context);
             Update();
         }
 
         public void NewTicket()
         {
-            ViewHelper.AddTicket(Context.Tickets, Context);
+            ViewHelper.AddTicket(Context);
             Update();
         }
 
         public void NewProject()
         {
-            ViewHelper.AddEntity<Project>(Context.Projects, Context);
+            ViewHelper.AddEntity<Project>(Context);
             Update();
         }
 

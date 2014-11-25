@@ -13,13 +13,13 @@ namespace Scrumr
 {
     public class ViewHelper
     {
-        public static void AddTicket<T>(DbSet<T> table, ScrumrContext context, long? projectId = null, long? sprintId = null, long? featureId = null) where T : Entity
+        public static void AddTicket(ScrumrContext context, long? projectId = null, long? sprintId = null, long? featureId = null)
         {
             var editView = new EditTicket(context, projectId, sprintId, featureId);
-            AddEntity<T>(table, context, editView);
+            AddEntity<Ticket>(context, editView);
         }
 
-        public static void AddEntity<T>(DbSet<T> table, ScrumrContext context, EditView editView = null) where T : Entity
+        public static void AddEntity<T>(ScrumrContext context, EditView editView = null) where T : Entity
         {
             if (editView == null)
                 editView = EditView.Create<T>(context);

@@ -20,14 +20,19 @@ namespace Scrumr
         protected override void OnCreated(Entity entity)
         {
             var project = entity as Project;
+            Context.Projects.Add(project);
+            Context.SaveChanges();
+
             var feature = new Feature { Name = "General", Project = project };
             var sprint = new Sprint { Name = "Backlog", Project = project };
 
             Context.Features.Add(feature);
             Context.Sprints.Add(sprint);
-
+            
             project.DefaultFeature = feature;
             project.Backlog = sprint;
+
+            base.OnCreated(project);
         }
     }
 }
