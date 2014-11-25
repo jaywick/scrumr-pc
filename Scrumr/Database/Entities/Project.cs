@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -17,8 +16,10 @@ namespace Scrumr
 
         public ICollection<Feature> Features { get; set; }
 
+        [Foreign]
         public long? BacklogId { get; set; }
 
+        [Foreign]
         public long? DefaultFeatureId { get; set; }
 
         public virtual Sprint Backlog { get; set; }

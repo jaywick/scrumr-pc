@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Scrumr;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Reflection;
 
 namespace Scrumr
@@ -30,8 +28,9 @@ namespace Scrumr
         };
 
         private static readonly string PrimaryKeyColumnFormat = "`{0}` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT";
-        private static readonly string ForeignKeyColumnFormat = "`{0}` INTEGER NOT NULL REFERENCES {1} ({2})";
+        private static readonly string ForeignKeyColumnFormat = "`{0}` INTEGER";
         private static readonly string GeneralColumnFormat = "`{0}` {1}";
+        private static readonly string NotNullKeyPhrase = "NOT NULL";
 
         public static string GenerateCreateScriptFor(Type type)
         {
@@ -43,25 +42,30 @@ namespace Scrumr
         {
             // get all primary keys
             var identityColumn = entityType.GetProperties()
-                .Where(x => x.HasAttribute<KeyAttribute>());
+                .Where(x => x.HasAttribute<PrimaryAttribute>());
 
-            // get all reference columns (ones with [ForeignKey] attribute)
-            var referenceColumns = entityType.GetProperties()
-                .Where(x => x.HasAttribute<ForeignKeyAttribute>());
+            // get all entity references used for navigation
+            var navigationItems = entityType.GetProperties()
+                .Where(x => x.PropertyType.BaseType == typeof(Entity));
+
+            // get all collections used for navigation
+            var navigationCollections = entityType.GetProperties()
+                .Where(x => x.PropertyType.IsGenericType && x.PropertyType.GetGenericArguments().First().BaseType == typeof(Entity));
 
             // get all int columns that are the actual foreign keys
             var referenceIdentityColumns = entityType.GetProperties()
-                .Where(x => x.PropertyType.BaseType == typeof(Entity));
+                .Where(x => x.HasAttribute<ForeignAttribute>());
 
             // get all properties that aren't to be mapped
             var unmappedColumns = entityType.GetProperties()
-                .Where(x => x.HasAttribute<NotMappedAttribute>());
+                .Where(x => x.HasAttribute<System.ComponentModel.DataAnnotations.Schema.NotMappedAttribute>());
 
             // get all remaining columns
             var dataColumns = entityType.GetProperties()
                 .Except(identityColumn)
-                .Except(referenceColumns)
+                .Except(navigationItems)
                 .Except(referenceIdentityColumns)
+                .Except(navigationCollections)
                 .Except(unmappedColumns);
 
             yield return GeneratePrimaryKeyDefinition(identityColumn.Single());
@@ -98,7 +102,7 @@ namespace Scrumr
             if (clrType.IsGenericType && clrType.GetGenericTypeDefinition() == typeof(Nullable<>))
                 return GetNullableType(clrType);
 
-            return _typeMap[clrType] + " NOT NULL";
+            return _typeMap[clrType] + " " + NotNullKeyPhrase;
         }
 
         private static string GetNullableType(Type clrType)

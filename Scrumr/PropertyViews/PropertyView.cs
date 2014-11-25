@@ -39,7 +39,7 @@ namespace Scrumr
                 return new CheckPropertyView(propertyItem);
 
             if (propertyItem.IsType<string>())
-                return new TextPropertyView(propertyItem, isLongAnswer: propertyItem.Attributes.Has<LongAnswerAttribute>());
+                return new TextPropertyView(propertyItem);
 
             if (propertyItem.IsNumericType)
                 return new NumericPropertyView(propertyItem);
@@ -69,22 +69,9 @@ namespace Scrumr
             IsNew = (value == null);
         }
 
-        public int Order
-        {
-            get
-            {
-                var orderAttribute = Attributes.Get<RenderOrderAttribute>();
-
-                if (orderAttribute == null)
-                    return int.MaxValue;
-                else
-                    return orderAttribute.Order;
-            }
-        }
-
         public bool IsRenderingIgnored
         {
-            get { return Attributes.IsOneOf(typeof(IgnoreRenderAttribute), typeof(NotMappedAttribute)); }
+            get { return Attributes.IsOneOf(typeof(NotMappedAttribute)); }
         }
 
         public bool IsEntityType

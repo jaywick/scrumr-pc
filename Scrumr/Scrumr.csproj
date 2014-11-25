@@ -93,13 +93,12 @@
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
     <Compile Include="Database\Entities\Entity.cs" />
+    <Compile Include="Database\Attributes\ForeignAttribute.cs" />
+    <Compile Include="Database\Attributes\PrimaryAttribute.cs" />
     <Compile Include="Database\FileSystem.cs" />
     <Compile Include="Database\SqlGenerator.cs" />
     <Compile Include="PropertyViews\EnumPropertyView.cs" />
     <Compile Include="Database\Entities\TicketState.cs" />
-    <Compile Include="Database\Attributes\IgnoreRenderAttribute.cs" />
-    <Compile Include="Database\Attributes\LongAnswerAttribute.cs" />
-    <Compile Include="Database\Attributes\RenderOrderAttribute.cs" />
     <Compile Include="Database\Entities\TicketType.cs" />
     <Compile Include="Database\Entities\Project.cs" />
     <Compile Include="Database\ScrumrContext.cs" />

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
@@ -13,8 +12,10 @@ namespace Scrumr
     {
         public string Description { get; set; }
 
+        [Foreign]
         public long FeatureId { get; set; }
 
+        [Foreign]
         public long SprintId { get; set; }
 
         public long ProjectTicketId { get; set; }
@@ -27,11 +28,13 @@ namespace Scrumr
 
         public TicketState State { get; set; }
 
+        [NotMapped]
         public Project Project
         {
             get { return Sprint.IfNotNull(x => x.Project); }
         }
 
+        [NotMapped]
         public long? ProjectId
         {
             get { return Sprint.IfNotNull(x => x.ProjectId); }

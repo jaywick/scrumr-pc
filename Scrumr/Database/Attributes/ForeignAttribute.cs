@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Scrumr
 {
-    class IgnoreRenderAttribute : System.Attribute
+    class ForeignAttribute : Attribute
     {
     }
 }

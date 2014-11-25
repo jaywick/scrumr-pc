@@ -113,11 +113,6 @@ namespace Scrumr
             {
                 var property = EntityType.GetProperty(item.Name);
 
-                // skip primary keys and ignored
-                var attributes = Attribute.GetCustomAttributes(property);
-                if (attributes.IsOneOf(typeof(KeyAttribute), typeof(IgnoreRenderAttribute), typeof(NotMappedAttribute)))
-                    continue;
-
                 var propertyView = PropertyViews
                     .Where(x => x != null)
                     .Single(x => x.Property.Name == property.Name);

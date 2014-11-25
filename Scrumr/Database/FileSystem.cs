@@ -22,7 +22,7 @@ namespace Scrumr
         {
             if (!File.Exists(filename) || App.Overwrite)
             {
-                //Create(filename);
+                Create(filename);
                 PopulateSampleData(filename);
             }
 
@@ -45,9 +45,9 @@ namespace Scrumr
                 var command = connection.CreateCommand();
                 var commandText = new StringBuilder();
 
-                foreach (var item in entities)
+                foreach (var entity in entities)
                 {
-                    commandText.AppendLine(SqlGenerator.GenerateCreateScriptFor(item));
+                    commandText.AppendLine(SqlGenerator.GenerateCreateScriptFor(entity));
                 }
 
                 command.CommandText = commandText.ToString();
