@@ -24,10 +24,7 @@ namespace Scrumr
             if (editView == null)
                 editView = EditView.Create<T>(context);
 
-            if (editView.ShowDialog() == true)
-                table.Add(editView.Result as T);
-
-            context.SaveChanges();
+            editView.ShowDialog();
         }
 
         public static void EditEntity<T>(T entity, ScrumrContext context, EditView editView = null) where T : Entity
@@ -35,8 +32,7 @@ namespace Scrumr
             if (editView == null)
                 editView = EditView.Create<T>(context, entity);
 
-            if (editView.ShowDialog() == true)
-                context.SaveChanges();
+            editView.ShowDialog();
         }
 
         public static async void RemoveEntity<T>(T entity, ScrumrContext context) where T : Entity

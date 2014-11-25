@@ -22,7 +22,7 @@ namespace Scrumr
         {
             if (!File.Exists(filename) || App.Overwrite)
             {
-                Create(filename);
+                //Create(filename);
                 PopulateSampleData(filename);
             }
 
@@ -60,20 +60,35 @@ namespace Scrumr
         private static void PopulateSampleData(string filename)
         {
             var context = new ScrumrContext(filename);
-            
-            var project = new Project { ID = 1, Name = SampleProjectName };
 
-            var backlogSprint = new Sprint { ID = 1, Name = SampleSprintName, ProjectId = 1 };
-            var defaultFeature = new Feature { ID = 1, Name = SampleFeatureName, ProjectId = 1 };
+            var project = AddProject(context);
+            context.SaveChanges();
 
-            project.BacklogId = backlogSprint.ID;
-            //project.DefaultFeatureId = defaultFeature.ID;
-
-            context.Sprints.Add(backlogSprint);
-            context.Features.Add(defaultFeature);
-            context.Projects.Add(project);
-
+            AddBacklog(context, project);
+            AddDefaultFeature(context, project);
             context.SaveChanges();
         }
+
+        private static void AddDefaultFeature(ScrumrContext context, Project project)
+        {
+            var backlogSprint = new Sprint { Name = SampleSprintName, Project = project };
+            project.Backlog = backlogSprint;
+            context.Sprints.Add(backlogSprint);
+        }
+
+        private static void AddBacklog(ScrumrContext context, Project project)
+        {
+            var defaultFeature = new Feature { Name = SampleFeatureName, Project = project };
+            project.DefaultFeature = defaultFeature;
+            context.Features.Add(defaultFeature);
+        }
+
+        private static Project AddProject(ScrumrContext context)
+        {
+            var project = new Project { Name = SampleProjectName };
+            context.Projects.Add(project);
+            return project;
+        }
+
     }
 }

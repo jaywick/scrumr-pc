@@ -19,9 +19,9 @@ namespace Scrumr
 
         public long ProjectTicketId { get; set; }
 
-        public Feature Feature { get; set; }
+        public virtual Feature Feature { get; set; }
 
-        public Sprint Sprint { get; set; }
+        public virtual Sprint Sprint { get; set; }
 
         public TicketType Type { get; set; }
 

@@ -17,9 +17,9 @@ namespace Scrumr
 
         public ICollection<Feature> Features { get; set; }
 
-        public long BacklogId { get; set; }
+        public long? BacklogId { get; set; }
 
-        public long DefaultFeatureId { get; set; }
+        public long? DefaultFeatureId { get; set; }
 
         public virtual Sprint Backlog { get; set; }
 

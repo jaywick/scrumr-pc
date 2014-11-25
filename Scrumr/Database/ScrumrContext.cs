@@ -61,7 +61,7 @@ namespace Scrumr
 
             modelBuilder.Entity<Project>()
                 .HasKey(p => p.ID)
-                .HasRequired(p => p.Backlog);
+                .HasOptional(p => p.Backlog);
 
             modelBuilder.Entity<Feature>()
                 .HasKey(s => s.ID)
@@ -71,7 +71,7 @@ namespace Scrumr
 
             modelBuilder.Entity<Project>()
                 .HasKey(p => p.ID)
-                .HasRequired(p => p.DefaultFeature);
+                .HasOptional(p => p.DefaultFeature);
         }
     }
 }
