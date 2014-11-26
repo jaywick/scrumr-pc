@@ -61,34 +61,31 @@ namespace Scrumr
         {
             var context = new ScrumrContext(filename);
 
-            var project = AddProject(context);
-            context.SaveChanges();
+            using (var transaction = context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var project = new Project { Name = "Project 1" };
+                    context.Projects.Add(project);
+                    context.SaveChanges();
 
-            AddBacklog(context, project);
-            AddDefaultFeature(context, project);
-            context.SaveChanges();
+                    var backlog = new Sprint { Name = "Backlog", Project = project };
+                    project.Backlog = backlog;
+                    context.Sprints.Add(backlog);
+
+                    var feature = new Feature { Name = "General", Project = project };
+                    project.DefaultFeature = feature;
+                    context.Features.Add(feature);
+                    context.SaveChanges();
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
-
-        private static void AddDefaultFeature(ScrumrContext context, Project project)
-        {
-            var backlogSprint = new Sprint { Name = SampleSprintName, Project = project };
-            project.Backlog = backlogSprint;
-            context.Sprints.Add(backlogSprint);
-        }
-
-        private static void AddBacklog(ScrumrContext context, Project project)
-        {
-            var defaultFeature = new Feature { Name = SampleFeatureName, Project = project };
-            project.DefaultFeature = defaultFeature;
-            context.Features.Add(defaultFeature);
-        }
-
-        private static Project AddProject(ScrumrContext context)
-        {
-            var project = new Project { Name = SampleProjectName };
-            context.Projects.Add(project);
-            return project;
-        }
-
     }
 }

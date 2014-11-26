@@ -19,20 +19,33 @@ namespace Scrumr
 
         protected override void OnCreated(Entity entity)
         {
-            var project = entity as Project;
-            Context.Projects.Add(project);
-            Context.SaveChanges();
+            using (var transaction = Context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var project = entity as Project;
+                    Context.Projects.Add(project);
+                    Context.SaveChanges();
 
-            var feature = new Feature { Name = "General", Project = project };
-            var sprint = new Sprint { Name = "Backlog", Project = project };
+                    var feature = new Feature { Name = "General", Project = project };
+                    var sprint = new Sprint { Name = "Backlog", Project = project };
 
-            Context.Features.Add(feature);
-            Context.Sprints.Add(sprint);
-            
-            project.DefaultFeature = feature;
-            project.Backlog = sprint;
+                    Context.Features.Add(feature);
+                    Context.Sprints.Add(sprint);
 
-            base.OnCreated(project);
+                    project.DefaultFeature = feature;
+                    project.Backlog = sprint;
+
+                    base.OnCreated(project);
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
     }
 }
