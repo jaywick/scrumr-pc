@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Scrumr
 {
-    class PrimaryAttribute : Attribute
+    public class PrimaryAttribute : Attribute
     {
     }
 }

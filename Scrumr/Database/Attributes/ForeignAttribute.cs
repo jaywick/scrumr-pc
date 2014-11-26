@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Scrumr
 {
-    class ForeignAttribute : Attribute
+    public class ForeignAttribute : Attribute
     {
     }
 }

@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace Scrumr
 {
-    class SqlGenerator
+    public class SqlGenerator
     {
         private static Dictionary<Type, string> _typeMap = new Dictionary<Type, string>
         {
@@ -27,8 +27,8 @@ namespace Scrumr
             { typeof(Enum), "INTEGER" },
         };
 
-        private static readonly string PrimaryKeyColumnFormat = "`{0}` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT";
-        private static readonly string ForeignKeyColumnFormat = "`{0}` INTEGER";
+        private static readonly string PrimaryKeyColumnFormat = "`{0}` BIGINT NOT NULL PRIMARY KEY AUTOINCREMENT";
+        private static readonly string ForeignKeyColumnFormat = "`{0}` BIGINT NOT NULL";
         private static readonly string GeneralColumnFormat = "`{0}` {1}";
         private static readonly string NotNullKeyPhrase = "NOT NULL";
 
@@ -38,7 +38,7 @@ namespace Scrumr
             return String.Format("CREATE TABLE {0} ({1});", type.Name + "s", columns);
         }
 
-        private static IEnumerable<string> GenerateColumnDefinitions(Type entityType)
+        public static IEnumerable<string> GenerateColumnDefinitions(Type entityType)
         {
             // get all primary keys
             var identityColumn = entityType.GetProperties()
@@ -77,24 +77,24 @@ namespace Scrumr
                 yield return GenerateColumnDefinition(info);
         }
 
-        private static string GeneratePrimaryKeyDefinition(PropertyInfo info)
+        public static string GeneratePrimaryKeyDefinition(PropertyInfo info)
         {
             return String.Format(PrimaryKeyColumnFormat, info.Name);
         }
 
-        private static string GenerateForeignKeyDefinition(PropertyInfo info)
+        public static string GenerateForeignKeyDefinition(PropertyInfo info)
         {
             var type = info.PropertyType;
 
             return String.Format(ForeignKeyColumnFormat, info.Name, type.Name + "s", "ID");
         }
 
-        private static string GenerateColumnDefinition(PropertyInfo info)
+        public static string GenerateColumnDefinition(PropertyInfo info)
         {
             return String.Format(GeneralColumnFormat, info.Name, GetSqlDataType(info.PropertyType));
         }
 
-        private static string GetSqlDataType(Type clrType)
+        public static string GetSqlDataType(Type clrType)
         {
             if (clrType.IsEnum)
                 return _typeMap[typeof(Enum)];
@@ -105,9 +105,12 @@ namespace Scrumr
             return _typeMap[clrType] + " " + NotNullKeyPhrase;
         }
 
-        private static string GetNullableType(Type clrType)
+        public static string GetNullableType(Type clrType)
         {
-            var innerType = clrType.GetGenericArguments().First();
+            var innerType = clrType.GetGenericArguments().FirstOrDefault();
+
+            if (innerType == null) return null;
+
             return _typeMap[innerType];
         }
     }
