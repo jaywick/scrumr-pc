@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace Scrumr
+namespace Scrumr.Client
 {
     public class NumericPropertyView : PropertyView
     {

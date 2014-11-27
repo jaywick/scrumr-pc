@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scrumr
+namespace Scrumr.Client.Database
 {
     public class Entity
     {

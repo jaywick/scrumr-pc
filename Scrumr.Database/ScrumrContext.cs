@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Data.SQLite;
 
-namespace Scrumr
+namespace Scrumr.Client.Database
 {
     public class ScrumrContext : DbContext
     {

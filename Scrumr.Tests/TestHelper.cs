@@ -5,7 +5,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scrumr.Tests
+namespace Scrumr.Client.Tests
 {
     class TestHelper
     {

@@ -16,8 +16,9 @@ using System.Windows.Shapes;
 using System.Runtime;
 using System.Data.Entity;
 using MahApps.Metro.Controls;
+using Scrumr.Client.Database;
 
-namespace Scrumr
+namespace Scrumr.Client
 {
     public partial class MainWindow : MetroWindow
     {

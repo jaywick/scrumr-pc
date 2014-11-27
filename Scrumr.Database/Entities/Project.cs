@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scrumr
+namespace Scrumr.Client.Database
 {
     [Table("Projects")]
     public class Project : Entity

@@ -4,14 +4,15 @@ using System.Data.Entity;
 using System.Data.Entity.Core.EntityClient;
 using System.Data.SqlClient;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scrumr
+namespace Scrumr.Client.Database
 {
-    class FileSystem
+    public class FileSystem
     {
         private const string DefaultDatabase = "scrumr.sqlite";
         private const string SampleSprintName = "Backlog";
@@ -20,13 +21,25 @@ namespace Scrumr
 
         public static ScrumrContext LoadContext(string filename = DefaultDatabase)
         {
-            if (!File.Exists(filename) || App.Overwrite)
+            if (!File.Exists(filename) || Overwrite)
             {
                 Create(filename);
                 PopulateSampleData(filename);
             }
 
             return new ScrumrContext(filename);
+        }
+
+        public static bool Overwrite
+        {
+            get
+            {
+#if OVERWRITE
+                return true;
+#else
+                return false;
+#endif
+            }
         }
 
         public static void Create(string filename)

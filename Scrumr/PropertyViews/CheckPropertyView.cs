@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 
-namespace Scrumr
+namespace Scrumr.Client
 {
     public class CheckPropertyView : PropertyView
     {

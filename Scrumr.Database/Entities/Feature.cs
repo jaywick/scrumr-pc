@@ -4,10 +4,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 
-namespace Scrumr
+namespace Scrumr.Client.Database
 {
-    [Table("Sprints")]
-    public class Sprint : Entity
+    [Table("Features")]
+    public class Feature : Entity
     {
         [Foreign]
         public long ProjectId { get; set; }

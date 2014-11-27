@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Scrumr;
+using Scrumr.Client;
 using System.Reflection;
 
-namespace Scrumr
+namespace Scrumr.Client.Database
 {
     public class SqlGenerator
     {

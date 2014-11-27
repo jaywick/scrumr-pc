@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using MahApps.Metro.Controls.Dialogs;
+using Scrumr.Client.Database;
 
-namespace Scrumr
+namespace Scrumr.Client
 {
     public class ViewDirector
     {

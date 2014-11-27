@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Scrumr
+namespace Scrumr.Client
 {
     public class InvalidInputException : Exception
     {

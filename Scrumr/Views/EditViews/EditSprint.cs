@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Scrumr.Client.Database;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scrumr
+namespace Scrumr.Client
 {
     class EditSprint : EditView
     {

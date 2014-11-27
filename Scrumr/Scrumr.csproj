@@ -7,7 +7,7 @@
     <ProjectGuid>{F78C363A-28B3-4509-AEDF-1DA1394C3100}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Scrumr</RootNamespace>
+    <RootNamespace>Scrumr.Client</RootNamespace>
     <AssemblyName>Scrumr</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -92,22 +92,13 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
-    <Compile Include="Database\Entities\Entity.cs" />
-    <Compile Include="Database\Attributes\ForeignAttribute.cs" />
-    <Compile Include="Database\Attributes\PrimaryAttribute.cs" />
-    <Compile Include="Database\FileSystem.cs" />
-    <Compile Include="Database\SqlGenerator.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="PropertyViews\EnumPropertyView.cs" />
-    <Compile Include="Database\Entities\TicketState.cs" />
-    <Compile Include="Database\Entities\TicketType.cs" />
-    <Compile Include="Database\Entities\Project.cs" />
-    <Compile Include="Database\ScrumrContext.cs" />
     <Compile Include="PropertyViews\CheckPropertyView.cs" />
     <Compile Include="PropertyViews\DataListPropertyView.cs" />
     <Compile Include="PropertyViews\NumericPropertyView.cs" />
     <Compile Include="PropertyViews\PropertyView.cs" />
     <Compile Include="PropertyViews\TextPropertyView.cs" />
-    <Compile Include="Extensions.cs" />
     <Compile Include="Views\BoardView.xaml.cs">
       <DependentUpon>BoardView.xaml</DependentUpon>
     </Compile>
@@ -125,9 +116,6 @@
     <Compile Include="Views\HeaderView.xaml.cs">
       <DependentUpon>HeaderView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Database\Entities\Feature.cs" />
-    <Compile Include="Database\Entities\Sprint.cs" />
-    <Compile Include="Database\Entities\Ticket.cs" />
     <Compile Include="Views\TicketView.xaml.cs">
       <DependentUpon>TicketView.xaml</DependentUpon>
     </Compile>
@@ -198,7 +186,12 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Scrumr.Database\Scrumr.Database.csproj">
+      <Project>{cbdf0634-9c6d-40bd-8d95-141ccb946f56}</Project>
+      <Name>Scrumr.Database</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Data.SQLite.Core.1.0.94.0\build\net45\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.94.0\build\net45\System.Data.SQLite.Core.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

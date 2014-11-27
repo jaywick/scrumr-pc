@@ -4,11 +4,11 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 
-namespace Scrumr
+namespace Scrumr.Client.Database
 {
-    public enum TicketType
+    public enum TicketState
     {
-        Task = 1,
-        Bug = 2,
+        Open = 1,
+        Closed = 2,
     }
 }

@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Scrumr
+namespace Scrumr.Client.Database
 {
     [Table("Tickets")]
     public class Ticket : Entity
@@ -31,13 +31,25 @@ namespace Scrumr
         [NotMapped]
         public Project Project
         {
-            get { return Sprint.IfNotNull(x => x.Project); }
+            get
+            {
+                if (Sprint == null)
+                    return null;
+
+                return Sprint.Project;
+            }
         }
 
         [NotMapped]
         public long? ProjectId
         {
-            get { return Sprint.IfNotNull(x => x.ProjectId); }
+            get
+            {
+                if (Sprint == null)
+                    return null;
+
+                return Sprint.ProjectId;
+            }
         }
     }
 }

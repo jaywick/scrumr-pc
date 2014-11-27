@@ -7,8 +7,9 @@ using System.Windows;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+using Scrumr.Client.Database;
 
-namespace Scrumr
+namespace Scrumr.Client
 {
     public abstract class PropertyView
     {

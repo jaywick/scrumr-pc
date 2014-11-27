@@ -6,9 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using Scrumr;
+using Scrumr.Client;
+using Scrumr.Client.Database;
 
-namespace Scrumr
+namespace Scrumr.Client
 {
     public class DataListPropertyView : PropertyView
     {

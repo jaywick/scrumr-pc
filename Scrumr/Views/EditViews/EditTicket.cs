@@ -4,9 +4,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
-using Scrumr;
+using Scrumr.Client;
+using Scrumr.Client.Database;
 
-namespace Scrumr
+namespace Scrumr.Client
 {
     class EditTicket : EditView
     {
