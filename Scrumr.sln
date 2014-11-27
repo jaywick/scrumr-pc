@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scrumr", "Scrumr\Scrumr.csproj", "{F78C363A-28B3-4509-AEDF-1DA1394C3100}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scrumr.Client", "Scrumr.Client\Scrumr.Client.csproj", "{F78C363A-28B3-4509-AEDF-1DA1394C3100}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scrumr.Tests", "Scrumr.Tests\Scrumr.Tests.csproj", "{E2897504-B1DA-49C9-8F92-B292778DE857}"
 EndProject

@@ -78,9 +78,9 @@
       <Project>{cbdf0634-9c6d-40bd-8d95-141ccb946f56}</Project>
       <Name>Scrumr.Database</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Scrumr\Scrumr.csproj">
+    <ProjectReference Include="..\Scrumr.Client\Scrumr.Client.csproj">
       <Project>{f78c363a-28b3-4509-aedf-1da1394c3100}</Project>
-      <Name>Scrumr</Name>
+      <Name>Scrumr.Client</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>
