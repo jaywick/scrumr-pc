@@ -59,7 +59,7 @@ namespace Scrumr
                 Board.Context = FileSystem.LoadContext();
 
                 await Board.Context.LoadAllAsync();
-                Board.Project = await GetDefaultProject();
+                Board.Project = await GetDefaultProjectAsync();
                 this.ProjectsList.SelectedItem = Board.Project;
                 Board.Update();
 
@@ -77,9 +77,9 @@ namespace Scrumr
             Board.Context.SaveChanges();
         }
 
-        private async Task<Project> GetDefaultProject()
+        private async Task<Project> GetDefaultProjectAsync()
         {
-            return await Task.Run(() => Board.Context.Projects.First());
+            return await Board.Context.Projects.FirstAsync();
         }
 
         public DisposableBusyDisplay BusyDisplay

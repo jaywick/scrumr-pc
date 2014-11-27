@@ -40,15 +40,10 @@ namespace Scrumr
 
         public async Task LoadAllAsync()
         {
-            await Task.Run(() => LoadAll());
-        }
-
-        public void LoadAll()
-        {
-            Projects.Load();
-            Features.Load();
-            Sprints.Load();
-            Tickets.Load();
+            await Projects.LoadAsync();
+            await Features.LoadAsync();
+            await Sprints.LoadAsync();
+            await Tickets.LoadAsync();
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
