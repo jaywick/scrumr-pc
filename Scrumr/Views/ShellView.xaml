@@ -18,11 +18,11 @@
             <Label Content="for PC" FontSize="22" Foreground="Gray" Margin="76,0,0,0" HorizontalAlignment="Left" />
             <DockPanel HorizontalAlignment="Right" Margin="0,0,0,10">
                 <Button x:Name="AddButton" Content="+" FontSize="20" Width="75" BorderBrush="{x:Null}" Background="{x:Null}"/>
-                <ComboBox x:Name="ProjectsList" DisplayMemberPath="Name" FontSize="15" Width="200" BorderBrush="{x:Null}" Background="{x:Null}"/>
+                <ComboBox x:Name="ProjectsList" DisplayMemberPath="Name" FontSize="15" Width="200" BorderBrush="{x:Null}" Background="{x:Null}" SelectionChanged="OnProjectSelected"/>
             </DockPanel>
         </Grid>
-        
-        <local:BoardView Grid.Row="1" x:Name="Board" Visibility="Collapsed" />
+
+        <local:BoardView Grid.Row="1" x:Name="Board" Visibility="Collapsed" OnProjectAdded="OnProjectAdded" />
         <Controls:ProgressRing Grid.Row="1" x:Name="ProgressBusy" IsActive="True" />
     </Grid>
 </Controls:MetroWindow >

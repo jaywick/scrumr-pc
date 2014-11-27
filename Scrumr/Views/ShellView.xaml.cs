@@ -21,22 +21,18 @@ namespace Scrumr
 {
     public partial class MainWindow : MetroWindow
     {
+        private bool _lockProjectSelection = false;
+
         public MainWindow()
         {
             InitializeComponent();
             this.LeftWindowCommands = new WindowCommands();
-            
+
             this.Loaded += (s, e) => Load();
             this.Closing += (s, e) => Save();
 
             loadAddButton();
-            setupProjectsList();
-        }
-
-        private void setupProjectsList()
-        {
             this.ProjectsList.Items.Clear();
-            this.ProjectsList.SelectionChanged += (s, e) => SwitchProject(e.AddedItems[0] as Project);
         }
 
         private void loadAddButton()
@@ -63,8 +59,46 @@ namespace Scrumr
                 this.ProjectsList.SelectedItem = Board.Project;
                 Board.Update();
 
-                Board.Context.Projects.ToList().ForEach(x => this.ProjectsList.Items.Add(x));
+                ReloadProjectsList();
             }
+        }
+
+        private void ReloadProjectsList()
+        {
+            ProjectsList.Items.Clear();
+
+            foreach (var item in Board.Context.Projects)
+                ProjectsList.Items.Add(item);
+        }
+
+        private void OnProjectSelected(object s, SelectionChangedEventArgs e)
+        {
+            if (_lockProjectSelection)
+                return;
+
+            if (e.AddedItems.Count == 0)
+                return;
+
+            Project selectedProject;
+
+            if (e.AddedItems.Count > 0)
+                selectedProject = e.AddedItems[e.AddedItems.Count - 1] as Project;
+            else
+                selectedProject = e.AddedItems[0] as Project;
+
+            if (selectedProject == null)
+                return;
+
+            SwitchProject(selectedProject);
+        }
+
+        private void OnProjectAdded(Project project)
+        {
+            _lockProjectSelection = true;
+            ReloadProjectsList();
+            _lockProjectSelection = false;
+
+            ProjectsList.SelectedItem = project;
         }
 
         private void SwitchProject(Project project)
@@ -81,6 +115,8 @@ namespace Scrumr
         {
             return await Board.Context.Projects.FirstAsync();
         }
+
+        #region BusyDisplay
 
         public DisposableBusyDisplay BusyDisplay
         {
@@ -105,5 +141,7 @@ namespace Scrumr
                 _mainWindow.Board.Visibility = System.Windows.Visibility.Visible;
             }
         }
+
+        #endregion
     }
 }

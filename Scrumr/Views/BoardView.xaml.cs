@@ -17,6 +17,8 @@ namespace Scrumr
 {
     public partial class BoardView : UserControl
     {
+        public event System.Action<Project> OnProjectAdded;
+
         public ScrumrContext Context { get; set; }
 
         public Func<Sprint, bool> SprintFilter { get; set; }
@@ -193,8 +195,11 @@ namespace Scrumr
 
         public void NewProject()
         {
-            ViewHelper.AddEntity<Project>(Context);
+            var project = ViewHelper.AddEntity<Project>(Context);
             Update();
+
+            if (OnProjectAdded != null)
+                OnProjectAdded.Invoke(project);
         }
 
     }
