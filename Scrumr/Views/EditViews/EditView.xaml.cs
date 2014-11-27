@@ -169,7 +169,8 @@ namespace Scrumr
                     // input
                     itemGrid.Children.Add(propertyView.View);
                     Grid.SetColumn(propertyView.View, 1);
-                    (propertyView.View as Control).Margin = new Thickness(10, 5, 10, 5);
+                    ((Control)propertyView.View).FontSize = 15;
+                    ((Control)propertyView.View).Margin = new Thickness(10, 8, 10, 8);
                     Contents.Children.Add(itemGrid);
 
                     PropertyViews.Add(propertyView);
