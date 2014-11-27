@@ -12,23 +12,23 @@ namespace Scrumr
     {
         private static Dictionary<Type, string> _typeMap = new Dictionary<Type, string>
         {
-            { typeof(byte), "TINYINT" },
-            { typeof(bool), "BIT" },
-            { typeof(Int16), "SMALLINT" },
-            { typeof(Int32), "INT32" },
-            { typeof(Int64), "BIGINT" },
-            { typeof(decimal), "DECIMAL" },
-            { typeof(double), "DOUBLE" },
+            { typeof(byte), "INTEGER" },
+            { typeof(bool), "INTEGER" },
+            { typeof(Int16), "INTEGER" },
+            { typeof(Int32), "INTEGER" },
+            { typeof(Int64), "INTEGER" },
+            { typeof(decimal), "REAL" },
+            { typeof(double), "REAL" },
             { typeof(float), "REAL" },
             { typeof(DateTime), "DATETIME" },
             { typeof(byte[]), "BLOB" },
             { typeof(string), "TEXT" },
-            { typeof(char), "NCHAR(1)" },
+            { typeof(char), "INTEGER" },
             { typeof(Enum), "INTEGER" },
         };
 
-        private static readonly string PrimaryKeyColumnFormat = "`{0}` BIGINT NOT NULL PRIMARY KEY AUTOINCREMENT";
-        private static readonly string ForeignKeyColumnFormat = "`{0}` BIGINT NOT NULL";
+        private static readonly string PrimaryKeyColumnFormat = "`{0}` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT";
+        private static readonly string ForeignKeyColumnFormat = "`{0}` INTEGER";
         private static readonly string GeneralColumnFormat = "`{0}` {1}";
         private static readonly string NotNullKeyPhrase = "NOT NULL";
 

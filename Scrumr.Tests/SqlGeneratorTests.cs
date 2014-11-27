@@ -8,9 +8,9 @@ namespace Scrumr.Tests
     [TestFixture]
     public class SqlGeneratorTests
     {
-        [TestCase(typeof(long?), "BIGINT")]
-        [TestCase(typeof(byte?), "TINYINT")]
-        [TestCase(typeof(bool?), "BIT")]
+        [TestCase(typeof(long?), "INTEGER")]
+        [TestCase(typeof(byte?), "INTEGER")]
+        [TestCase(typeof(bool?), "INTEGER")]
         public void ShouldReturnNullableType(Type input, string expected)
         {
             var actual = SqlGenerator.GetNullableType(input);
@@ -26,8 +26,8 @@ namespace Scrumr.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        [TestCase(typeof(long), "BIGINT NOT NULL")]
-        [TestCase(typeof(long?), "BIGINT")]
+        [TestCase(typeof(long), "INTEGER NOT NULL")]
+        [TestCase(typeof(long?), "INTEGER")]
         public void ShouldReturnSqlDataType(Type input, string expected)
         {
             var actual = SqlGenerator.GetSqlDataType(input);
@@ -35,8 +35,8 @@ namespace Scrumr.Tests
         }
 
         [TestCase("Message", "`Message` TEXT NOT NULL")]
-        [TestCase("NullableValue", "`NullableValue` BIGINT")]
-        [TestCase("AnotherValue", "`AnotherValue` BIGINT NOT NULL")]
+        [TestCase("NullableValue", "`NullableValue` INTEGER")]
+        [TestCase("AnotherValue", "`AnotherValue` INTEGER NOT NULL")]
         public void ShouldGenerateColumnDefinition(string propertyName, string expected)
         {
             var input = TestHelper.GetPropertyInfo(typeof(TestEntity), propertyName);
@@ -45,7 +45,7 @@ namespace Scrumr.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        [TestCase("ForeignKeyReference", "`ForeignKeyReference` BIGINT NOT NULL")]
+        [TestCase("ForeignKeyReference", "`ForeignKeyReference` INTEGER NOT NULL")]
         public void ShouldGenerateForeignKeyDefinition(string propertyName, string expected)
         {
             var input = TestHelper.GetPropertyInfo(typeof(TestEntity), propertyName);
@@ -54,7 +54,7 @@ namespace Scrumr.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        [TestCase("PrimaryKey", "`PrimaryKey` BIGINT NOT NULL PRIMARY KEY AUTOINCREMENT")]
+        [TestCase("PrimaryKey", "`PrimaryKey` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT")]
         public void ShouldGeneratePrimaryKeyDefinition(string propertyName, string expected)
         {
             var input = TestHelper.GetPropertyInfo(typeof(TestEntity), propertyName);
