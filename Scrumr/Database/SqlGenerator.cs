@@ -27,8 +27,8 @@ namespace Scrumr
             { typeof(Enum), "INTEGER" },
         };
 
-        private static readonly string PrimaryKeyColumnFormat = "`{0}` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT";
-        private static readonly string ForeignKeyColumnFormat = "`{0}` INTEGER";
+        private static readonly string PrimaryKeyColumnFormat = "`{0}` {1} PRIMARY KEY AUTOINCREMENT";
+        private static readonly string ForeignKeyColumnFormat = "`{0}` {1}";
         private static readonly string GeneralColumnFormat = "`{0}` {1}";
         private static readonly string NotNullKeyPhrase = "NOT NULL";
 
@@ -79,14 +79,14 @@ namespace Scrumr
 
         public static string GeneratePrimaryKeyDefinition(PropertyInfo info)
         {
-            return String.Format(PrimaryKeyColumnFormat, info.Name);
+            return String.Format(PrimaryKeyColumnFormat, info.Name, GetSqlDataType(info.PropertyType));
         }
 
         public static string GenerateForeignKeyDefinition(PropertyInfo info)
         {
             var type = info.PropertyType;
 
-            return String.Format(ForeignKeyColumnFormat, info.Name, type.Name + "s", "ID");
+            return String.Format(ForeignKeyColumnFormat, info.Name, GetSqlDataType(info.PropertyType));
         }
 
         public static string GenerateColumnDefinition(PropertyInfo info)

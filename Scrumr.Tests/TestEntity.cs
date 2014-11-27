@@ -19,7 +19,12 @@ namespace Scrumr.Tests
         public long AnotherValue { get; set; }
 
         [Foreign]
+        public long? NullableForeignKeyId { get; set; }
+
+        [Foreign]
         public long ForeignKeyId { get; set; }
+
+        public TestForeignEntity NullableForeignKeyReference { get; set; }
 
         public TestForeignEntity ForeignKeyReference { get; set; }
     }

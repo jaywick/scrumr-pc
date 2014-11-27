@@ -11,7 +11,12 @@ namespace Scrumr.Tests
     {
         public static PropertyInfo GetPropertyInfo(Type type, string propertyName)
         {
-            return type.GetProperty(propertyName);
+            var result = type.GetProperty(propertyName);
+
+            if (result == null)
+                throw new InvalidOperationException(String.Format("The type {0} does not contain any properties with the name {1}", type.Name, propertyName));
+
+            return result;
         }
     }
 }

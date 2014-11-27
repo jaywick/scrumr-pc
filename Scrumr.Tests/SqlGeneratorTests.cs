@@ -45,7 +45,8 @@ namespace Scrumr.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        [TestCase("ForeignKeyReference", "`ForeignKeyReference` INTEGER NOT NULL")]
+        [TestCase("NullableForeignKeyId", "`NullableForeignKeyId` INTEGER")]
+        [TestCase("ForeignKeyId", "`ForeignKeyId` INTEGER NOT NULL")]
         public void ShouldGenerateForeignKeyDefinition(string propertyName, string expected)
         {
             var input = TestHelper.GetPropertyInfo(typeof(TestEntity), propertyName);
