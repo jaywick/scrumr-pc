@@ -11,7 +11,7 @@ using MahApps.Metro.Controls.Dialogs;
 
 namespace Scrumr
 {
-    public class ViewHelper
+    public class ViewDirector
     {
         public static Ticket AddTicket(ScrumrContext context, long? projectId = null, long? sprintId = null, long? featureId = null)
         {

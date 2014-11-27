@@ -38,10 +38,10 @@ namespace Scrumr
         private void loadAddButton()
         {
             var _addMenu = new ContextMenu();
-            _addMenu.Items.Add(ViewHelper.CreateMenuItem("Ticket", Board.NewTicket));
-            _addMenu.Items.Add(ViewHelper.CreateMenuItem("Feature", Board.NewFeature));
-            _addMenu.Items.Add(ViewHelper.CreateMenuItem("Sprint", Board.NewSprint));
-            _addMenu.Items.Add(ViewHelper.CreateMenuItem("Project", Board.NewProject));
+            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Ticket", Board.NewTicket));
+            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Feature", Board.NewFeature));
+            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Sprint", Board.NewSprint));
+            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Project", Board.NewProject));
 
             AddButton.Click += (s, e) => _addMenu.IsOpen = true;
             _addMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;

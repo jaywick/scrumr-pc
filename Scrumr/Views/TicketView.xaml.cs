@@ -33,8 +33,8 @@ namespace Scrumr
             Foreground = ticket.State == TicketState.Open ? Brushes.Black : Brushes.Gray;
 
             ContextMenu = new ContextMenu();
-            ContextMenu.Items.Add(ViewHelper.CreateMenuItem("Edit",  () => RequestEdit(ticket)));
-            ContextMenu.Items.Add(ViewHelper.CreateMenuItem("Remove", () => RequestRemove(ticket)));
+            ContextMenu.Items.Add(ViewDirector.CreateMenuItem("Edit",  () => RequestEdit(ticket)));
+            ContextMenu.Items.Add(ViewDirector.CreateMenuItem("Remove", () => RequestRemove(ticket)));
 
             PreviewMouseMove += UserControl_PreviewMouseMove;
         }

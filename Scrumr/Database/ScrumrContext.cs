@@ -21,23 +21,6 @@ namespace Scrumr
                     ConnectionString = new SQLiteConnectionStringBuilder() { DataSource = filename, ForeignKeys = true }.ConnectionString
                 }, true) { }
 
-        public List<Entity> GetCollection(Type type)
-        {
-            if (type == typeof(Project))
-                return Projects.ToList<Entity>();
-
-            if (type == typeof(Ticket))
-                return Tickets.ToList<Entity>();
-
-            if (type == typeof(Feature))
-                return Features.ToList<Entity>();
-
-            if (type == typeof(Sprint))
-                return Sprints.ToList<Entity>();
-
-            throw new ArgumentException(string.Format("Collection of '{0}' does not exist in Context", type.Name));
-        }
-
         public async Task LoadAllAsync()
         {
             await Projects.LoadAsync();

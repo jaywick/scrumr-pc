@@ -17,5 +17,16 @@ namespace Scrumr
             yield return x => (x as Feature).Name;
             yield return x => (x as Feature).Project;
         }
+
+        protected override void OnCreated(Entity entity)
+        {
+            Context.Features.Add(entity as Feature);
+            Context.SaveChanges();
+        }
+
+        protected override void OnUpdated(Entity entity)
+        {
+            Context.SaveChanges();
+        }
     }
 }

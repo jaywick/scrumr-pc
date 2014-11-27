@@ -17,7 +17,7 @@ namespace Scrumr
         public DataListPropertyView(PropertyItem propertyItem, ScrumrContext context)
             : base(propertyItem)
         {
-            var defaultSource = context.GetCollection(propertyItem.Type);
+            var defaultSource = Enumerable.Empty<Entity>();
 
             var selected = propertyItem.IsNew
                 ? null

@@ -65,16 +65,9 @@ namespace Scrumr
 
         protected abstract IEnumerable<Expression<Func<Entity, object>>> OnRendering();
 
-        protected virtual void OnUpdated(Entity entity)
-        {
-            Context.SaveChanges();
-        }
+        protected abstract void OnUpdated(Entity entity);
 
-        protected virtual void OnCreated(Entity entity)
-        {
-            Context.GetCollection(EntityType).Add(entity);
-            Context.SaveChanges();
-        }
+        protected abstract void OnCreated(Entity entity);
 
         protected PropertyView GetView<T>()
         {

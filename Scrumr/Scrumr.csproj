@@ -131,7 +131,7 @@
     <Compile Include="Views\TicketView.xaml.cs">
       <DependentUpon>TicketView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\ViewHelper.cs" />
+    <Compile Include="Views\ViewDirector.cs" />
     <Page Include="Views\BoardView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

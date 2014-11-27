@@ -89,7 +89,13 @@ namespace Scrumr
             var ticket = entity as Ticket;
             ticket.ProjectTicketId = ticket.Project.NextProjectTicketId++;
 
-            base.OnCreated(ticket);
+            Context.Tickets.Add(ticket);
+            Context.SaveChanges();
+        }
+
+        protected override void OnUpdated(Entity entity)
+        {
+            Context.SaveChanges();
         }
     }
 }

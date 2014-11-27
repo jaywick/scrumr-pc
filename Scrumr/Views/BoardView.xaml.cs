@@ -151,19 +151,19 @@ namespace Scrumr
 
         private void EditEntity<T>(T entity) where T : Entity
         {
-            ViewHelper.EditEntity(entity, Context);
+            ViewDirector.EditEntity(entity, Context);
             Update();
         }
 
         private void RemoveEntity<T>(T entity) where T : Entity
         {
-            ViewHelper.RemoveEntity(entity, Context);
+            ViewDirector.RemoveEntity(entity, Context);
             Update();
         }
 
         public void NewTicket(int sprintId, int featureId)
         {
-            ViewHelper.AddTicket(Context, Project.ID, sprintId, featureId);
+            ViewDirector.AddTicket(Context, Project.ID, sprintId, featureId);
             Update();
         }
 
@@ -177,25 +177,25 @@ namespace Scrumr
 
         public void NewSprint()
         {
-            ViewHelper.AddEntity<Sprint>(Context);
+            ViewDirector.AddEntity<Sprint>(Context);
             Update();
         }
 
         public void NewFeature()
         {
-            ViewHelper.AddEntity<Feature>(Context);
+            ViewDirector.AddEntity<Feature>(Context);
             Update();
         }
 
         public void NewTicket()
         {
-            ViewHelper.AddTicket(Context);
+            ViewDirector.AddTicket(Context);
             Update();
         }
 
         public void NewProject()
         {
-            var project = ViewHelper.AddEntity<Project>(Context);
+            var project = ViewDirector.AddEntity<Project>(Context);
             Update();
 
             if (OnProjectAdded != null)

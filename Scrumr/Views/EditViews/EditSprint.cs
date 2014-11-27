@@ -17,5 +17,16 @@ namespace Scrumr
             yield return x => (x as Sprint).Name;
             yield return x => (x as Sprint).Project;
         }
+
+        protected override void OnCreated(Entity entity)
+        {
+            Context.Sprints.Add(entity as Sprint);
+            Context.SaveChanges();
+        }
+
+        protected override void OnUpdated(Entity entity)
+        {
+            Context.SaveChanges();
+        }
     }
 }

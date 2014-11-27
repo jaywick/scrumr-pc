@@ -35,8 +35,7 @@ namespace Scrumr
 
                     project.DefaultFeature = feature;
                     project.Backlog = sprint;
-
-                    base.OnCreated(project);
+                    Context.SaveChanges();
 
                     transaction.Commit();
                 }
@@ -46,6 +45,11 @@ namespace Scrumr
                     throw;
                 }
             }
+        }
+
+        protected override void OnUpdated(Entity entity)
+        {
+            Context.SaveChanges();
         }
     }
 }
