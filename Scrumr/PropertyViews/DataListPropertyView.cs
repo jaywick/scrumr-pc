@@ -37,6 +37,11 @@ namespace Scrumr
             get { return View as ComboBox; }
         }
 
+        public void SelectItem(Entity entity)
+        {
+            ActualView.SelectedItem = entity;
+        }
+
         public override object Value
         {
             get

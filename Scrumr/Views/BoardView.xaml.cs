@@ -177,13 +177,13 @@ namespace Scrumr
 
         public void NewSprint()
         {
-            ViewDirector.AddEntity<Sprint>(Context);
+            ViewDirector.AddEntity<Sprint>(Context, Project);
             Update();
         }
 
         public void NewFeature()
         {
-            ViewDirector.AddEntity<Feature>(Context);
+            ViewDirector.AddEntity<Feature>(Context, Project);
             Update();
         }
 

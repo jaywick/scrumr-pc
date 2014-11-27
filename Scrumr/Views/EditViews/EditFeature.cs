@@ -9,8 +9,20 @@ namespace Scrumr
 {
     class EditFeature : EditView
     {
-        public EditFeature(ScrumrContext context, Entity entity = null)
-            : base(typeof(Feature), context, entity) { }
+        public EditFeature(ScrumrContext context, Entity entity = null, Project project = null)
+            : base(typeof(Feature), context, entity)
+        {
+            LoadProjectsList(project);
+        }
+
+        private void LoadProjectsList(Project project)
+        {
+            var projectsView = GetView<Project, DataListPropertyView>();
+            projectsView.Source = Context.Projects;
+
+            if (project != null)
+                projectsView.SelectItem(project);
+        }
 
         protected override IEnumerable<Expression<Func<Entity, object>>> OnRendering()
         {

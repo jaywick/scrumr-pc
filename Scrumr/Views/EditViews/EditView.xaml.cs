@@ -198,12 +198,12 @@ namespace Scrumr
             Hide();
         }
 
-        public static EditView Create<T>(ScrumrContext context, Entity entity = null)
+        public static EditView Create<T>(ScrumrContext context, Entity entity = null, Project project = null)
         {
             if (typeof(T) == typeof(Feature))
-                return new EditFeature(context, entity);
+                return new EditFeature(context, entity, project);
             else if (typeof(T) == typeof(Sprint))
-                return new EditSprint(context, entity);
+                return new EditSprint(context, entity, project);
             else if (typeof(T) == typeof(Project))
                 return new EditProject(context, entity);
             else if (typeof(T) == typeof(Ticket))

@@ -16,25 +16,25 @@ namespace Scrumr
         public static Ticket AddTicket(ScrumrContext context, long? projectId = null, long? sprintId = null, long? featureId = null)
         {
             var editView = new EditTicket(context, projectId, sprintId, featureId);
-            AddEntity<Ticket>(context, editView);
+            AddEntity<Ticket>(context, editView: editView);
 
             return (Ticket)editView.Result;
         }
 
-        public static T AddEntity<T>(ScrumrContext context, EditView editView = null) where T : Entity
+        public static T AddEntity<T>(ScrumrContext context, Project project = null, EditView editView = null) where T : Entity
         {
             if (editView == null)
-                editView = EditView.Create<T>(context);
+                editView = EditView.Create<T>(context, project: project);
 
             editView.ShowDialog();
 
             return (T)editView.Result;
         }
 
-        public static void EditEntity<T>(T entity, ScrumrContext context, EditView editView = null) where T : Entity
+        public static void EditEntity<T>(T entity, ScrumrContext context, Project project = null, EditView editView = null) where T : Entity
         {
             if (editView == null)
-                editView = EditView.Create<T>(context, entity);
+                editView = EditView.Create<T>(context, entity, project);
 
             editView.ShowDialog();
         }
