@@ -8,23 +8,22 @@ using System.Threading.Tasks;
 
 namespace Scrumr.Client
 {
-    class EditProject : EditView
+    class EditProject : EditEntityBase<Project>
     {
-        public EditProject(ScrumrContext context, Entity entity = null)
-            : base(typeof(Project), context, entity) { }
+        public EditProject(ScrumrContext context, Project entity = null)
+            : base(context, entity) { }
 
-        protected override IEnumerable<Expression<Func<Entity, object>>> OnRendering()
+        protected override IEnumerable<Expression<Func<Project, object>>> OnRender()
         {
-            yield return x => (x as Project).Name;
+            yield return x => x.Name;
         }
 
-        protected override void OnCreated(Entity entity)
+        protected override void OnCreated(Project project)
         {
             using (var transaction = Context.Database.BeginTransaction())
             {
                 try
                 {
-                    var project = entity as Project;
                     Context.Projects.Add(project);
                     Context.SaveChanges();
 
@@ -48,7 +47,7 @@ namespace Scrumr.Client
             }
         }
 
-        protected override void OnUpdated(Entity entity)
+        protected override void OnUpdated(Project project)
         {
             Context.SaveChanges();
         }

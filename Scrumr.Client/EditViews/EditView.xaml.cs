@@ -57,18 +57,18 @@ namespace Scrumr.Client
             DrawItems();
         }
 
-        private EditView()
+        protected EditView()
         {
             InitializeComponent();
         }
 
         public Modes Mode { get; private set; }
 
-        protected abstract IEnumerable<Expression<Func<Entity, object>>> OnRendering();
+        protected abstract IEnumerable<string> GetRenderableViews();
 
-        protected abstract void OnUpdated(Entity entity);
+        protected abstract void PostUpdated(Entity entity);
 
-        protected abstract void OnCreated(Entity entity);
+        protected abstract void PostCreated(Entity entity);
 
         protected PropertyView GetView<T>()
         {
@@ -83,9 +83,9 @@ namespace Scrumr.Client
         private List<PropertyItem> loadItems()
         {
             var items = new List<PropertyItem>();
-            foreach (var expression in OnRendering())
+            foreach (var propertyName in GetRenderableViews())
             {
-                var property = expression.GetExpressedProperty();
+                var property = EntityType.GetProperty(propertyName);
 
                 var currentValue = GetInitialValue(property);
                 var attributes = Attribute.GetCustomAttributes(property);
@@ -126,8 +126,8 @@ namespace Scrumr.Client
 
             switch (Mode)
             {
-                case Modes.Creating: OnCreated(result); break;
-                case Modes.Updating: OnUpdated(result); break;
+                case Modes.Creating: PostCreated(result); break;
+                case Modes.Updating: PostUpdated(result); break;
                 default: throw new NotSupportedException();
             }
 
@@ -203,13 +203,13 @@ namespace Scrumr.Client
         public static EditView Create<T>(ScrumrContext context, Entity entity = null, Project project = null)
         {
             if (typeof(T) == typeof(Feature))
-                return new EditFeature(context, entity, project);
+                return new EditFeature(context, (Feature)entity, project);
             else if (typeof(T) == typeof(Sprint))
-                return new EditSprint(context, entity, project);
+                return new EditSprint(context, (Sprint)entity, project);
             else if (typeof(T) == typeof(Project))
-                return new EditProject(context, entity);
+                return new EditProject(context, (Project)entity);
             else if (typeof(T) == typeof(Ticket))
-                return new EditTicket(context, entity);
+                return new EditTicket(context, (Ticket)entity);
             else
                 throw new NotSupportedException("EditView.Create does not support this type");
         }

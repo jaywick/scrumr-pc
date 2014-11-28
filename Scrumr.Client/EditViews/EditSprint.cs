@@ -8,12 +8,29 @@ using System.Threading.Tasks;
 
 namespace Scrumr.Client
 {
-    class EditSprint : EditView
+    class EditSprint : EditEntityBase<Sprint>
     {
-        public EditSprint(ScrumrContext context, Entity entity = null, Project project = null)
-            : base(typeof(Sprint), context, entity)
+        public EditSprint(ScrumrContext context, Sprint sprint = null, Project project = null)
+            : base(context, sprint)
         {
             LoadProjectsList(project);
+        }
+
+        protected override IEnumerable<Expression<Func<Sprint, object>>> OnRender()
+        {
+            yield return x => x.Name;
+            yield return x => x.Project;
+        }
+
+        protected override void OnCreated(Sprint sprint)
+        {
+            Context.Sprints.Add(sprint);
+            Context.SaveChanges();
+        }
+
+        protected override void OnUpdated(Sprint sprint)
+        {
+            Context.SaveChanges();
         }
 
         private void LoadProjectsList(Project project)
@@ -23,23 +40,6 @@ namespace Scrumr.Client
 
             if (project != null)
                 projectsView.SelectItem(project);
-        }
-
-        protected override IEnumerable<Expression<Func<Entity, object>>> OnRendering()
-        {
-            yield return x => (x as Sprint).Name;
-            yield return x => (x as Sprint).Project;
-        }
-
-        protected override void OnCreated(Entity entity)
-        {
-            Context.Sprints.Add(entity as Sprint);
-            Context.SaveChanges();
-        }
-
-        protected override void OnUpdated(Entity entity)
-        {
-            Context.SaveChanges();
         }
     }
 }

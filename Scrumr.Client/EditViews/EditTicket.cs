@@ -9,7 +9,7 @@ using Scrumr.Client.Database;
 
 namespace Scrumr.Client
 {
-    class EditTicket : EditView
+    class EditTicket : EditEntityBase<Ticket>
     {
         DataListPropertyView SprintView;
         DataListPropertyView FeatureView;
@@ -20,18 +20,8 @@ namespace Scrumr.Client
         long? _sprintId;
         long? _featureId;
 
-        protected override IEnumerable<Expression<Func<Entity, object>>> OnRendering()
-        {
-            yield return x => (x as Ticket).Name;
-            yield return x => (x as Ticket).Description;
-            yield return x => (x as Ticket).Type;
-            yield return x => (x as Ticket).State;
-            yield return x => (x as Ticket).Sprint;
-            yield return x => (x as Ticket).Feature;
-        }
-
         public EditTicket(ScrumrContext context, long? projectId = null, long? sprintId = null, long? featureId = null)
-            : base(typeof(Ticket), context)
+            : base(context)
         {
             _projectId = projectId;
             _sprintId = sprintId;
@@ -42,13 +32,36 @@ namespace Scrumr.Client
             SetSelections();
         }
 
-        public EditTicket(ScrumrContext context, Entity entity)
-            : base(typeof(Ticket), context, entity)
+        public EditTicket(ScrumrContext context, Ticket entity)
+            : base(context, entity)
         {
             _projectId = (entity as Ticket).Sprint.ProjectId;
 
             LoadViews();
             LoadSources();
+        }
+
+        protected override IEnumerable<Expression<Func<Ticket, object>>> OnRender()
+        {
+            yield return x => x.Name;
+            yield return x => x.Description;
+            yield return x => x.Type;
+            yield return x => x.State;
+            yield return x => x.Sprint;
+            yield return x => x.Feature;
+        }
+
+        protected override void OnCreated(Ticket ticket)
+        {
+            ticket.ProjectTicketId = ticket.Project.NextProjectTicketId++;
+
+            Context.Tickets.Add(ticket);
+            Context.SaveChanges();
+        }
+
+        protected override void OnUpdated(Ticket ticket)
+        {
+            Context.SaveChanges();
         }
 
         private void LoadViews()
@@ -83,20 +96,6 @@ namespace Scrumr.Client
 
             TypeView.Value = TicketType.Task;
             StateView.Value = TicketState.Open;
-        }
-
-        protected override void OnCreated(Entity entity)
-        {
-            var ticket = entity as Ticket;
-            ticket.ProjectTicketId = ticket.Project.NextProjectTicketId++;
-
-            Context.Tickets.Add(ticket);
-            Context.SaveChanges();
-        }
-
-        protected override void OnUpdated(Entity entity)
-        {
-            Context.SaveChanges();
         }
     }
 }

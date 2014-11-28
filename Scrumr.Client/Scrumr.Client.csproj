@@ -92,6 +92,7 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
+    <Compile Include="EditViews\EditEntityBase.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="PropertyViews\EnumPropertyView.cs" />
     <Compile Include="PropertyViews\CheckPropertyView.cs" />
