@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 using System.Runtime;
 using System.Data.Entity;
 using MahApps.Metro.Controls;
-using Scrumr.Client.Database;
+using Scrumr.Database;
 
 namespace Scrumr.Client
 {

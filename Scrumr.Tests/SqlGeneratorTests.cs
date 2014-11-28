@@ -2,9 +2,9 @@
 using NUnit.Framework;
 using Scrumr.Client;
 using System.Reflection;
-using Scrumr.Client.Database;
+using Scrumr.Database;
 
-namespace Scrumr.Client.Tests
+namespace Scrumr.Tests
 {
     [TestFixture]
     public class SqlGeneratorTests

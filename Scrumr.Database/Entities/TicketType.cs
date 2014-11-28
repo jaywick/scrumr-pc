@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 
-namespace Scrumr.Client.Database
+namespace Scrumr.Database
 {
     public enum TicketType
     {

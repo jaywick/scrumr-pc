@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using MahApps.Metro.Controls.Dialogs;
-using Scrumr.Client.Database;
+using Scrumr.Database;
 
 namespace Scrumr.Client
 {

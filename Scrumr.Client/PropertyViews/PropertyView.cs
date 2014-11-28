@@ -7,7 +7,7 @@ using System.Windows;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
-using Scrumr.Client.Database;
+using Scrumr.Database;
 
 namespace Scrumr.Client
 {

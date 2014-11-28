@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using Scrumr.Client;
-using Scrumr.Client.Database;
+using Scrumr.Database;
 
 namespace Scrumr.Client
 {

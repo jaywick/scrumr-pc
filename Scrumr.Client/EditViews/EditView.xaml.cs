@@ -17,7 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls.Dialogs;
 using System.ComponentModel.DataAnnotations.Schema;
-using Scrumr.Client.Database;
+using Scrumr.Database;
 
 namespace Scrumr.Client
 {

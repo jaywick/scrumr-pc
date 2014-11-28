@@ -6,7 +6,7 @@
     <ProjectGuid>{E2897504-B1DA-49C9-8F92-B292778DE857}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Scrumr.Client.Tests</RootNamespace>
+    <RootNamespace>Scrumr.Tests</RootNamespace>
     <AssemblyName>Scrumr.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

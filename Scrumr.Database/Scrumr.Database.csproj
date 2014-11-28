@@ -7,7 +7,7 @@
     <ProjectGuid>{CBDF0634-9C6D-40BD-8D95-141CCB946F56}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Scrumr.Client.Database</RootNamespace>
+    <RootNamespace>Scrumr.Database</RootNamespace>
     <AssemblyName>Scrumr.Database</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
