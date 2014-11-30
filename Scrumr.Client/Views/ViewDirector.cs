@@ -16,28 +16,23 @@ namespace Scrumr.Client
     {
         public static Ticket AddTicket(ScrumrContext context, long? projectId = null, long? sprintId = null, long? featureId = null)
         {
-            var editView = new EditTicket(context, projectId, sprintId, featureId);
-            AddEntity<Ticket>(context, editView: editView);
-
-            return (Ticket)editView.Result;
-        }
-
-        public static T AddEntity<T>(ScrumrContext context, Project project = null, EditView editView = null) where T : Entity
-        {
-            if (editView == null)
-                editView = EditView.Create<T>(context, project: project);
-
+            /*var editView = EditView.Create<Ticket>(context, projectId, sprintId, featureId);
             editView.ShowDialog();
 
-            return (T)editView.Result;
+            return (Ticket)editView.Result;*/
+            throw new NotImplementedException();
         }
 
-        public static void EditEntity<T>(T entity, ScrumrContext context, Project project = null, EditView editView = null) where T : Entity
+        public static T AddEntity<T>(ScrumrContext context, Project project = null) where T : Entity
         {
-            if (editView == null)
-                editView = EditView.Create<T>(context, entity, project);
+            var editor = EditEntityBase<T>.Create(context, project: project);
+            return (T)editor.GetResult();
+        }
 
-            editView.ShowDialog();
+        public static void EditEntity<T>(T entity, ScrumrContext context, Project project = null) where T : Entity
+        {
+            var editor = EditEntityBase<T>.Create(context, entity, project);
+            editor.GetResult();
         }
 
         public static async void RemoveEntity<T>(T entity, ScrumrContext context) where T : Entity
