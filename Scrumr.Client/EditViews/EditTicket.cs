@@ -20,25 +20,16 @@ namespace Scrumr.Client
         long? _sprintId;
         long? _featureId;
 
-        public EditTicket(ScrumrContext context, long? projectId = null, long? sprintId = null, long? featureId = null)
-            : base(context)
+        public EditTicket(ScrumrContext context, Ticket entity = null, PropertyBag properties = null)
+            : base(context, entity)
         {
-            _projectId = projectId;
-            _sprintId = sprintId;
-            _featureId = featureId;
+            _projectId = properties.GetValue<long>("projectId") ?? (entity as Ticket).IfNotNull(x => x.Sprint).IfNotNull(x => x.ProjectId);
+            _sprintId = properties.GetValue<long>("sprintId");
+            _featureId = properties.GetValue<long>("featureId");
 
             LoadViews();
             LoadSources();
             SetSelections();
-        }
-
-        public EditTicket(ScrumrContext context, Ticket entity)
-            : base(context, entity)
-        {
-            _projectId = (entity as Ticket).Sprint.ProjectId;
-
-            LoadViews();
-            LoadSources();
         }
 
         protected override IEnumerable<Expression<Func<Ticket, object>>> OnRender()

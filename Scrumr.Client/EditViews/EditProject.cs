@@ -10,7 +10,7 @@ namespace Scrumr.Client
 {
     class EditProject : EditEntityBase<Project>
     {
-        public EditProject(ScrumrContext context, Project entity = null)
+        public EditProject(ScrumrContext context, Project entity = null, PropertyBag properties = null)
             : base(context, entity) { }
 
         protected override IEnumerable<Expression<Func<Project, object>>> OnRender()

@@ -10,10 +10,11 @@ namespace Scrumr.Client
 {
     class EditSprint : EditEntityBase<Sprint>
     {
-        public EditSprint(ScrumrContext context, Sprint sprint = null, Project project = null)
+        public EditSprint(ScrumrContext context, Sprint sprint = null, PropertyBag properties = null)
             : base(context, sprint)
         {
-            LoadProjectsList(project);
+            var projectId = properties.GetValue<long>("projectId");
+            LoadProjectsList(projectId);
         }
 
         protected override IEnumerable<Expression<Func<Sprint, object>>> OnRender()
@@ -33,13 +34,13 @@ namespace Scrumr.Client
             Context.SaveChanges();
         }
 
-        private void LoadProjectsList(Project project)
+        private void LoadProjectsList(long? projectId)
         {
             var projectsView = GetView<Project, DataListPropertyView>();
             projectsView.Source = Context.Projects;
 
-            if (project != null)
-                projectsView.SelectItem(project);
+            if (projectId.HasValue)
+                projectsView.SelectItem(Context.Projects.Get(projectId.Value));
         }
     }
 }

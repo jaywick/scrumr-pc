@@ -16,22 +16,30 @@ namespace Scrumr.Client
     {
         public static Ticket AddTicket(ScrumrContext context, long? projectId = null, long? sprintId = null, long? featureId = null)
         {
-            /*var editView = EditView.Create<Ticket>(context, projectId, sprintId, featureId);
-            editView.ShowDialog();
+            var properties = new PropertyBag();
+            properties.Add("projectId", projectId);
+            properties.Add("sprintId", sprintId);
+            properties.Add("featureId", featureId);
 
-            return (Ticket)editView.Result;*/
-            throw new NotImplementedException();
+            var editor = EditEntityBase<Ticket>.Create(context, null, properties);
+            return (Ticket)editor.GetResult();
         }
 
-        public static T AddEntity<T>(ScrumrContext context, Project project = null) where T : Entity
+        public static T AddEntity<T>(ScrumrContext context, long? projectId = null) where T : Entity
         {
-            var editor = EditEntityBase<T>.Create(context, project: project);
+            var properties = new PropertyBag();
+            properties.Add("projectId", projectId);
+
+            var editor = EditEntityBase<T>.Create(context, null, properties);
             return (T)editor.GetResult();
         }
 
-        public static void EditEntity<T>(T entity, ScrumrContext context, Project project = null) where T : Entity
+        public static void EditEntity<T>(T entity, ScrumrContext context, long? projectId = null) where T : Entity
         {
-            var editor = EditEntityBase<T>.Create(context, entity, project);
+            var properties = new PropertyBag();
+            properties.Add("projectId", projectId);
+
+            var editor = EditEntityBase<T>.Create(context, entity, properties);
             editor.GetResult();
         }
 

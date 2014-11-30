@@ -178,19 +178,19 @@ namespace Scrumr.Client
 
         public void NewSprint()
         {
-            ViewDirector.AddEntity<Sprint>(Context, Project);
+            ViewDirector.AddEntity<Sprint>(Context, Project.ID);
             Update();
         }
 
         public void NewFeature()
         {
-            ViewDirector.AddEntity<Feature>(Context, Project);
+            ViewDirector.AddEntity<Feature>(Context, Project.ID);
             Update();
         }
 
         public void NewTicket()
         {
-            ViewDirector.AddTicket(Context);
+            ViewDirector.AddTicket(Context, Project.ID);
             Update();
         }
 

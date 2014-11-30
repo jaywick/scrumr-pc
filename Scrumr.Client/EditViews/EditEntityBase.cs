@@ -60,16 +60,16 @@ namespace Scrumr.Client
             OnCreated((TEntity)entity);
         }
 
-        public static EditEntityBase<TEntity> Create(ScrumrContext context, Entity entity = null, Project project = null)
+        public static EditEntityBase<TEntity> Create(ScrumrContext context, Entity entity = null, PropertyBag properties = null)
         {
             if (typeof(TEntity) == typeof(Feature))
-                return new EditFeature(context, (Feature)entity, project) as EditEntityBase<TEntity>;
+                return new EditFeature(context, (Feature)entity, properties) as EditEntityBase<TEntity>;
             else if (typeof(TEntity) == typeof(Sprint))
-                return new EditSprint(context, (Sprint)entity, project) as EditEntityBase<TEntity>;
+                return new EditSprint(context, (Sprint)entity, properties) as EditEntityBase<TEntity>;
             else if (typeof(TEntity) == typeof(Project))
-                return new EditProject(context, (Project)entity) as EditEntityBase<TEntity>;
+                return new EditProject(context, (Project)entity, properties) as EditEntityBase<TEntity>;
             else if (typeof(TEntity) == typeof(Ticket))
-                return new EditTicket(context, (Ticket)entity) as EditEntityBase<TEntity>;
+                return new EditTicket(context, (Ticket)entity, properties) as EditEntityBase<TEntity>;
             else
                 throw new NotSupportedException("EditEntityBase<TEntity>.Create does not support this type");
         }
