@@ -74,6 +74,24 @@ namespace Scrumr.Client
             CreateSprintColumns();
             CreateFeatureRows();
             CreateTicketCells();
+
+            ResizeGrid();
+        }
+
+        public void ResizeGrid()
+        {
+            var xlimit = 1000;
+            var ylimit = 500;
+
+            if (this.ActualWidth > xlimit)
+                Board.Width = Double.NaN;
+            else if (this.ActualWidth < xlimit)
+                Board.Width = xlimit;
+
+            if (this.ActualHeight > ylimit)
+                Board.Height = Double.NaN;
+            else if (this.ActualHeight < ylimit)
+                Board.Height = ylimit;
         }
 
         private void CreateTicketCells()
