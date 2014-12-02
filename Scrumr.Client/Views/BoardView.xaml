@@ -18,7 +18,7 @@
         <Grid x:Name="Horizontal" Grid.Row="0" Grid.Column="1"/>
         <Grid x:Name="Vertical" Grid.Row="1" Grid.Column="0"/>
         <ScrollViewer Grid.Row="1" Grid.Column="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <Grid x:Name="Board"/>
+            <Grid x:Name="Board" MinHeight="600" MinWidth="1000"/>
         </ScrollViewer>
     </Grid>
 </UserControl>

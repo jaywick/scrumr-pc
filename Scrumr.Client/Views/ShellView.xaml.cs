@@ -31,7 +31,6 @@ namespace Scrumr.Client
 
             this.Loaded += (s, e) => Load();
             this.Closing += (s, e) => Save();
-            this.SizeChanged += (s, e) => Board.ResizeGrid();
 
             loadAddButton();
             this.ProjectsList.Items.Clear();
