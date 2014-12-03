@@ -52,5 +52,34 @@ namespace Scrumr.Database
                 .HasKey(p => p.ID)
                 .HasOptional(p => p.DefaultFeature);
         }
+
+        public void AddNewProject(Project project)
+        {
+            using (var transaction = Database.BeginTransaction())
+            {
+                try
+                {
+                    Projects.Add(project);
+                    SaveChanges();
+
+                    var feature = new Feature { Name = "General", Project = project };
+                    var sprint = new Sprint { Name = "Backlog", Project = project };
+
+                    Features.Add(feature);
+                    Sprints.Add(sprint);
+
+                    project.DefaultFeature = feature;
+                    project.Backlog = sprint;
+                    SaveChanges();
+
+                    transaction.Commit();
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
+            }
+        }
     }
 }

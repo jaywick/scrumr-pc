@@ -29,11 +29,6 @@ namespace Scrumr.Client
             Context.SaveChanges();
         }
 
-        protected override void OnUpdated(Sprint sprint)
-        {
-            Context.SaveChanges();
-        }
-
         private void LoadProjectsList(long? projectId)
         {
             var projectsView = GetView<Project, DataListPropertyView>();

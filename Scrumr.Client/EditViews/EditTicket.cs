@@ -50,11 +50,6 @@ namespace Scrumr.Client
             Context.SaveChanges();
         }
 
-        protected override void OnUpdated(Ticket ticket)
-        {
-            Context.SaveChanges();
-        }
-
         private void LoadViews()
         {
             SprintView = GetView<Sprint, DataListPropertyView>();
