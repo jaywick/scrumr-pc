@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="Scrumr.Client.BoardView"
+﻿<UserControl x:Class="Scrumr.Client.MatrixView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,7 +7,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="100"/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -16,11 +16,11 @@
         </Grid.RowDefinitions>
 
         <ScrollViewer x:Name="TopScroller" Grid.Row="0" Grid.Column="1" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
-            <Grid x:Name="Horizontal" MinHeight="600" MinWidth="1000" />
+            <Grid x:Name="TopHeader" MinWidth="1000" />
         </ScrollViewer>
 
-        <ScrollViewer x:Name="SideScroller" Grid.Row="1" Grid.Column="0" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
-            <Grid x:Name="Vertical" MinHeight="600" MinWidth="1000" />
+        <ScrollViewer x:Name="LeftScroller" Grid.Row="1" Grid.Column="0" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+            <Grid x:Name="LeftHeader" MinHeight="600" />
         </ScrollViewer>
 
         <ScrollViewer x:Name="BoardScroller" Grid.Row="1" Grid.Column="1" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" ScrollChanged="OnBoardScroll">
