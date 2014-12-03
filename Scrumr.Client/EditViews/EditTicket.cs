@@ -44,10 +44,7 @@ namespace Scrumr.Client
 
         protected override void OnCreated(Ticket ticket)
         {
-            ticket.ProjectTicketId = ticket.Project.NextProjectTicketId++;
-
-            Context.Tickets.Add(ticket);
-            Context.SaveChanges();
+            Context.AddNewTicket(ticket);
         }
 
         private void LoadViews()

@@ -81,5 +81,13 @@ namespace Scrumr.Database
                 }
             }
         }
+
+        public void AddNewTicket(Ticket ticket)
+        {
+            ticket.ProjectTicketId = ticket.Project.NextProjectTicketId++;
+
+            Tickets.Add(ticket);
+            SaveChanges();
+        }
     }
 }
