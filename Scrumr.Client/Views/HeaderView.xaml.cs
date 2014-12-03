@@ -31,9 +31,9 @@ namespace Scrumr.Client
             Entity = entity;
 
             if (orientation == Orientation.Horizontal)
-                borderHeader.BorderThickness = new Thickness(0, 0, .5, 0);
+                borderHeader.BorderThickness = new Thickness(0, 0, 1, 0);
             else if (orientation == Orientation.Vertical)
-                borderHeader.BorderThickness = new Thickness(0, 0, 0, .5);
+                borderHeader.BorderThickness = new Thickness(0, 0, 0, 1);
 
             FontWeight = FontWeights.Bold;
 

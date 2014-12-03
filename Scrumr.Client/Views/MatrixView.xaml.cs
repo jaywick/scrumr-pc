@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 
 namespace Scrumr.Client
 {
-    public partial class BoardView : UserControl
+    public partial class MatrixView : UserControl
     {
         public event System.Action<Project> OnProjectAdded;
 
@@ -53,7 +53,7 @@ namespace Scrumr.Client
             }
         }
 
-        public BoardView()
+        public MatrixView()
         {
             InitializeComponent();
         }
@@ -68,8 +68,8 @@ namespace Scrumr.Client
             TicketFilter = x => true;
 
             Board.Children.Clear();
-            Horizontal.Children.Clear();
-            Vertical.Children.Clear();
+            TopHeader.Children.Clear();
+            LeftHeader.Children.Clear();
 
             CreateSprintColumns();
             CreateFeatureRows();
@@ -91,18 +91,18 @@ namespace Scrumr.Client
         {
             int i = 0;
             Board.RowDefinitions.Clear();
-            Vertical.RowDefinitions.Clear();
+            LeftHeader.RowDefinitions.Clear();
 
             foreach (var feature in VisibleFeatures)
             {
                 Board.RowDefinitions.Add(new RowDefinition());
-                Vertical.RowDefinitions.Add(new RowDefinition());
+                LeftHeader.RowDefinitions.Add(new RowDefinition());
 
                 var headerView = new HeaderView(feature, Orientation.Vertical);
                 headerView.RequestEdit += (h) => EditEntity(h as Feature);
                 headerView.RequestRemove += (h) => RemoveEntity(h as Feature);
 
-                Vertical.InsertAt(headerView, 0, i);
+                LeftHeader.InsertAt(headerView, 0, i);
 
                 i++;
             }
@@ -112,18 +112,18 @@ namespace Scrumr.Client
         {
             int i = 0;
             Board.ColumnDefinitions.Clear();
-            Horizontal.ColumnDefinitions.Clear();
+            TopHeader.ColumnDefinitions.Clear();
 
             foreach (var sprint in VisibleSprints)
             {
                 Board.ColumnDefinitions.Add(new ColumnDefinition());
-                Horizontal.ColumnDefinitions.Add(new ColumnDefinition());
+                TopHeader.ColumnDefinitions.Add(new ColumnDefinition());
 
                 var headerView = new HeaderView(sprint, Orientation.Horizontal);
                 headerView.RequestEdit += (h) => EditEntity(h as Sprint);
                 headerView.RequestRemove += (h) => RemoveEntity(h as Sprint);
 
-                Horizontal.InsertAt(headerView, i, 0);
+                TopHeader.InsertAt(headerView, i, 0);
 
                 i++;
             }
@@ -203,5 +203,10 @@ namespace Scrumr.Client
                 OnProjectAdded.Invoke(project);
         }
 
+        public void OnBoardScroll(object sender, ScrollChangedEventArgs e)
+        {
+            TopScroller.ScrollToHorizontalOffset(e.HorizontalOffset);
+            LeftScroller.ScrollToVerticalOffset(e.VerticalOffset);
+        }
     }
 }
