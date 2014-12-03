@@ -21,14 +21,20 @@ using Scrumr.Database;
 
 namespace Scrumr.Client
 {
-    public abstract partial class EditView : MetroWindow
+    public partial class EditView : MetroWindow
     {
-        protected Type EntityType { get; set; }
-        protected Entity Entity { get; set; }
-        protected ScrumrContext Context { get; set; }
-        private List<PropertyItem> Items { get; set; }
+        public event Action<Entity> PostUpdated;
+        public event Action<Entity> PostCreated;
+        public event Action<Renderables> PreRendering;
 
-        protected List<PropertyView> PropertyViews { get; private set; }
+        private Type type;
+
+        public Type EntityType { get; set; }
+        public Entity Entity { get; set; }
+        public ScrumrContext Context { get; set; }
+        public List<PropertyView> PropertyViews { get; set; }
+        public List<PropertyItem> Items { get; set; }
+
         public Entity Result { get; private set; }
 
         public enum Modes
@@ -47,35 +53,27 @@ namespace Scrumr.Client
             EntityType = type;
             Context = context;
             Entity = entity;
-
-            Render();
         }
 
-        private void Render()
+        public Modes Mode { get; private set; }
+
+        internal void Render()
         {
             Items = loadItems();
             DrawItems();
         }
 
-        protected EditView()
+        private EditView()
         {
             InitializeComponent();
         }
 
-        public Modes Mode { get; private set; }
-
-        protected abstract IEnumerable<string> GetRenderableViews();
-
-        protected abstract void PostUpdated(Entity entity);
-
-        protected abstract void PostCreated(Entity entity);
-
-        protected PropertyView GetView<T>()
+        private PropertyView GetView<T>()
         {
             return PropertyViews.SingleOrDefault(x => x.Property.Type == typeof(T)) as PropertyView;
         }
 
-        protected TView GetView<T, TView>() where TView : class
+        private TView GetView<T, TView>() where TView : class
         {
             return PropertyViews.SingleOrDefault(x => x.Property.Type == typeof(T)) as TView;
         }
@@ -94,6 +92,13 @@ namespace Scrumr.Client
             }
 
             return items;
+        }
+
+        private IEnumerable<string> GetRenderableViews()
+        {
+            var r = new Renderables();
+            PreRendering(r);
+            return r.Items;
         }
 
         private object GetInitialValue(PropertyInfo property)
@@ -126,8 +131,8 @@ namespace Scrumr.Client
 
             switch (Mode)
             {
-                case Modes.Creating: PostCreated(result); break;
-                case Modes.Updating: PostUpdated(result); break;
+                case Modes.Creating: if (PostCreated != null) PostCreated(result); break;
+                case Modes.Updating: if (PostUpdated != null) PostUpdated(result); break;
                 default: throw new NotSupportedException();
             }
 
@@ -199,19 +204,10 @@ namespace Scrumr.Client
             Result = null;
             Hide();
         }
+    }
 
-        public static EditView Create<T>(ScrumrContext context, Entity entity = null, Project project = null)
-        {
-            if (typeof(T) == typeof(Feature))
-                return new EditFeature(context, (Feature)entity, project);
-            else if (typeof(T) == typeof(Sprint))
-                return new EditSprint(context, (Sprint)entity, project);
-            else if (typeof(T) == typeof(Project))
-                return new EditProject(context, (Project)entity);
-            else if (typeof(T) == typeof(Ticket))
-                return new EditTicket(context, (Ticket)entity);
-            else
-                throw new NotSupportedException("EditView.Create does not support this type");
-        }
+    public class Renderables
+    {
+        public IEnumerable<string> Items { get; set; }
     }
 }

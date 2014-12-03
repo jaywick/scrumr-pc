@@ -10,10 +10,11 @@ namespace Scrumr.Client
 {
     class EditFeature : EditEntityBase<Feature>
     {
-        public EditFeature(ScrumrContext context, Feature entity = null, Project project = null)
+        public EditFeature(ScrumrContext context, Feature entity = null, PropertyBag properties = null)
             : base(context, entity)
         {
-            LoadProjectsList(project);
+            var projectId = properties.GetValue<long>("projectId");
+            LoadProjectsList(projectId);
         }
 
         protected override IEnumerable<Expression<Func<Feature, object>>> OnRender()
@@ -28,18 +29,13 @@ namespace Scrumr.Client
             Context.SaveChanges();
         }
 
-        protected override void OnUpdated(Feature entity)
-        {
-            Context.SaveChanges();
-        }
-
-        private void LoadProjectsList(Project project)
+        private void LoadProjectsList(long? projectId)
         {
             var projectsView = GetView<Project, DataListPropertyView>();
             projectsView.Source = Context.Projects;
 
-            if (project != null)
-                projectsView.SelectItem(project);
+            if (projectId.HasValue)
+                projectsView.SelectItem(Context.Projects.Get(projectId.Value));
         }
     }
 }

@@ -16,28 +16,31 @@ namespace Scrumr.Client
     {
         public static Ticket AddTicket(ScrumrContext context, long? projectId = null, long? sprintId = null, long? featureId = null)
         {
-            var editView = new EditTicket(context, projectId, sprintId, featureId);
-            AddEntity<Ticket>(context, editView: editView);
+            var properties = new PropertyBag();
+            properties.Add("projectId", projectId);
+            properties.Add("sprintId", sprintId);
+            properties.Add("featureId", featureId);
 
-            return (Ticket)editView.Result;
+            var editor = EditEntityBase<Ticket>.Create(context, null, properties);
+            return (Ticket)editor.GetResult();
         }
 
-        public static T AddEntity<T>(ScrumrContext context, Project project = null, EditView editView = null) where T : Entity
+        public static T AddEntity<T>(ScrumrContext context, long? projectId = null) where T : Entity
         {
-            if (editView == null)
-                editView = EditView.Create<T>(context, project: project);
+            var properties = new PropertyBag();
+            properties.Add("projectId", projectId);
 
-            editView.ShowDialog();
-
-            return (T)editView.Result;
+            var editor = EditEntityBase<T>.Create(context, null, properties);
+            return (T)editor.GetResult();
         }
 
-        public static void EditEntity<T>(T entity, ScrumrContext context, Project project = null, EditView editView = null) where T : Entity
+        public static void EditEntity<T>(T entity, ScrumrContext context, long? projectId = null) where T : Entity
         {
-            if (editView == null)
-                editView = EditView.Create<T>(context, entity, project);
+            var properties = new PropertyBag();
+            properties.Add("projectId", projectId);
 
-            editView.ShowDialog();
+            var editor = EditEntityBase<T>.Create(context, entity, properties);
+            editor.GetResult();
         }
 
         public static async void RemoveEntity<T>(T entity, ScrumrContext context) where T : Entity
