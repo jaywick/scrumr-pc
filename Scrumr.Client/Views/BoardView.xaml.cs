@@ -203,5 +203,10 @@ namespace Scrumr.Client
                 OnProjectAdded.Invoke(project);
         }
 
+        public void OnBoardScroll(object sender, ScrollChangedEventArgs e)
+        {
+            TopScroller.ScrollToHorizontalOffset(e.HorizontalOffset);
+            SideScroller.ScrollToVerticalOffset(e.VerticalOffset);
+        }
     }
 }
