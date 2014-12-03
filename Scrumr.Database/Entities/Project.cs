@@ -10,6 +10,13 @@ namespace Scrumr.Database
     [Table("Projects")]
     public class Project : Entity
     {
+        public Project() { }
+
+        public Project(string name)
+        {
+            Name = name;
+        }
+
         public long NextProjectTicketId { get; set; }
 
         public ICollection<Sprint> Sprints { get; set; }
