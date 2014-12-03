@@ -15,11 +15,11 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <ScrollViewer x:Name="TopScroller" Grid.Row="0" Grid.Column="1" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+        <ScrollViewer x:Name="TopScroller" Grid.Row="0" Grid.Column="1" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Margin="0,0,15,0">
             <Grid x:Name="TopHeader" MinWidth="1000" />
         </ScrollViewer>
 
-        <ScrollViewer x:Name="LeftScroller" Grid.Row="1" Grid.Column="0" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden">
+        <ScrollViewer x:Name="LeftScroller" Grid.Row="1" Grid.Column="0" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Margin="0,0,0,15">
             <Grid x:Name="LeftHeader" MinHeight="600" />
         </ScrollViewer>
 
