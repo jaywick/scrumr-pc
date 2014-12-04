@@ -70,6 +70,7 @@ namespace Scrumr.Database
 
                     project.DefaultFeature = feature;
                     project.Backlog = sprint;
+                    project.NextProjectTicketId = 1;
                     SaveChanges();
 
                     transaction.Commit();
