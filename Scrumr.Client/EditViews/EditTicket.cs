@@ -44,7 +44,7 @@ namespace Scrumr.Client
 
         protected override void OnCreated(Ticket ticket)
         {
-            Context.AddNewTicket(ticket);
+            Context.AddNewTicketAsync(ticket);
         }
 
         private void LoadViews()

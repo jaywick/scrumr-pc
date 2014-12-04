@@ -26,23 +26,23 @@ namespace Scrumr.Tests
         }
 
         [TestCase]
-        public void ShouldAddNewProject()
+        public async Task ShouldAddNewProject()
         {
             using (var database = new DisposableTestDatabase(_testFiles))
             {
                 var projectName = "Test Project";
-                database.Context.AddNewProject(new Project(projectName));
+                await database.Context.AddNewProjectAsync(new Project(projectName));
 
                 Assert.AreEqual(database.Context.Projects.Single().Name, projectName);
             }
         }
 
         [TestCase]
-        public void ShouldCreateBacklogOnAddingNewProject()
+        public async Task ShouldCreateBacklogOnAddingNewProject()
         {
             using (var database = new DisposableTestDatabase(_testFiles))
             {
-                database.Context.AddNewProject(new Project("Project X"));
+                await database.Context.AddNewProjectAsync(new Project("Project X"));
 
                 var projectAdded = database.Context.Projects.Single();
                 var sprintAdded = database.Context.Sprints.Single();
@@ -52,11 +52,11 @@ namespace Scrumr.Tests
         }
 
         [TestCase]
-        public void ShouldCreateDefaultFeatureOnAddingNewProject()
+        public async Task ShouldCreateDefaultFeatureOnAddingNewProject()
         {
             using (var database = new DisposableTestDatabase(_testFiles))
             {
-                database.Context.AddNewProject(new Project("Project X"));
+                await database.Context.AddNewProjectAsync(new Project("Project X"));
 
                 var projectAdded = database.Context.Projects.Single();
                 var featureAdded = database.Context.Features.Single();
