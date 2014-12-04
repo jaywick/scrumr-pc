@@ -6,7 +6,7 @@ using Scrumr.Database;
 
 namespace Scrumr.Tests
 {
-    [TestFixture]
+    [TestFixture, Category("SQL Generation")]
     public class SqlGeneratorTests
     {
         [TestCase(typeof(long?), "INTEGER")]

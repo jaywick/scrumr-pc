@@ -8,67 +8,76 @@ using System.Threading.Tasks;
 
 namespace Scrumr.Tests
 {
-    [TestFixture]
+    [TestFixture, Category("Context")]
     class ScrumrContextTests
     {
-        private DisposableTestFiles _testFiles;
+        private DisposableTestWorkspace _workspace;
 
         [TestFixtureSetUp]
         public void SetUp()
         {
-            _testFiles = new DisposableTestFiles();
+            _workspace = new DisposableTestWorkspace();
         }
 
         [TestFixtureTearDown]
         public void TearDown()
         {
-            _testFiles.Dispose();
+            _workspace.Dispose();
         }
 
         [TestCase]
         public void ShouldAddNewProject()
         {
-            using (var database = new DisposableTestDatabase(_testFiles))
+            using (var database = new DisposableTestDatabase(_workspace))
             {
-                var projectName = "Test Project";
-                database.Context.AddNewProject(new Project(projectName));
+                var project = new Project("Project X");
+                database.Context.AddNewProject(project);
 
-                Assert.AreEqual(database.Context.Projects.Single().Name, projectName);
+                var expected = project;
+                var actual = database.Context.Projects.Single();
+
+                Assert.AreEqual(expected, actual);
             }
         }
 
         [TestCase]
         public void ShouldCreateBacklogOnAddingNewProject()
         {
-            using (var database = new DisposableTestDatabase(_testFiles))
+            using (var database = new DisposableTestDatabase(_workspace))
             {
                 database.Context.AddNewProject(new Project("Project X"));
 
                 var projectAdded = database.Context.Projects.Single();
                 var sprintAdded = database.Context.Sprints.Single();
 
-                Assert.AreEqual(projectAdded.Backlog, sprintAdded);
+                var expected = sprintAdded;
+                var actual = projectAdded.Backlog;
+
+                Assert.AreEqual(expected, actual);
             }
         }
 
         [TestCase]
         public void ShouldCreateDefaultFeatureOnAddingNewProject()
         {
-            using (var database = new DisposableTestDatabase(_testFiles))
+            using (var database = new DisposableTestDatabase(_workspace))
             {
                 database.Context.AddNewProject(new Project("Project X"));
 
                 var projectAdded = database.Context.Projects.Single();
                 var featureAdded = database.Context.Features.Single();
 
-                Assert.AreEqual(projectAdded.DefaultFeature, featureAdded);
+                var expected = featureAdded;
+                var actual = projectAdded.DefaultFeature;
+                
+                Assert.AreEqual(expected, actual);
             }
         }
 
         [TestCase]
         public void ShouldSetDefaultValueForNextTicketIdOnAddNewProject()
         {
-            using (var database = new DisposableTestDatabase(_testFiles))
+            using (var database = new DisposableTestDatabase(_workspace))
             {
                 database.Context.AddNewProject(new Project("Project X"));
 
@@ -82,11 +91,11 @@ namespace Scrumr.Tests
         [TestCase]
         public void ShouldReturnFirstProjectTicketIdOnAddingNewTicket()
         {
-            using (var database = new DisposableTestDatabase(_testFiles))
+            using (var database = new DisposableTestDatabase(_workspace))
             {
                 var project = new Project("Project X");
                 database.Context.AddNewProject(project);
-                database.Context.AddNewTicket(new Ticket { Name = "Ticket X", Description = "", Sprint = project.Backlog, Feature = project.DefaultFeature, State = TicketState.Open, Type = TicketType.Task });
+                database.Context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket X", project));
 
                 var expected = 1;
                 var actual = database.Context.Tickets.Single().ProjectTicketId;
@@ -98,12 +107,12 @@ namespace Scrumr.Tests
         [TestCase]
         public void ShouldIncrementNextTicketIdOnAddingNewTicket()
         {
-            using (var database = new DisposableTestDatabase(_testFiles))
+            using (var database = new DisposableTestDatabase(_workspace))
             {
                 var project = new Project("Project X");
                 database.Context.AddNewProject(project);
-                database.Context.AddNewTicket(new Ticket { Name = "Ticket 1", Description = "", Sprint = project.Backlog, Feature = project.DefaultFeature, State = TicketState.Open, Type = TicketType.Task });
-                database.Context.AddNewTicket(new Ticket { Name = "Ticket 2", Description = "", Sprint = project.Backlog, Feature = project.DefaultFeature, State = TicketState.Open, Type = TicketType.Task });
+                database.Context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket 1", project));
+                database.Context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket 2", project)); ;
 
                 var secondTicketAdded = database.Context.Tickets.ToList()[1];
 
@@ -117,18 +126,18 @@ namespace Scrumr.Tests
         [TestCase]
         public void ShouldNotIncrementProjectTicketIdOnAddingTicketToAnotherProject()
         {
-            using (var database = new DisposableTestDatabase(_testFiles))
+            using (var database = new DisposableTestDatabase(_workspace))
             {
                 var project = new Project("Project X");
                 database.Context.AddNewProject(project);
-                database.Context.AddNewTicket(new Ticket { Name = "Ticket X.1", Description = "", Sprint = project.Backlog, Feature = project.DefaultFeature, State = TicketState.Open, Type = TicketType.Task });
-                database.Context.AddNewTicket(new Ticket { Name = "Ticket X.2", Description = "", Sprint = project.Backlog, Feature = project.DefaultFeature, State = TicketState.Open, Type = TicketType.Task });
+                database.Context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket X.1", project));
+                database.Context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket X.2", project));
 
                 var project2 = new Project("Project Y");
                 database.Context.AddNewProject(project2);
-                database.Context.AddNewTicket(new Ticket { Name = "Ticket Y.1", Description = "", Sprint = project2.Backlog, Feature = project2.DefaultFeature, State = TicketState.Open, Type = TicketType.Task });
+                database.Context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket Y.1", project2));
 
-                var secondProjectTicket = database.Context.Tickets.Single(x => x.Name == "Ticket Y.1");
+                var secondProjectTicket = database.Context.Tickets.ToList()[2];
 
                 var expected = 1;
                 var actual = secondProjectTicket.ProjectTicketId;

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Scrumr.Tests
 {
-    class DisposableTestFiles : IDisposable
+    class DisposableTestWorkspace : IDisposable
     {
         public List<string> _filePaths = new List<string>();
 

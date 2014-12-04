@@ -88,6 +88,7 @@
     <Compile Include="Helpers\DisposableTestDatabase.cs" />
     <Compile Include="EditFeatureTests.cs" />
     <Compile Include="Helpers\DisposableTestFiles.cs" />
+    <Compile Include="Helpers\ContextTestHelper.cs" />
     <Compile Include="ScrumrContextTests.cs" />
     <Compile Include="SqlGeneratorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
