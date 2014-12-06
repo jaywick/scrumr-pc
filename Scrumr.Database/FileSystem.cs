@@ -70,10 +70,10 @@ namespace Scrumr.Database
             }
         }
 
-        private static async Task PopulateSampleData(string filename)
+        private static void PopulateSampleData(string filename)
         {
             var context = new ScrumrContext(filename);
-            await context.AddNewProjectAsync(new Project { Name = "Project 1" });
+            context.AddNewProject(new Project { Name = "Project 1" });
         }
     }
 }

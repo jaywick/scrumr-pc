@@ -18,9 +18,9 @@ namespace Scrumr.Client
             yield return x => x.Name;
         }
 
-        protected override async void OnCreated(Project project)
+        protected override void OnCreated(Project project)
         {
-            await Context.AddNewProjectAsync(project);
+            Context.AddNewProject(project);
         }
     }
 }
