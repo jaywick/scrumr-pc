@@ -23,10 +23,10 @@ namespace Scrumr.Client
             yield return x => x.Project;
         }
 
-        protected override void OnCreated(Feature entity)
+        protected override async Task OnCreated(Feature entity)
         {
             Context.Features.Add(entity);
-            Context.SaveChanges();
+            await Context.SaveChangesAsync();
         }
 
         private void LoadProjectsList(long? projectId)

@@ -30,7 +30,7 @@ namespace Scrumr.Client
             this.LeftWindowCommands = new WindowCommands();
 
             this.Loaded += (s, e) => Load();
-            this.Closing += (s, e) => Save();
+            this.Closing += async (s, e) => await Save();
 
             loadAddButton();
             this.ProjectsList.Items.Clear();
@@ -107,9 +107,9 @@ namespace Scrumr.Client
             Board.Project = project;
         }
 
-        private void Save()
+        private async Task Save()
         {
-            Board.Context.SaveChanges();
+            await Board.Context.SaveChangesAsync();
         }
 
         private async Task<Project> GetDefaultProjectAsync()

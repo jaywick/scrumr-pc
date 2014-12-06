@@ -26,12 +26,12 @@ namespace Scrumr.Tests
         }
 
         [TestCase]
-        public void ShouldAddNewProject()
+        public async Task ShouldAddNewProject()
         {
             using (var database = new DisposableTestDatabase(_workspace))
             {
                 var project = new Project("Project X");
-                database.Context.AddNewProject(project);
+                await database.Context.AddNewProject(project);
 
                 var expected = project;
                 var actual = database.Context.Projects.Single();
@@ -41,11 +41,11 @@ namespace Scrumr.Tests
         }
 
         [TestCase]
-        public void ShouldCreateBacklogOnAddingNewProject()
+        public async Task ShouldCreateBacklogOnAddingNewProject()
         {
             using (var database = new DisposableTestDatabase(_workspace))
             {
-                database.Context.AddNewProject(new Project("Project X"));
+                await database.Context.AddNewProject(new Project("Project X"));
 
                 var projectAdded = database.Context.Projects.Single();
                 var sprintAdded = database.Context.Sprints.Single();
@@ -58,11 +58,11 @@ namespace Scrumr.Tests
         }
 
         [TestCase]
-        public void ShouldCreateDefaultFeatureOnAddingNewProject()
+        public async Task ShouldCreateDefaultFeatureOnAddingNewProject()
         {
             using (var database = new DisposableTestDatabase(_workspace))
             {
-                database.Context.AddNewProject(new Project("Project X"));
+                await database.Context.AddNewProject(new Project("Project X"));
 
                 var projectAdded = database.Context.Projects.Single();
                 var featureAdded = database.Context.Features.Single();
@@ -75,11 +75,11 @@ namespace Scrumr.Tests
         }
 
         [TestCase]
-        public void ShouldSetDefaultValueForNextTicketIdOnAddNewProject()
+        public async Task ShouldSetDefaultValueForNextTicketIdOnAddNewProject()
         {
             using (var database = new DisposableTestDatabase(_workspace))
             {
-                database.Context.AddNewProject(new Project("Project X"));
+                await database.Context.AddNewProject(new Project("Project X"));
 
                 var expected = 1;
                 var actual = database.Context.Projects.First().NextProjectTicketId;
@@ -89,13 +89,13 @@ namespace Scrumr.Tests
         }
 
         [TestCase]
-        public void ShouldReturnFirstProjectTicketIdOnAddingNewTicket()
+        public async Task ShouldReturnFirstProjectTicketIdOnAddingNewTicket()
         {
             using (var database = new DisposableTestDatabase(_workspace))
             {
                 var project = new Project("Project X");
-                database.Context.AddNewProject(project);
-                database.Context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket X", project));
+                await database.Context.AddNewProject(project);
+                await database.Context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket X", project));
 
                 var expected = 1;
                 var actual = database.Context.Tickets.Single().ProjectTicketId;
@@ -105,14 +105,14 @@ namespace Scrumr.Tests
         }
 
         [TestCase]
-        public void ShouldIncrementNextTicketIdOnAddingNewTicket()
+        public async Task ShouldIncrementNextTicketIdOnAddingNewTicket()
         {
             using (var database = new DisposableTestDatabase(_workspace))
             {
                 var project = new Project("Project X");
-                database.Context.AddNewProject(project);
-                database.Context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket 1", project));
-                database.Context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket 2", project)); ;
+                await database.Context.AddNewProject(project);
+                await database.Context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket 1", project));
+                await database.Context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket 2", project)); ;
 
                 var secondTicketAdded = database.Context.Tickets.ToList()[1];
 
@@ -124,18 +124,18 @@ namespace Scrumr.Tests
         }
 
         [TestCase]
-        public void ShouldNotIncrementProjectTicketIdOnAddingTicketToAnotherProject()
+        public async Task ShouldNotIncrementProjectTicketIdOnAddingTicketToAnotherProject()
         {
             using (var database = new DisposableTestDatabase(_workspace))
             {
                 var project = new Project("Project X");
-                database.Context.AddNewProject(project);
-                database.Context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket X.1", project));
-                database.Context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket X.2", project));
+                await database.Context.AddNewProject(project);
+                await database.Context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket X.1", project));
+                await database.Context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket X.2", project));
 
                 var project2 = new Project("Project Y");
-                database.Context.AddNewProject(project2);
-                database.Context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket Y.1", project2));
+                await database.Context.AddNewProject(project2);
+                await database.Context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket Y.1", project2));
 
                 var secondProjectTicket = database.Context.Tickets.ToList()[2];
 

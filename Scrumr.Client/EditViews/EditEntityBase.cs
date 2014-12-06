@@ -26,11 +26,11 @@ namespace Scrumr.Client
 
         protected abstract IEnumerable<Expression<Func<TEntity, object>>> OnRender();
 
-        protected abstract void OnCreated(TEntity entity);
+        protected virtual async Task OnCreated(TEntity entity) { }
 
-        protected virtual void OnUpdated(TEntity entity)
+        protected virtual async Task OnUpdated(TEntity entity)
         {
-            Context.SaveChanges();
+            await Context.SaveChangesAsync();
         }
 
         public virtual ScrumrContext Context
@@ -53,14 +53,14 @@ namespace Scrumr.Client
             r.Items = OnRender().Select(x => x.GetExpressedProperty().Name);
         }
 
-        private void PostCreated(Database.Entity entity)
+        private async Task PostCreated(Database.Entity entity)
         {
-            OnCreated((TEntity)entity);
+            await OnCreated((TEntity)entity);
         }
 
-        private void PostUpdated(Database.Entity entity)
+        private async Task PostUpdated(Database.Entity entity)
         {
-            OnUpdated((TEntity)entity);
+            await OnUpdated((TEntity)entity);
         }
 
         public static EditEntityBase<TEntity> Create(ScrumrContext context, Entity entity = null, PropertyBag properties = null)

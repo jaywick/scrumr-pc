@@ -53,14 +53,14 @@ namespace Scrumr.Database
                 .HasOptional(p => p.DefaultFeature);
         }
 
-        public void AddNewProject(Project project)
+        public async Task AddNewProject(Project project)
         {
             using (var transaction = Database.BeginTransaction())
             {
                 try
                 {
                     Projects.Add(project);
-                    SaveChanges();
+                    await SaveChangesAsync();
 
                     var feature = new Feature { Name = "General", Project = project };
                     var sprint = new Sprint { Name = "Backlog", Project = project };
@@ -71,7 +71,7 @@ namespace Scrumr.Database
                     project.DefaultFeature = feature;
                     project.Backlog = sprint;
                     project.NextProjectTicketId = 1;
-                    SaveChanges();
+                    await SaveChangesAsync();
 
                     transaction.Commit();
                 }
@@ -83,12 +83,12 @@ namespace Scrumr.Database
             }
         }
 
-        public void AddNewTicket(Ticket ticket)
+        public async Task AddNewTicket(Ticket ticket)
         {
             ticket.ProjectTicketId = ticket.Project.NextProjectTicketId++;
 
             Tickets.Add(ticket);
-            SaveChanges();
+            await SaveChangesAsync();
         }
     }
 }

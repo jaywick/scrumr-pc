@@ -23,10 +23,10 @@ namespace Scrumr.Client
             yield return x => x.Project;
         }
 
-        protected override void OnCreated(Sprint sprint)
+        protected override async Task OnCreated(Sprint sprint)
         {
             Context.Sprints.Add(sprint);
-            Context.SaveChanges();
+            await Context.SaveChangesAsync();
         }
 
         private void LoadProjectsList(long? projectId)

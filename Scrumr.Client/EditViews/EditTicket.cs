@@ -42,9 +42,9 @@ namespace Scrumr.Client
             yield return x => x.Feature;
         }
 
-        protected override void OnCreated(Ticket ticket)
+        protected override async Task OnCreated(Ticket ticket)
         {
-            Context.AddNewTicket(ticket);
+            await Context.AddNewTicket(ticket);
         }
 
         private void LoadViews()
