@@ -26,7 +26,8 @@ namespace Scrumr.Tests
 
         public void Dispose()
         {
-            _filePaths.ForEach(x => File.Delete(x));
+            try { _filePaths.ForEach(x => File.Delete(x)); }
+            catch { }
         }
     }
 }
