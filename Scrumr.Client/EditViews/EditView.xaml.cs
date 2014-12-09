@@ -25,9 +25,8 @@ namespace Scrumr.Client
     {
         public event Action<Entity> PostUpdated;
         public event Action<Entity> PostCreated;
+        public event Action<Entity> PreDeleting;
         public event Action<Renderables> PreRendering;
-
-        private Type type;
 
         public Type EntityType { get; set; }
         public Entity Entity { get; set; }
@@ -46,9 +45,16 @@ namespace Scrumr.Client
         public EditView(Type type, ScrumrContext context, Entity entity = null)
             : this()
         {
-            Mode = entity == null
-                ? Modes.Creating
-                : Modes.Updating;
+            if (entity == null)
+            {
+                Mode = Modes.Creating;
+                DeleteButton.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            else
+            {
+                Mode = Modes.Updating;
+                DeleteButton.Visibility = System.Windows.Visibility.Visible;
+            }
 
             EntityType = type;
             Context = context;
@@ -203,6 +209,12 @@ namespace Scrumr.Client
             DialogResult = false;
             Result = null;
             Hide();
+        }
+
+        private void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            if (PreDeleting != null)
+                PreDeleting(Entity);
         }
     }
 

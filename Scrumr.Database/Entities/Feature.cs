@@ -9,6 +9,14 @@ namespace Scrumr.Database
     [Table("Features")]
     public class Feature : Entity
     {
+        public Feature() { }
+
+        public Feature(string name, Project project)
+        {
+            this.Name = name;
+            this.Project = project;
+        }
+
         [Foreign]
         public long ProjectId { get; set; }
 

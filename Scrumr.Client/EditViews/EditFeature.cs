@@ -37,5 +37,10 @@ namespace Scrumr.Client
             if (projectId.HasValue)
                 projectsView.SelectItem(Context.Projects.Get(projectId.Value));
         }
+
+        protected override async Task OnDeleting(Feature feature)
+        {
+            await Context.DeleteFeature(feature);
+        }
     }
 }

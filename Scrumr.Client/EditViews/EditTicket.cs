@@ -47,6 +47,11 @@ namespace Scrumr.Client
             await Context.AddNewTicket(ticket);
         }
 
+        protected override async Task OnDeleting(Ticket ticket)
+        {
+            await Context.DeleteTicket(ticket);
+        }
+
         private void LoadViews()
         {
             SprintView = GetView<Sprint, DataListPropertyView>();

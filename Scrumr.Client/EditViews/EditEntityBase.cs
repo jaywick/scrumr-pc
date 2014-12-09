@@ -17,8 +17,9 @@ namespace Scrumr.Client
         {
             _view = new EditView(typeof(TEntity), context, (Entity)entity);
 
-            _view.PostUpdated += (e) => PostUpdated(e);
-            _view.PostCreated += (e) => PostCreated(e);
+            _view.PostUpdated += async (e) => await PostUpdated(e);
+            _view.PostCreated += async (e) => await PostCreated(e);
+            _view.PreDeleting += async (r) => await PreDeleting(r);
             _view.PreRendering += (r) => PreRendering(r);
 
             _view.Render();
@@ -31,6 +32,11 @@ namespace Scrumr.Client
         protected virtual async Task OnUpdated(TEntity entity)
         {
             await Context.SaveChangesAsync();
+        }
+
+        protected virtual async Task OnDeleting(TEntity entity)
+        {
+            throw new InvalidOperationException(String.Format("OnDelete for {0} must be overriden", typeof(TEntity).Name));
         }
 
         public virtual ScrumrContext Context
@@ -61,6 +67,11 @@ namespace Scrumr.Client
         private async Task PostUpdated(Database.Entity entity)
         {
             await OnUpdated((TEntity)entity);
+        }
+
+        private async Task PreDeleting(Database.Entity entity)
+        {
+            await OnDeleting((TEntity)entity);
         }
 
         public static EditEntityBase<TEntity> Create(ScrumrContext context, Entity entity = null, PropertyBag properties = null)

@@ -9,6 +9,14 @@ namespace Scrumr.Database
     [Table("Sprints")]
     public class Sprint : Entity
     {
+        public Sprint() { }
+
+        public Sprint(string name, Project project)
+        {
+            this.Name = name;
+            this.Project = project;
+        }
+
         [Foreign]
         public long ProjectId { get; set; }
 
