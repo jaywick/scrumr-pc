@@ -62,7 +62,6 @@ namespace Scrumr.Tests
             {
                 var project = new Project("Project X");
                 await database.Context.AddNewProject(project);
-                await database.Context.DeleteProject(project);
 
                 var features = new List<Feature>()
                 {
@@ -89,7 +88,6 @@ namespace Scrumr.Tests
             {
                 var project = new Project("Project X");
                 await database.Context.AddNewProject(project);
-                await database.Context.DeleteProject(project);
 
                 var sprints = new List<Sprint>()
                 {
@@ -105,6 +103,31 @@ namespace Scrumr.Tests
 
                 var exists = database.Context.Sprints.Any(x => x.ProjectId == project.ID);
 
+                Assert.IsFalse(exists);
+            }
+        }
+
+        [TestCase]
+        public async Task ShouldDeleteProjectAndTickets()
+        {
+            using (var database = new DisposableTestDatabase(_workspace))
+            {
+                var project = new Project("Project X");
+                await database.Context.AddNewProject(project);
+
+                var tickets = new List<Ticket>()
+                {
+                    ContextTestHelper.CreateTestTicket("Ticket 1", project),
+                    ContextTestHelper.CreateTestTicket("Ticket 2", project),
+                    ContextTestHelper.CreateTestTicket("Ticket 3", project),
+                };
+                
+                await database.Context.SaveChangesAsync();
+
+                await database.Context.DeleteProject(project);
+
+                var exists = database.Context.Tickets.Any();
+                
                 Assert.IsFalse(exists);
             }
         }
