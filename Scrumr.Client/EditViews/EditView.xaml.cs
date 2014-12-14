@@ -211,10 +211,19 @@ namespace Scrumr.Client
             Hide();
         }
 
-        private void Delete_Click(object sender, RoutedEventArgs e)
+        private async void Delete_Click(object sender, RoutedEventArgs e)
         {
+            var confirmResult = await this.ShowMessageAsync("Confirm Delete", "This will delete all items contained within. Are you sure you wish to continue?", MessageDialogStyle.AffirmativeAndNegative);
+
+            if (confirmResult == MessageDialogResult.Negative)
+                return;
+
             if (PreDeleting != null)
                 PreDeleting(Entity);
+
+            DialogResult = true;
+            Result = null;
+            Hide();
         }
     }
 
