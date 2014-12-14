@@ -53,7 +53,7 @@ namespace Scrumr.Client
         {
             using (BusyDisplay)
             {
-                Board.Context = FileSystem.LoadContext();
+                Board.Context = FileSystem.LoadContext(App.Overwrite);
 
                 await Board.Context.LoadAllAsync();
                 Board.Project = await GetDefaultProjectAsync();
