@@ -14,22 +14,16 @@ namespace Scrumr.Database
 {
     public class FileSystem
     {
-        private const string DefaultDatabase = "scrumr.sqlite";
         private const string SampleSprintName = "Backlog";
         private const string SampleFeatureName = "General";
         private const string SampleProjectName = "Project A";
 
-        public static ScrumrContext LoadContext(bool Overwrite = false)
-        {
-            return LoadContext(DefaultDatabase, Overwrite);
-        }
-
-        public static ScrumrContext LoadContext(string filename, bool Overwrite = false)
+        public async static Task<ScrumrContext> LoadContext(string filename, bool Overwrite = false)
         {
             if (!File.Exists(filename) || Overwrite)
             {
                 Create(filename);
-                PopulateSampleData(filename);
+                await PopulateSampleData(filename);
             }
 
             return new ScrumrContext(filename);

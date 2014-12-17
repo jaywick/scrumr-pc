@@ -17,12 +17,15 @@ using System.Runtime;
 using System.Data.Entity;
 using MahApps.Metro.Controls;
 using Scrumr.Database;
+using Microsoft.Win32;
 
 namespace Scrumr.Client
 {
     public partial class MainWindow : MetroWindow
     {
         private bool _lockProjectSelection = false;
+
+        private string SourceFile { get; set; }
 
         public MainWindow()
         {
@@ -32,28 +35,37 @@ namespace Scrumr.Client
             this.Loaded += (s, e) => Load();
             this.Closing += async (s, e) => await Save();
 
-            loadAddButton();
+            loadCommands();
             this.ProjectsList.Items.Clear();
         }
 
-        private void loadAddButton()
+        private void loadCommands()
         {
-            var _addMenu = new ContextMenu();
-            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Ticket", Board.NewTicket));
-            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Feature", Board.NewFeature));
-            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Sprint", Board.NewSprint));
-            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Project", Board.NewProject));
+            var addMenu = new ContextMenu();
+            addMenu.Items.Add(ViewDirector.CreateMenuItem("Ticket", Board.NewTicket));
+            addMenu.Items.Add(ViewDirector.CreateMenuItem("Feature", Board.NewFeature));
+            addMenu.Items.Add(ViewDirector.CreateMenuItem("Sprint", Board.NewSprint));
+            addMenu.Items.Add(ViewDirector.CreateMenuItem("Project", Board.NewProject));
 
-            AddButton.Click += (s, e) => _addMenu.IsOpen = true;
-            _addMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
-            _addMenu.PlacementTarget = AddButton;
+            AddButton.Click += (s, e) => addMenu.IsOpen = true;
+            addMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+            addMenu.PlacementTarget = AddButton;
+
+            var manageProjectMenu = new ContextMenu();
+            manageProjectMenu.Items.Add(ViewDirector.CreateMenuItem("Configure Project", EditProject));
+            manageProjectMenu.Items.Add(ViewDirector.CreateMenuItem("Choose File", ChooseFile));
+
+            ManageProjectsButton.Click += (s, e) => manageProjectMenu.IsOpen = true;
+            manageProjectMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+            manageProjectMenu.PlacementTarget = ManageProjectsButton;
         }
 
         private async void Load()
         {
             using (BusyDisplay)
             {
-                Board.Context = FileSystem.LoadContext(App.Overwrite);
+                SourceFile = App.Preferences[Preferences.SourceFileKey] ?? "scrumr.sqlite";
+                Board.Context = await FileSystem.LoadContext(SourceFile, App.Overwrite);
 
                 await Board.Context.LoadAllAsync();
                 Board.Project = await GetDefaultProjectAsync();
@@ -114,6 +126,21 @@ namespace Scrumr.Client
         private void EditProject()
         {
             ViewDirector.EditEntity(Board.Project, Board.Context);
+        }
+
+        private void ChooseFile()
+        {
+            var openFileDialog = new OpenFileDialog
+            {
+                DefaultExt = ".sqlite",
+                Filter = "SQLite Database File (*.sqlite)|*.sqlite",
+            };
+
+            if (openFileDialog.ShowDialog() == false)
+                return;
+
+            App.Preferences[Preferences.SourceFileKey] = openFileDialog.FileName;
+            Load();
         }
 
         private async Task Save()

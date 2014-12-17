@@ -9,16 +9,17 @@
 
     <Grid Background="White">
         <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Margin="10,0,165,0" >
             <Label Content="Scrumr" FontSize="22" FontFamily="Segoe UI Semibold" HorizontalAlignment="Left"/>
             <Label Content="for PC" FontSize="22" Foreground="Gray" Margin="76,0,0,0" HorizontalAlignment="Left" />
-            <DockPanel HorizontalAlignment="Right" Margin="0,0,0,10">
+            <DockPanel HorizontalAlignment="Right">
                 <Button x:Name="AddButton" Content="+" FontSize="20" Width="75" BorderBrush="{x:Null}" Background="{x:Null}"/>
                 <ComboBox x:Name="ProjectsList" DisplayMemberPath="Name" FontSize="15" Width="200" BorderBrush="{x:Null}" Background="{x:Null}" SelectionChanged="OnProjectSelected"/>
+                <Button x:Name="ManageProjectsButton" Content="MANAGE" FontSize="15" Width="111" BorderBrush="{x:Null}" Background="{x:Null}"/>
             </DockPanel>
         </Grid>
 
