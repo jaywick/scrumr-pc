@@ -53,7 +53,7 @@ namespace Scrumr.Client
         {
             using (BusyDisplay)
             {
-                Board.Context = FileSystem.LoadContext();
+                Board.Context = FileSystem.LoadContext(App.Overwrite);
 
                 await Board.Context.LoadAllAsync();
                 Board.Project = await GetDefaultProjectAsync();
@@ -70,6 +70,10 @@ namespace Scrumr.Client
 
             foreach (var item in Board.Context.Projects)
                 ProjectsList.Items.Add(item);
+
+            ProjectsList.Items.Add(new Separator());
+
+            ProjectsList.Items.Add(ViewDirector.CreateMenuItem("Configure Project", () => EditProject()));
         }
 
         private void OnProjectSelected(object s, SelectionChangedEventArgs e)
@@ -105,6 +109,11 @@ namespace Scrumr.Client
         private void SwitchProject(Project project)
         {
             Board.Project = project;
+        }
+
+        private void EditProject()
+        {
+            ViewDirector.EditEntity(Board.Project, Board.Context);
         }
 
         private async Task Save()

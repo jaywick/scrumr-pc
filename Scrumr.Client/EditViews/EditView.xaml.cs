@@ -25,9 +25,8 @@ namespace Scrumr.Client
     {
         public event Action<Entity> PostUpdated;
         public event Action<Entity> PostCreated;
+        public event Action<Entity> PreDeleting;
         public event Action<Renderables> PreRendering;
-
-        private Type type;
 
         public Type EntityType { get; set; }
         public Entity Entity { get; set; }
@@ -46,9 +45,16 @@ namespace Scrumr.Client
         public EditView(Type type, ScrumrContext context, Entity entity = null)
             : this()
         {
-            Mode = entity == null
-                ? Modes.Creating
-                : Modes.Updating;
+            if (entity == null)
+            {
+                Mode = Modes.Creating;
+                DeleteButton.Visibility = System.Windows.Visibility.Collapsed;
+            }
+            else
+            {
+                Mode = Modes.Updating;
+                DeleteButton.Visibility = System.Windows.Visibility.Visible;
+            }
 
             EntityType = type;
             Context = context;
@@ -201,6 +207,21 @@ namespace Scrumr.Client
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             DialogResult = false;
+            Result = null;
+            Hide();
+        }
+
+        private async void Delete_Click(object sender, RoutedEventArgs e)
+        {
+            var confirmResult = await this.ShowMessageAsync("Confirm Delete", "This will delete all items contained within. Are you sure you wish to continue?", MessageDialogStyle.AffirmativeAndNegative);
+
+            if (confirmResult == MessageDialogResult.Negative)
+                return;
+
+            if (PreDeleting != null)
+                PreDeleting(Entity);
+
+            DialogResult = true;
             Result = null;
             Hide();
         }

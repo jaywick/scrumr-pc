@@ -90,5 +90,55 @@ namespace Scrumr.Database
             Tickets.Add(ticket);
             await SaveChangesAsync();
         }
+
+        public async Task DeleteProject(Project project)
+        {
+            var linkedTickets = Tickets.Where(x => x.Sprint.Project.ID == project.ID).ToList();
+            Tickets.RemoveRange(linkedTickets);
+
+            var linkedFeatures = Features.Where(x => x.ProjectId == project.ID);
+            Features.RemoveRange(linkedFeatures);
+
+            var linkedSprints = Sprints.Where(x => x.ProjectId == project.ID);
+            Sprints.RemoveRange(linkedSprints);
+
+            await SaveChangesAsync();
+
+            Projects.Remove(project);
+
+            await SaveChangesAsync();
+        }
+
+        public async Task DeleteFeature(Feature feature)
+        {
+            var linkedTickets = Tickets.Where(x => x.FeatureId == feature.ID);
+            Tickets.RemoveRange(linkedTickets);
+
+            var linkedProjects = Projects.Where(x => x.DefaultFeatureId == feature.ID);
+            Projects.ToList().ForEach(x => x.DefaultFeature = null);
+
+            Features.Remove(feature);
+
+            await SaveChangesAsync();
+        }
+
+        public async Task DeleteTicket(Ticket ticket)
+        {
+            Tickets.Remove(ticket);
+            await SaveChangesAsync();
+        }
+
+        public async Task DeleteSprint(Sprint sprint)
+        {
+            var linkedTickets = Tickets.Where(x => x.SprintId == sprint.ID);
+            Tickets.RemoveRange(linkedTickets);
+
+            var linkedProjects = Projects.Where(x => x.BacklogId == sprint.ID);
+            Projects.ToList().ForEach(x => x.Backlog = null);
+
+            Sprints.Remove(sprint);
+
+            await SaveChangesAsync();
+        }
     }
 }

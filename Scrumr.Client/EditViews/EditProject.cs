@@ -22,5 +22,10 @@ namespace Scrumr.Client
         {
             await Context.AddNewProject(project);
         }
+
+        protected override async Task OnDeleting(Project project)
+        {
+            await Context.DeleteProject(project);
+        }
     }
 }

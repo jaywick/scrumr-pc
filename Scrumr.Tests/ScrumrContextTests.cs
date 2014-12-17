@@ -41,6 +41,98 @@ namespace Scrumr.Tests
         }
 
         [TestCase]
+        public async Task ShouldDeleteProject()
+        {
+            using (var database = new DisposableTestDatabase(_workspace))
+            {
+                var project = new Project("Project X");
+                await database.Context.AddNewProject(project);
+                await database.Context.DeleteProject(project);
+
+                var exists = database.Context.Projects.Any(x => x.ID == project.ID);
+
+                Assert.IsFalse(exists);
+            }
+        }
+
+        [TestCase]
+        public async Task ShouldDeleteProjectAndFeatures()
+        {
+            using (var database = new DisposableTestDatabase(_workspace))
+            {
+                var project = new Project("Project X");
+                await database.Context.AddNewProject(project);
+
+                var features = new List<Feature>()
+                {
+                   new Feature("Feature 1", project),
+                   new Feature("Feature 2", project),
+                   new Feature("Feature 3", project),
+                };
+
+                database.Context.Features.AddRange(features);
+                await database.Context.SaveChangesAsync();
+
+                await database.Context.DeleteProject(project);
+
+                var exists = database.Context.Features.Any(x => x.ProjectId == project.ID);
+
+                Assert.IsFalse(exists);
+            }
+        }
+
+        [TestCase]
+        public async Task ShouldDeleteProjectAndSprints()
+        {
+            using (var database = new DisposableTestDatabase(_workspace))
+            {
+                var project = new Project("Project X");
+                await database.Context.AddNewProject(project);
+
+                var sprints = new List<Sprint>()
+                {
+                   new Sprint("Sprint 1", project),
+                   new Sprint("Sprint 2", project),
+                   new Sprint("Sprint 3", project),
+                };
+
+                database.Context.Sprints.AddRange(sprints);
+                await database.Context.SaveChangesAsync();
+
+                await database.Context.DeleteProject(project);
+
+                var exists = database.Context.Sprints.Any(x => x.ProjectId == project.ID);
+
+                Assert.IsFalse(exists);
+            }
+        }
+
+        [TestCase]
+        public async Task ShouldDeleteProjectAndTickets()
+        {
+            using (var database = new DisposableTestDatabase(_workspace))
+            {
+                var project = new Project("Project X");
+                await database.Context.AddNewProject(project);
+
+                var tickets = new List<Ticket>()
+                {
+                    ContextTestHelper.CreateTestTicket("Ticket 1", project),
+                    ContextTestHelper.CreateTestTicket("Ticket 2", project),
+                    ContextTestHelper.CreateTestTicket("Ticket 3", project),
+                };
+                
+                await database.Context.SaveChangesAsync();
+
+                await database.Context.DeleteProject(project);
+
+                var exists = database.Context.Tickets.Any();
+                
+                Assert.IsFalse(exists);
+            }
+        }
+
+        [TestCase]
         public async Task ShouldCreateBacklogOnAddingNewProject()
         {
             using (var database = new DisposableTestDatabase(_workspace))
@@ -69,7 +161,7 @@ namespace Scrumr.Tests
 
                 var expected = featureAdded;
                 var actual = projectAdded.DefaultFeature;
-                
+
                 Assert.AreEqual(expected, actual);
             }
         }

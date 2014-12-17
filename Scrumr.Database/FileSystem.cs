@@ -19,7 +19,12 @@ namespace Scrumr.Database
         private const string SampleFeatureName = "General";
         private const string SampleProjectName = "Project A";
 
-        public static ScrumrContext LoadContext(string filename = DefaultDatabase)
+        public static ScrumrContext LoadContext(bool Overwrite = false)
+        {
+            return LoadContext(DefaultDatabase, Overwrite);
+        }
+
+        public static ScrumrContext LoadContext(string filename, bool Overwrite = false)
         {
             if (!File.Exists(filename) || Overwrite)
             {
@@ -28,18 +33,6 @@ namespace Scrumr.Database
             }
 
             return new ScrumrContext(filename);
-        }
-
-        public static bool Overwrite
-        {
-            get
-            {
-#if OVERWRITE
-                return true;
-#else
-                return false;
-#endif
-            }
         }
 
         public static void Create(string filename)
