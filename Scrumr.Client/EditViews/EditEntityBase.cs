@@ -97,5 +97,10 @@ namespace Scrumr.Client
 
             return (TEntity)_view.Result;
         }
+
+        public void Show()
+        {
+            _view.ShowDialog();
+        }
     }
 }

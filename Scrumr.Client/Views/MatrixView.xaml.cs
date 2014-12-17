@@ -145,9 +145,15 @@ namespace Scrumr.Client
                 var ticketView = new TicketView(ticket);
                 cellView.Add(ticketView);
 
-                ticketView.RequestEdit += (t) => EditEntity(t as Ticket);
+                ticketView.RequestEdit += (t) => EditTicket(t as Ticket);
                 ticketView.RequestRemove += (t) => RemoveEntity(t as Ticket);
             }
+        }
+
+        private void EditTicket(Ticket ticket)
+        {
+            ViewDirector.EditTicket(ticket, Context);
+            Update();
         }
 
         private void EditEntity<T>(T entity) where T : Entity

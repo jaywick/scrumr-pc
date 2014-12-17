@@ -34,13 +34,24 @@ namespace Scrumr.Client
             return (T)editor.GetResult();
         }
 
+        public static void EditTicket(Ticket ticket, ScrumrContext context)
+        {
+            var properties = new PropertyBag();
+            properties.Add("projectId", ticket.ProjectId);
+            properties.Add("sprintId", ticket.SprintId);
+            properties.Add("featureId", ticket.FeatureId);
+
+            var editor = EditEntityBase<Ticket>.Create(context, ticket, properties);
+            editor.Show();
+        }
+
         public static void EditEntity<T>(T entity, ScrumrContext context, long? projectId = null) where T : Entity
         {
             var properties = new PropertyBag();
             properties.Add("projectId", projectId);
 
             var editor = EditEntityBase<T>.Create(context, entity, properties);
-            editor.GetResult();
+            editor.Show();
         }
 
         public static async void RemoveEntity<T>(T entity, ScrumrContext context) where T : Entity
