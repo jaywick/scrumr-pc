@@ -82,10 +82,6 @@ namespace Scrumr.Client
 
             foreach (var item in Board.Context.Projects)
                 ProjectsList.Items.Add(item);
-
-            ProjectsList.Items.Add(new Separator());
-
-            ProjectsList.Items.Add(ViewDirector.CreateMenuItem("Configure Project", () => EditProject()));
         }
 
         private void OnProjectSelected(object s, SelectionChangedEventArgs e)
