@@ -94,6 +94,7 @@
     </ApplicationDefinition>
     <Compile Include="EditViews\EditEntityBase.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Preferences.cs" />
     <Compile Include="PropertyViews\EnumPropertyView.cs" />
     <Compile Include="PropertyViews\CheckPropertyView.cs" />
     <Compile Include="PropertyViews\DataListPropertyView.cs" />

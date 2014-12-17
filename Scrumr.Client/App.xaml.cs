@@ -12,9 +12,12 @@ namespace Scrumr.Client
     {
         public static bool Overwrite { get; private set; }
 
+        public static Preferences Preferences { get; private set; }
+
         public App()
         {
             CheckDirectives();
+            Preferences = new Preferences();
         }
 
         private static void CheckDirectives()
