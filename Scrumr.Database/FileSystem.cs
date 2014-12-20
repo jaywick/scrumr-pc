@@ -22,14 +22,19 @@ namespace Scrumr.Database
         {
             if (!File.Exists(filename) || Overwrite)
             {
-                Create(filename);
-                await PopulateSampleData(filename);
+                await CreateNew(filename);
             }
 
             return new ScrumrContext(filename);
         }
 
-        public static void Create(string filename)
+        private async static Task CreateNew(string filename)
+        {
+            CreateEmpty(filename);
+            await PopulateSampleData(filename);
+        }
+
+        public static void CreateEmpty(string filename)
         {
             var entities = typeof(ScrumrContext).GetProperties()
                 .Where(x => x.PropertyType.IsGenericType)

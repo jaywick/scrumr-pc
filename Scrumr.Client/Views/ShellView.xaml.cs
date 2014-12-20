@@ -52,8 +52,9 @@ namespace Scrumr.Client
             addMenu.PlacementTarget = AddButton;
 
             var manageProjectMenu = new ContextMenu();
-            manageProjectMenu.Items.Add(ViewDirector.CreateMenuItem("Configure Project", EditProject));
-            manageProjectMenu.Items.Add(ViewDirector.CreateMenuItem("Choose File", ChooseFile));
+            manageProjectMenu.Items.Add(ViewDirector.CreateMenuItem("Configure project", EditProject));
+            manageProjectMenu.Items.Add(ViewDirector.CreateMenuItem("Choose database", ChooseFile));
+            manageProjectMenu.Items.Add(ViewDirector.CreateMenuItem("Create new database", CreateFile));
 
             ManageProjectsButton.Click += (s, e) => manageProjectMenu.IsOpen = true;
             manageProjectMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
@@ -126,16 +127,37 @@ namespace Scrumr.Client
 
         private void ChooseFile()
         {
-            var openFileDialog = new OpenFileDialog
+            var dialog = new OpenFileDialog
             {
                 DefaultExt = ".sqlite",
                 Filter = "SQLite Database File (*.sqlite)|*.sqlite",
+                CheckFileExists = true,
             };
 
-            if (openFileDialog.ShowDialog() == false)
+            if (dialog.ShowDialog() == false)
                 return;
 
-            App.Preferences[Preferences.SourceFileKey] = openFileDialog.FileName;
+            App.Preferences[Preferences.SourceFileKey] = dialog.FileName;
+            Load();
+        }
+
+        private void CreateFile()
+        {
+            var dialog = new SaveFileDialog
+            {
+                DefaultExt = ".sqlite",
+                Filter = "SQLite Database File (*.sqlite)|*.sqlite",
+                OverwritePrompt = true,
+            };
+
+            if (dialog.ShowDialog() == false)
+                return;
+
+            var path = dialog.FileName;
+
+            FileSystem.CreateEmpty(path);
+
+            App.Preferences[Preferences.SourceFileKey] = path;
             Load();
         }
 

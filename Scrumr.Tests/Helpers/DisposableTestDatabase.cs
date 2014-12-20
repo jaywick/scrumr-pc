@@ -17,7 +17,7 @@ namespace Scrumr.Tests
         public DisposableTestDatabase(DisposableTestWorkspace testFiles)
         {
             _testDbPath = testFiles.Create();
-            FileSystem.Create(_testDbPath);
+            FileSystem.CreateEmpty(_testDbPath);
             Context = new ScrumrContext(_testDbPath);
         }
 
