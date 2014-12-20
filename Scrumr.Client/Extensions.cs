@@ -29,5 +29,10 @@ namespace Scrumr.Client
             Grid.SetColumn(element, column);
             Grid.SetRow(element, row);
         }
+
+        public static T GetData<T>(this IDataObject target) where T : class
+        {
+            return target.GetData(typeof(T)) as T;
+        }
     }
 }

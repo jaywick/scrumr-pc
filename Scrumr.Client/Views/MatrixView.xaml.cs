@@ -78,12 +78,19 @@ namespace Scrumr.Client
 
         private void CreateTicketCells()
         {
-            for (int column = 0; column < VisibleSprints.Count(); column++)
+            int column = 0;
+            int row = 0;
+
+            foreach (var sprint in VisibleSprints)
             {
-                for (int row = 0; row < VisibleFeatures.Count(); row++)
+                foreach (var feature in VisibleFeatures)
                 {
-                    CreateTicketCell(column + 1, row + 1);
+                    CreateTicketCell(column, row, sprint.ID, feature.ID);
+                    row++;
                 }
+
+                column++;
+                row = 0;
             }
         }
 
@@ -129,11 +136,11 @@ namespace Scrumr.Client
             }
         }
 
-        private void CreateTicketCell(int sprintId, int featureId)
+        private void CreateTicketCell(int column, int row, long sprintId, long featureId)
         {
             var cellView = new CellView(sprintId, featureId);
-            Board.InsertAt(cellView, sprintId - 1, featureId - 1);
-            cellView.Drop += (s, e) => MoveTicket(e.Data.GetData(typeof(Ticket)) as Ticket, sprintId, featureId);
+            Board.InsertAt(cellView, column, row);
+            cellView.Drop += (s, e) => MoveTicket(e.Data.GetData<Ticket>(), sprintId, featureId);
             cellView.RequestNewTicket += (s, f) => NewTicket(s, f);
 
             var tickets = VisibleTickets
@@ -168,13 +175,13 @@ namespace Scrumr.Client
             Update();
         }
 
-        public void NewTicket(int sprintId, int featureId)
+        public void NewTicket(long sprintId, long featureId)
         {
             ViewDirector.AddTicket(Context, Project.ID, sprintId, featureId);
             Update();
         }
 
-        private void MoveTicket(Ticket ticket, int sprintId, int featureId)
+        private void MoveTicket(Ticket ticket, long sprintId, long featureId)
         {
             ticket.SprintId = sprintId;
             ticket.FeatureId = featureId;
