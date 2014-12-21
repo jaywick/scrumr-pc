@@ -18,20 +18,18 @@ namespace Scrumr.Database
         private const string SampleFeatureName = "General";
         private const string SampleProjectName = "Project A";
 
-        public async static Task<ScrumrContext> LoadContext(string filename, bool Overwrite = false)
+        public static ScrumrContext LoadContext(string filename, int expectedSchemaVersion)
         {
-            if (!File.Exists(filename) || Overwrite)
-            {
-                await CreateNew(filename);
-            }
+            if (!File.Exists(filename))
+                throw new FileNotFoundException(String.Format("Cannot find database '{0}'", filename));
 
-            return new ScrumrContext(filename);
+            return new ScrumrContext(filename, expectedSchemaVersion);
         }
 
-        private async static Task CreateNew(string filename)
+        public async static Task CreateNew(string filename, int schemaVersion)
         {
             CreateEmpty(filename);
-            await PopulateSampleData(filename);
+            await PopulateSampleData(filename, schemaVersion);
         }
 
         public static void CreateEmpty(string filename)
@@ -39,7 +37,7 @@ namespace Scrumr.Database
             var entities = typeof(ScrumrContext).GetProperties()
                 .Where(x => x.PropertyType.IsGenericType)
                 .Where(x => x.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>))
-                .Select(x => x.PropertyType.GetGenericArguments().First());
+                .Select(x => x.PropertyType.GetGenericArguments().Single());
 
             SQLiteConnection.CreateFile(filename);
 
@@ -62,10 +60,13 @@ namespace Scrumr.Database
             }
         }
 
-        private static async Task PopulateSampleData(string filename)
+        private static async Task PopulateSampleData(string filename, int schemaVersion)
         {
-            var context = new ScrumrContext(filename);
-            await context.AddNewProject(new Project { Name = "Project 1" });
+            using (var context = new ScrumrContext(filename, schemaVersion))
+            {
+                context.Meta.Add(new Meta { SchemaVersion = schemaVersion });
+                await context.AddNewProject(new Project { Name = "Project 1" });
+            }
         }
     }
 }

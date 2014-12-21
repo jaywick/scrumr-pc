@@ -18,6 +18,7 @@ using System.Data.Entity;
 using MahApps.Metro.Controls;
 using Scrumr.Database;
 using Microsoft.Win32;
+using MahApps.Metro.Controls.Dialogs;
 
 namespace Scrumr.Client
 {
@@ -66,9 +67,31 @@ namespace Scrumr.Client
             using (BusyDisplay)
             {
                 SourceFile = App.Preferences[Preferences.SourceFileKey] ?? "scrumr.sqlite";
-                Board.Context = await FileSystem.LoadContext(SourceFile, App.Overwrite);
+                Board.Context = FileSystem.LoadContext(SourceFile, App.SchemaVersion);
 
-                await Board.Context.LoadAllAsync();
+                Task errorMessageTask = null;
+                try
+                {
+                    await Board.Context.LoadAllAsync();
+                }
+                catch(SchemaMismatchException ex)
+                {
+                    errorMessageTask = this.ShowMessageAsync("", String.Format(
+                        "The database you are trying to laod is out of date and cannot be used with this version of the application.\n" +
+                        "Application expects v{0}, however database is v{1}.\n\n" +
+                        "{2}", ex.ExpectedVersion, ex.ActualVersion, ex.FilePath));
+                }
+                catch(Exception ex)
+                {
+                    errorMessageTask = this.ShowMessageAsync("Could not load database", ex.Message);
+                }
+
+                if (errorMessageTask != null)
+                {
+                    await errorMessageTask;
+                    return;
+                }
+
                 Board.Project = await GetDefaultProjectAsync();
                 this.ProjectsList.SelectedItem = Board.Project;
                 Board.Update();
@@ -141,7 +164,7 @@ namespace Scrumr.Client
             Load();
         }
 
-        private void CreateFile()
+        private async void CreateFile()
         {
             var dialog = new SaveFileDialog
             {
@@ -155,7 +178,7 @@ namespace Scrumr.Client
 
             var path = dialog.FileName;
 
-            FileSystem.CreateEmpty(path);
+            await FileSystem.CreateNew(path, App.SchemaVersion);
 
             App.Preferences[Preferences.SourceFileKey] = path;
             Load();

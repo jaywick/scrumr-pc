@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Scrumr.Database
 {
@@ -34,7 +35,9 @@ namespace Scrumr.Database
         public static string GenerateCreateScriptFor(Type type)
         {
             var columns = String.Join(", ", GenerateColumnDefinitions(type));
-            return String.Format("CREATE TABLE {0} ({1});", type.Name + "s", columns);
+            var tableName = type.GetCustomAttribute<TableAttribute>().Name;
+
+            return String.Format("CREATE TABLE {0} ({1});", tableName, columns);
         }
 
         public static IEnumerable<string> GenerateColumnDefinitions(Type entityType)

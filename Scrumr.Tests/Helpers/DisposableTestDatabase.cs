@@ -18,7 +18,7 @@ namespace Scrumr.Tests
         {
             _testDbPath = testFiles.Create();
             FileSystem.CreateEmpty(_testDbPath);
-            Context = new ScrumrContext(_testDbPath);
+            Context = new ScrumrContext(_testDbPath, 0);
         }
 
         public void Dispose()

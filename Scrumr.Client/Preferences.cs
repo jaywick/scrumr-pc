@@ -30,7 +30,7 @@ namespace Scrumr.Client
 
         public static void SetValue(string key, object value)
         {
-            var subKey = Registry.CurrentUser.OpenSubKey(AppKey, false);
+            var subKey = Registry.CurrentUser.OpenSubKey(AppKey, true);
 
             if (subKey == null)
                 subKey = Registry.CurrentUser.CreateSubKey(AppKey);

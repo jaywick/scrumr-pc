@@ -10,23 +10,13 @@ namespace Scrumr.Client
 {
     public partial class App : Application
     {
-        public static bool Overwrite { get; private set; }
-
         public static Preferences Preferences { get; private set; }
+
+        public static readonly int SchemaVersion = 1;
 
         public App()
         {
-            CheckDirectives();
             Preferences = new Preferences();
-        }
-
-        private static void CheckDirectives()
-        {
-#if OVERWRITE
-            Overwrite = true;
-#else
-            Overwrite = false;
-#endif
         }
     }
 }

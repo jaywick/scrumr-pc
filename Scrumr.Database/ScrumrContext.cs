@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Data.Entity;
 using System.Data.SQLite;
 using Scrumr.Database;
+using System.IO;
 
 namespace Scrumr.Database
 {
@@ -15,19 +16,42 @@ namespace Scrumr.Database
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Feature> Features { get; set; }
         public DbSet<Sprint> Sprints { get; set; }
+        public DbSet<Meta> Meta { get; set; }
 
-        public ScrumrContext(string filename)
-            : base(new SQLiteConnection()
-                {
-                    ConnectionString = new SQLiteConnectionStringBuilder() { DataSource = filename, ForeignKeys = true }.ConnectionString
-                }, true) { }
+        public FileInfo DatabaseFile { get; private set; }
+
+        private int _expectedSchemaVersion;
+
+        public ScrumrContext(string filename, int expectedSchemaVersion)
+            : base(new SQLiteConnection() { ConnectionString = new SQLiteConnectionStringBuilder() { DataSource = filename, ForeignKeys = true }.ConnectionString }, true)
+        {
+            DatabaseFile = new FileInfo(filename);
+            _expectedSchemaVersion = expectedSchemaVersion;
+        }
+
+        public Meta SchemaInfo
+        {
+            get { return Meta.SingleOrDefault(); }
+        }
 
         public async Task LoadAllAsync()
         {
+            await Meta.LoadAsync();
+            CheckSchema();
+
             await Projects.LoadAsync();
             await Features.LoadAsync();
             await Sprints.LoadAsync();
             await Tickets.LoadAsync();
+        }
+
+        public void CheckSchema()
+        {
+            if (SchemaInfo == null)
+                throw new SchemaMismatchException(DatabaseFile.FullName);
+
+            if (SchemaInfo.SchemaVersion != _expectedSchemaVersion)
+                throw new SchemaMismatchException(DatabaseFile.FullName, _expectedSchemaVersion, SchemaInfo.SchemaVersion);
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
