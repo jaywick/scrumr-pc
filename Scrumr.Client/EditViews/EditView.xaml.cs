@@ -161,6 +161,7 @@ namespace Scrumr.Client
 
             Contents.Children.Clear();
 
+            Control firstControl = null;
             foreach (var item in Items)
             {
                 var propertyView = PropertyView.Create(item, Context);
@@ -185,9 +186,14 @@ namespace Scrumr.Client
                     ((Control)propertyView.View).Margin = new Thickness(10, 8, 10, 8);
                     Contents.Children.Add(itemGrid);
 
+                    if (firstControl == null)
+                        firstControl = propertyView.View as Control;
+
                     PropertyViews.Add(propertyView);
                 }
             }
+
+            firstControl.Focus();
         }
 
         private void Save_Click(object sender, RoutedEventArgs e)
