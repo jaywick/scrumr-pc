@@ -74,6 +74,8 @@ namespace Scrumr.Client
             CreateSprintColumns();
             CreateFeatureRows();
             CreateTicketCells();
+
+            SyncHeaderScrollers();
         }
 
         private void CreateTicketCells()
@@ -218,8 +220,13 @@ namespace Scrumr.Client
 
         public void OnBoardScroll(object sender, ScrollChangedEventArgs e)
         {
-            TopScroller.ScrollToHorizontalOffset(e.HorizontalOffset);
-            LeftScroller.ScrollToVerticalOffset(e.VerticalOffset);
+            SyncHeaderScrollers();
+        }
+
+        private void SyncHeaderScrollers()
+        {
+            TopScroller.ScrollToHorizontalOffset(BoardScroller.HorizontalOffset);
+            LeftScroller.ScrollToVerticalOffset(BoardScroller.VerticalOffset);
         }
     }
 }
