@@ -18,6 +18,8 @@ namespace Scrumr.Client
 {
     partial class TicketView : UserControl
     {
+        public event Action<Ticket> RequestClose;
+        public event Action<Ticket> RequestReopen; 
         public event Action<Ticket> RequestEdit;
         public event Action<Ticket> RequestRemove;
 
@@ -35,6 +37,13 @@ namespace Scrumr.Client
             borderId.Background = ticket.Type == TicketType.Task ? Brushes.LightBlue : Brushes.LightPink;
 
             ContextMenu = new ContextMenu();
+
+            if (Ticket.IsOpen)
+                ContextMenu.Items.Add(ViewDirector.CreateMenuItem("Close", () => RequestClose(ticket)));
+            else
+                ContextMenu.Items.Add(ViewDirector.CreateMenuItem("Reopen", () => RequestReopen(ticket)));
+
+            ContextMenu.Items.Add(new Separator());
             ContextMenu.Items.Add(ViewDirector.CreateMenuItem("Edit",  () => RequestEdit(ticket)));
             ContextMenu.Items.Add(ViewDirector.CreateMenuItem("Remove", () => RequestRemove(ticket)));
 

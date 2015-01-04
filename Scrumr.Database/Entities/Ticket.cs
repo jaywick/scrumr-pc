@@ -51,5 +51,21 @@ namespace Scrumr.Database
                 return Sprint.ProjectId;
             }
         }
+
+        [NotMapped]
+        public bool IsOpen
+        {
+            get { return State == TicketState.Open; }
+        }
+        
+        public void Open()
+        {
+            State = TicketState.Open;
+        }
+
+        public void Close()
+        {
+            State = TicketState.Closed;
+        }
     }
 }

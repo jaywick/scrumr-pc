@@ -154,9 +154,23 @@ namespace Scrumr.Client
                 var ticketView = new TicketView(ticket);
                 cellView.Add(ticketView);
 
+                ticketView.RequestClose += (t) => CloseTicket(t as Ticket); 
+                ticketView.RequestReopen += (t) => OpenTicket(t as Ticket);
                 ticketView.RequestEdit += (t) => EditTicket(t as Ticket);
                 ticketView.RequestRemove += (t) => RemoveEntity(t as Ticket);
             }
+        }
+
+        private void OpenTicket(Ticket ticket)
+        {
+            ticket.Open();
+            Update();
+        }
+
+        private void CloseTicket(Ticket ticket)
+        {
+            ticket.Close();
+            Update();
         }
 
         private void EditTicket(Ticket ticket)
