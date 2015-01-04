@@ -19,12 +19,17 @@ using MahApps.Metro.Controls;
 using Scrumr.Database;
 using Microsoft.Win32;
 using MahApps.Metro.Controls.Dialogs;
+using Scrumr.Client.Views;
 
 namespace Scrumr.Client
 {
     public partial class MainWindow : MetroWindow
     {
         private bool _lockProjectSelection = false;
+        private bool _lockSaving = false;
+        private ContextMenu _addMenu;
+        private ContextMenu _projectsList;
+        private ShortcutMaps _shortcuts = new ShortcutMaps();
 
         private string SourceFile { get; set; }
 
@@ -33,36 +38,56 @@ namespace Scrumr.Client
             InitializeComponent();
             this.LeftWindowCommands = new WindowCommands();
 
-            this.Loaded += (s, e) => Load();
-            this.Closing += async (s, e) => await Save();
+            this.ProjectsList.Items.Clear();
+            this.Loaded += async (s, e) => await LoadAsync();
+            this.Closing += async (s, e) => await SaveAsync();
 
             loadCommands();
-            this.ProjectsList.Items.Clear();
+            loadShortcuts();
+        }
+
+        private void loadShortcuts()
+        {
+            _shortcuts.Add(ModifierKeys.Control, Key.N, () => _addMenu.IsOpen = true);
+            _shortcuts.Add(ModifierKeys.Control, Key.T, () => Board.NewTicket());
+            _shortcuts.Add(ModifierKeys.Control, Key.S, async () => await Save());
+            _shortcuts.Add(ModifierKeys.Control, Key.O, () => ChooseFile());
+        }
+
+        private async Task Save()
+        {
+            savedDisplay.FadeIn(0.1);
+            
+            await SaveAsync();
+            await Task.Delay(TimeSpan.FromSeconds(3));
+
+            savedDisplay.FadeOut(1);
         }
 
         private void loadCommands()
         {
-            var addMenu = new ContextMenu();
-            addMenu.Items.Add(ViewDirector.CreateMenuItem("Ticket", Board.NewTicket));
-            addMenu.Items.Add(ViewDirector.CreateMenuItem("Feature", Board.NewFeature));
-            addMenu.Items.Add(ViewDirector.CreateMenuItem("Sprint", Board.NewSprint));
-            addMenu.Items.Add(ViewDirector.CreateMenuItem("Project", Board.NewProject));
+            _addMenu = new ContextMenu();
+            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Ticket", Board.NewTicket));
+            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Feature", Board.NewFeature));
+            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Sprint", Board.NewSprint));
+            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Project", Board.NewProject));
+            _addMenu.PreviewKeyDown += (s, e) => ProcessAddMenuShortcut(e.Key);
 
-            AddButton.Click += (s, e) => addMenu.IsOpen = true;
-            addMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
-            addMenu.PlacementTarget = AddButton;
+            AddButton.Click += (s, e) => _addMenu.IsOpen = true;
+            _addMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+            _addMenu.PlacementTarget = AddButton;
 
-            var manageProjectMenu = new ContextMenu();
-            manageProjectMenu.Items.Add(ViewDirector.CreateMenuItem("Configure project", EditProject));
-            manageProjectMenu.Items.Add(ViewDirector.CreateMenuItem("Choose database", ChooseFile));
-            manageProjectMenu.Items.Add(ViewDirector.CreateMenuItem("Create new database", CreateFile));
+            _projectsList = new ContextMenu();
+            _projectsList.Items.Add(ViewDirector.CreateMenuItem("Configure project", EditProject));
+            _projectsList.Items.Add(ViewDirector.CreateMenuItem("Choose database", ChooseFile));
+            _projectsList.Items.Add(ViewDirector.CreateMenuItem("Create new database", CreateFile));
 
-            ManageProjectsButton.Click += (s, e) => manageProjectMenu.IsOpen = true;
-            manageProjectMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
-            manageProjectMenu.PlacementTarget = ManageProjectsButton;
+            ManageProjectsButton.Click += (s, e) => _projectsList.IsOpen = true;
+            _projectsList.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
+            _projectsList.PlacementTarget = ManageProjectsButton;
         }
 
-        private async void Load()
+        private async Task LoadAsync()
         {
             using (BusyDisplay)
             {
@@ -74,14 +99,14 @@ namespace Scrumr.Client
                 {
                     await Board.Context.LoadAllAsync();
                 }
-                catch(SchemaMismatchException ex)
+                catch (SchemaMismatchException ex)
                 {
                     errorMessageTask = this.ShowMessageAsync("", String.Format(
                         "The database you are trying to laod is out of date and cannot be used with this version of the application.\n" +
                         "Application expects v{0}, however database is v{1}.\n\n" +
                         "{2}", ex.ExpectedVersion, ex.ActualVersion, ex.FilePath));
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     errorMessageTask = this.ShowMessageAsync("Could not load database", ex.Message);
                 }
@@ -148,7 +173,7 @@ namespace Scrumr.Client
             ViewDirector.EditEntity(Board.Project, Board.Context);
         }
 
-        private void ChooseFile()
+        private async void ChooseFile()
         {
             var dialog = new OpenFileDialog
             {
@@ -161,7 +186,7 @@ namespace Scrumr.Client
                 return;
 
             App.Preferences[Preferences.SourceFileKey] = dialog.FileName;
-            Load();
+            await LoadAsync();
         }
 
         private async void CreateFile()
@@ -181,10 +206,10 @@ namespace Scrumr.Client
             await FileSystem.CreateNew(path, App.SchemaVersion);
 
             App.Preferences[Preferences.SourceFileKey] = path;
-            Load();
+            await LoadAsync();
         }
 
-        private async Task Save()
+        private async Task SaveAsync()
         {
             await Board.Context.SaveChangesAsync();
         }
@@ -221,5 +246,27 @@ namespace Scrumr.Client
         }
 
         #endregion
+
+        #region Shortcuts
+
+        private void MetroWindow_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            _shortcuts.Process(Keyboard.Modifiers, e.Key);
+        }
+
+        private void ProcessAddMenuShortcut(Key key)
+        {
+            switch (key)
+            {
+                case Key.T: Board.NewTicket();break;
+                case Key.S: Board.NewSprint(); break;
+                case Key.F: Board.NewFeature(); break;
+                case Key.P: Board.NewProject(); break;
+                default: break;
+            }
+        }
+
+        #endregion
+
     }
 }

@@ -5,7 +5,7 @@
         xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         Title="Scrumr for Desktop" Height="571" Width="1008" TextOptions.TextFormattingMode="Display" WindowStartupLocation="CenterScreen"
-        GlowBrush="{DynamicResource AccentColorBrush}" WindowTitleBrush="White" TitleForeground="Black" Background="White" NonActiveWindowTitleBrush="White" ShowTitleBar="False">
+        GlowBrush="{DynamicResource AccentColorBrush}" WindowTitleBrush="White" TitleForeground="Black" Background="White" NonActiveWindowTitleBrush="White" ShowTitleBar="False" PreviewKeyDown="MetroWindow_PreviewKeyDown">
 
     <Grid Background="White">
         <Grid.RowDefinitions>
@@ -16,6 +16,10 @@
         <Grid Grid.Row="0" Margin="10,0,165,0" >
             <Label Content="Scrumr" FontSize="22" FontFamily="Segoe UI Semibold" HorizontalAlignment="Left"/>
             <Label Content="for PC" FontSize="22" Foreground="Gray" Margin="76,0,0,0" HorizontalAlignment="Left" />
+            <Grid x:Name="savedDisplay" Margin="210.417,0,0,0" HorizontalAlignment="Left" Width="65.583" Visibility="Hidden">
+            	<Path Data="M164.5,-38 L173.625,-47.125 171.75,-49 164.75,-42 162.41639,-44.666667 160.41667,-42.416667 z" Fill="#FF09A0D8" HorizontalAlignment="Left" Height="12" Margin="2,14,0,0" Stretch="Fill" VerticalAlignment="Top" Width="14.208"/>
+            	<Label Content="Saved" FontSize="13.333" Foreground="Gray" Margin="17.583,0,0,0" VerticalContentAlignment="Center" FontStyle="Italic" />
+            </Grid>
             <DockPanel HorizontalAlignment="Right">
                 <Button x:Name="AddButton" Content="Add" FontSize="15" Width="75" BorderBrush="{x:Null}" Background="{x:Null}"/>
                 <ComboBox x:Name="ProjectsList" DisplayMemberPath="Name" FontSize="15" FontWeight="Bold" Width="200" BorderBrush="{x:Null}" Background="{x:Null}" SelectionChanged="OnProjectSelected"/>
