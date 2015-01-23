@@ -104,8 +104,8 @@ namespace Scrumr.Client
 
             foreach (var feature in VisibleFeatures)
             {
-                Board.RowDefinitions.Add(new RowDefinition());
-                LeftHeader.RowDefinitions.Add(new RowDefinition());
+                Board.RowDefinitions.Add(new RowDefinition { Height = new GridLength(300) });
+                LeftHeader.RowDefinitions.Add(new RowDefinition { Height = new GridLength(300) });
 
                 var headerView = new HeaderView(feature, Orientation.Vertical);
                 headerView.RequestEdit += (h) => EditEntity(h as Feature);
@@ -125,8 +125,8 @@ namespace Scrumr.Client
 
             foreach (var sprint in VisibleSprints)
             {
-                Board.ColumnDefinitions.Add(new ColumnDefinition());
-                TopHeader.ColumnDefinitions.Add(new ColumnDefinition());
+                Board.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(300) });
+                TopHeader.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(300) });
 
                 var headerView = new HeaderView(sprint, Orientation.Horizontal);
                 headerView.RequestEdit += (h) => EditEntity(h as Sprint);
@@ -154,7 +154,7 @@ namespace Scrumr.Client
                 var ticketView = new TicketView(ticket);
                 cellView.Add(ticketView);
 
-                ticketView.RequestClose += (t) => CloseTicket(t as Ticket); 
+                ticketView.RequestClose += (t) => CloseTicket(t as Ticket);
                 ticketView.RequestReopen += (t) => OpenTicket(t as Ticket);
                 ticketView.RequestEdit += (t) => EditTicket(t as Ticket);
                 ticketView.RequestRemove += (t) => RemoveEntity(t as Ticket);
