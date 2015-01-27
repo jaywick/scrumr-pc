@@ -9,8 +9,10 @@ namespace Scrumr.Client
 {
     public class Preferences
     {
+        private const string AppKey = @"Software\Jay Wick Labs\Scrumr"; 
+        
         public const string SourceFileKey = "Source File";
-        private const string AppKey = @"Software\Jay Wick Labs\Scrumr";
+        public const string DefaultProjectKey = "Default Project";
 
         public string this[string key]
         {

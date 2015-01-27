@@ -166,6 +166,7 @@ namespace Scrumr.Client
         private void SwitchProject(Project project)
         {
             Board.Project = project;
+            App.Preferences[Preferences.DefaultProjectKey] = project.Name;
         }
 
         private void EditProject()
@@ -216,7 +217,17 @@ namespace Scrumr.Client
 
         private async Task<Project> GetDefaultProjectAsync()
         {
-            return await Board.Context.Projects.FirstAsync();
+            var defaultProject = App.Preferences[Preferences.DefaultProjectKey];
+
+            if (defaultProject == null)
+                return await Board.Context.Projects.FirstAsync();
+
+            var project = await Board.Context.Projects.SingleOrDefaultAsync(x => x.Name == defaultProject);
+
+            if (project == null)
+                return await Board.Context.Projects.FirstAsync();
+
+            return project;
         }
 
         #region BusyDisplay
