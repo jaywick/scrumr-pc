@@ -5,7 +5,7 @@
         xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         Title="Scrumr for Desktop" Height="571" Width="1008" TextOptions.TextFormattingMode="Display" WindowStartupLocation="CenterScreen"
-        GlowBrush="{DynamicResource AccentColorBrush}" WindowTitleBrush="White" TitleForeground="Black" Background="White" NonActiveWindowTitleBrush="White" ShowTitleBar="False" PreviewKeyDown="MetroWindow_PreviewKeyDown">
+        GlowBrush="{DynamicResource AccentColorBrush}" WindowTitleBrush="White" TitleForeground="Black" Background="White" NonActiveWindowTitleBrush="White" ShowTitleBar="False" PreviewKeyDown="MetroWindow_PreviewKeyDown" Icon="/Scrumr.Client;component/app.ico">
 
     <Grid Background="White">
         <Grid.RowDefinitions>
