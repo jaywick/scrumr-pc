@@ -27,7 +27,7 @@
             </DockPanel>
         </Grid>
 
-        <local:MatrixView Grid.Row="1" x:Name="Board" Visibility="Collapsed" OnProjectAdded="OnProjectAdded" />
+        <ContentControl Grid.Row="1" x:Name="BoardControl" Visibility="Collapsed"/>
         <metro:ProgressRing Grid.Row="1" x:Name="ProgressBusy" IsActive="True" />
     </Grid>
 </metro:MetroWindow >

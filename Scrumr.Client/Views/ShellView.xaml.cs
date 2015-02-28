@@ -26,7 +26,6 @@ namespace Scrumr.Client
     public partial class MainWindow : MetroWindow
     {
         private bool _lockProjectSelection = false;
-        private bool _lockSaving = false;
         private ContextMenu _addMenu;
         private ContextMenu _projectsList;
         private ShortcutMaps _shortcuts = new ShortcutMaps();
@@ -37,6 +36,7 @@ namespace Scrumr.Client
         {
             InitializeComponent();
             this.LeftWindowCommands = new WindowCommands();
+            this.BoardControl.Content = new FeatureView();
 
             this.ProjectsList.Items.Clear();
             this.Loaded += async (s, e) => await LoadAsync();
@@ -44,6 +44,12 @@ namespace Scrumr.Client
 
             loadCommands();
             loadShortcuts();
+        }
+
+        public IBoardView Board
+        {
+            get { return (IBoardView)BoardControl.Content; }
+            set { BoardControl.Content = value; }
         }
 
         private void loadShortcuts()
@@ -246,13 +252,13 @@ namespace Scrumr.Client
                 _mainWindow = mainWindow;
 
                 _mainWindow.ProgressBusy.Visibility = System.Windows.Visibility.Visible;
-                _mainWindow.Board.Visibility = System.Windows.Visibility.Collapsed;
+                _mainWindow.BoardControl.Visibility = System.Windows.Visibility.Collapsed;
             }
 
             public void Dispose()
             {
                 _mainWindow.ProgressBusy.Visibility = System.Windows.Visibility.Collapsed;
-                _mainWindow.Board.Visibility = System.Windows.Visibility.Visible;
+                _mainWindow.BoardControl.Visibility = System.Windows.Visibility.Visible;
             }
         }
 

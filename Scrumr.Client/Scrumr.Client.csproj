@@ -104,7 +104,11 @@
     <Compile Include="PropertyViews\NumericPropertyView.cs" />
     <Compile Include="PropertyViews\PropertyView.cs" />
     <Compile Include="PropertyViews\TextPropertyView.cs" />
-    <Compile Include="Views\MatrixView.xaml.cs">
+    <Compile Include="Views\Boards\FeatureView.xaml.cs">
+      <DependentUpon>FeatureView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Boards\IBoardView.cs" />
+    <Compile Include="Views\Boards\MatrixView.xaml.cs">
       <DependentUpon>MatrixView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common.cs" />
@@ -126,7 +130,11 @@
       <DependentUpon>TicketView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ViewDirector.cs" />
-    <Page Include="Views\MatrixView.xaml">
+    <Page Include="Views\Boards\FeatureView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Boards\MatrixView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
