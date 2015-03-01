@@ -16,25 +16,23 @@ using System.Windows.Shapes;
 
 namespace Scrumr.Client
 {
-    partial class TicketView : UserControl
+    partial class TileTicketView : UserControl, ITicketView
     {
         public event Action<Ticket> RequestClose;
         public event Action<Ticket> RequestReopen; 
         public event Action<Ticket> RequestEdit;
         public event Action<Ticket> RequestRemove;
 
-        public Ticket Ticket { get; private set; }
+        public Ticket Ticket { get; set; }
 
-        public TicketView(Ticket ticket)
+        public TileTicketView(Ticket ticket)
         {
             InitializeComponent();
 
             Ticket = ticket;
 
-            labelId.Text = "#" + ticket.ProjectTicketId.ToString();
             labelName.Text = ticket.Name.ToString();
             labelName.Foreground = ticket.State == TicketState.Open ? Brushes.Black : Brushes.Gray;
-            borderId.Background = ticket.Type == TicketType.Task ? Brushes.LightBlue : Brushes.LightPink;
 
             ContextMenu = new ContextMenu();
 
@@ -54,8 +52,9 @@ namespace Scrumr.Client
         {
             if (e.LeftButton == MouseButtonState.Pressed)
             {
-                var thisControl = sender as TicketView;
-                DragDrop.DoDragDrop(thisControl, new DataObject(typeof(Ticket), thisControl.Ticket), DragDropEffects.Move);
+                var ticketView = (ITicketView)sender;
+                var dependancyProperty = (DependencyObject)sender;
+                DragDrop.DoDragDrop(dependancyProperty, new DataObject(typeof(Ticket), ticketView.Ticket), DragDropEffects.Move);
             }
         }
     }

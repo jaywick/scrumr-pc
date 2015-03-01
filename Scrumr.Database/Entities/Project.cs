@@ -32,5 +32,12 @@ namespace Scrumr.Database
         public virtual Sprint Backlog { get; set; }
 
         public virtual Feature DefaultFeature { get; set; }
+
+        public IEnumerable<Ticket> GetTickets(ScrumrContext context, Feature feature, Sprint sprint)
+        {
+            return context.Tickets
+                .Where(x => x.FeatureId == feature.ID)
+                .Where(x => x.SprintId == sprint.ID);
+        }
     }
 }

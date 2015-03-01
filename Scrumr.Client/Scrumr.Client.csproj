@@ -126,7 +126,11 @@
       <DependentUpon>HeaderView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ShortcutMaps.cs" />
-    <Compile Include="Views\TicketView.xaml.cs">
+    <Compile Include="Views\Tickets\ITicketView.cs" />
+    <Compile Include="Views\Tickets\TileTicketView.xaml.cs">
+      <DependentUpon>TileTicketView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Tickets\TicketView.xaml.cs">
       <DependentUpon>TicketView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ViewDirector.cs" />
@@ -162,7 +166,11 @@
       <DependentUpon>ShellView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\TicketView.xaml">
+    <Page Include="Views\Tickets\TileTicketView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Tickets\TicketView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
