@@ -18,6 +18,8 @@ namespace Scrumr.Client.Views
 {
     public partial class FeatureView : UserControl, IBoardView
     {
+        public event Action<Project> OnProjectAdded;
+
         public Database.ScrumrContext Context { get; set; }
         public Database.Project Project { get; set; }
 
@@ -26,20 +28,31 @@ namespace Scrumr.Client.Views
             InitializeComponent();
         }
 
-        public void NewTicket()
+        public void NewSprint()
         {
+            ViewDirector.AddEntity<Sprint>(Context, Project.ID);
+            Update();
         }
 
         public void NewFeature()
         {
+            ViewDirector.AddEntity<Feature>(Context, Project.ID);
+            Update();
         }
 
-        public void NewSprint()
+        public void NewTicket()
         {
+            ViewDirector.AddTicket(Context, Project.ID);
+            Update();
         }
 
         public void NewProject()
         {
+            var project = ViewDirector.AddEntity<Project>(Context);
+            Update();
+
+            if (OnProjectAdded != null)
+                OnProjectAdded.Invoke(project);
         }
 
         public void Update()

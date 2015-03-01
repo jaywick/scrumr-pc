@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Scrumr.Database;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,13 +9,15 @@ namespace Scrumr.Client
 {
     public interface IBoardView
     {
+        event System.Action<Project> OnProjectAdded;
+
         void NewTicket();
         void NewFeature();
         void NewSprint();
         void NewProject();
         void Update();
 
-        Database.ScrumrContext Context { get; set; }
-        Database.Project Project { get; set; }
+        ScrumrContext Context { get; set; }
+        Project Project { get; set; }
     }
 }

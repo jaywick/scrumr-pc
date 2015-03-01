@@ -18,7 +18,7 @@ namespace Scrumr.Client
 {
     public partial class MatrixView : UserControl, IBoardView
     {
-        public event System.Action<Project> OnProjectAdded;
+        public event Action<Project> OnProjectAdded;
 
         public ScrumrContext Context { get; set; }
 
