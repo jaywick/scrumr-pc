@@ -19,7 +19,7 @@ namespace Scrumr.Client
 {
     partial class AddButtonTileView : UserControl
     {
-        public event Action<Feature, Sprint> AddFor;
+        public event Action<Ticket> Added;
 
         private Feature Feature { get; set; }
         private Sprint Sprint { get; set; }
@@ -29,7 +29,53 @@ namespace Scrumr.Client
             InitializeComponent();
             this.Feature = feature;
             this.Sprint = sprint;
-            this.PreviewMouseDown += (s, e) => AddFor.Invoke(Feature, Sprint);
+
+            this.PreviewMouseDown += AddButtonTileView_PreviewMouseDown;
+            TicketSummary.PreviewKeyDown += TicketSummary_PreviewKeyDown;
+        }
+
+        void AddButtonTileView_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            StartQuickEdit();
+            e.Handled = true;
+        }
+
+        private void StartQuickEdit()
+        {
+            TicketSummary.Visibility = Visibility.Visible;
+            AddIconLabel.Visibility = Visibility.Collapsed;
+
+            TicketSummary.Focus();
+        }
+
+        public void Reset()
+        {
+            TicketSummary.Visibility = Visibility.Collapsed;
+            AddIconLabel.Visibility = Visibility.Visible;
+
+            TicketSummary.Text = "";
+        }
+
+        private void TicketSummary_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                Added.Invoke(new Ticket
+                {
+                    Name = TicketSummary.Text,
+                    State = TicketState.Open,
+                    Type = TicketType.Task,
+                    SprintId = Sprint.ID,
+                    FeatureId = Feature.ID,
+                });
+
+                e.Handled = true;
+            }
+            else if (e.Key == Key.Escape)
+            {
+                Reset();
+                e.Handled = true;
+            }
         }
     }
 }

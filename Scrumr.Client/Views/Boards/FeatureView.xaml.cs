@@ -79,7 +79,7 @@ namespace Scrumr.Client.Views
                 }
 
                 var addTile = new AddButtonTileView(feature, feature.Project.Backlog);
-                addTile.AddFor += AddTicketFor;
+                addTile.Added += AddedTicket;
                 featurePanel.Children.Add(addTile);
 
                 RootItems.Children.Add(featurePanel);
@@ -94,9 +94,11 @@ namespace Scrumr.Client.Views
                 featurePanel.Visibility = System.Windows.Visibility.Visible;
         }
 
-        public void AddTicketFor(Feature feature, Sprint sprint)
+        public async void AddedTicket(Ticket ticket)
         {
-            ViewDirector.AddTicket(Context, sprintId: sprint.ID, featureId: feature.ID);
+            Context.Tickets.Add(ticket);
+            await Context.SaveChangesAsync();
+
             Update();
         }
 
