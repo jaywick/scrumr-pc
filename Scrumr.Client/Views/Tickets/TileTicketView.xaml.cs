@@ -46,6 +46,7 @@ namespace Scrumr.Client
             ContextMenu.Items.Add(ViewDirector.CreateMenuItem("Remove", () => RequestRemove(ticket)));
 
             PreviewMouseMove += UserControl_PreviewMouseMove;
+            PreviewMouseDoubleClick += (s, e) => RequestEdit(ticket);
         }
 
         void UserControl_PreviewMouseMove(object sender, MouseEventArgs e)

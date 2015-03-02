@@ -127,6 +127,9 @@
     </Compile>
     <Compile Include="Views\ShortcutMaps.cs" />
     <Compile Include="Views\Tickets\ITicketView.cs" />
+    <Compile Include="Views\Tickets\AddButtonTileView.xaml.cs">
+      <DependentUpon>AddButtonTileView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Tickets\TileTicketView.xaml.cs">
       <DependentUpon>TileTicketView.xaml</DependentUpon>
     </Compile>
@@ -166,6 +169,10 @@
       <DependentUpon>ShellView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\Tickets\AddButtonTileView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\Tickets\TileTicketView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

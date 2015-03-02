@@ -59,11 +59,12 @@ namespace Scrumr.Client.Views
         {
             RootItems.Children.Clear();
 
-
             foreach (var feature in Project.Features)
             {
                 var featurePanel = CreateFeaturePanel(feature);
-                featurePanel.Children.Add(CreateFeatureHeader(feature));
+                var featureHeader = CreateFeatureHeader(feature);
+                featureHeader.PreviewMouseDown += (s, e) => ToggleVisibility(featurePanel);
+                RootItems.Children.Add(featureHeader);
 
                 foreach (var sprint in Project.Sprints)
                 {
@@ -82,10 +83,28 @@ namespace Scrumr.Client.Views
 
                         sprintPanel.Children.Add(ticketView);
                     }
+
+                    var addTile = new AddButtonTileView(sprint);
+                    addTile.AddFor += AddTicketFor;
+                    sprintPanel.Children.Add(addTile);
                 }
 
                 RootItems.Children.Add(featurePanel);
             }
+        }
+
+        private void ToggleVisibility(Panel featurePanel)
+        {
+            if (featurePanel.Visibility == System.Windows.Visibility.Visible)
+                featurePanel.Visibility = System.Windows.Visibility.Collapsed;
+            else
+                featurePanel.Visibility = System.Windows.Visibility.Visible;
+        }
+
+        public void AddTicketFor(Sprint sprint)
+        {
+            ViewDirector.AddTicket(Context, sprintId: sprint.ID);
+            Update();
         }
 
         private void OpenTicket(Ticket ticket)

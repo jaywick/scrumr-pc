@@ -7,7 +7,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <ScrollViewer>
-            <StackPanel x:Name="RootItems"/>
+            <StackPanel x:Name="RootItems" Margin="20"/>
         </ScrollViewer>
     </Grid>
 </UserControl>
