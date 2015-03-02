@@ -19,15 +19,17 @@ namespace Scrumr.Client
 {
     partial class AddButtonTileView : UserControl
     {
-        public event Action<Sprint> AddFor;
-        
+        public event Action<Feature, Sprint> AddFor;
+
+        private Feature Feature { get; set; }
         private Sprint Sprint { get; set; }
 
-        public AddButtonTileView(Sprint sprint)
+        public AddButtonTileView(Feature feature, Sprint sprint)
         {
             InitializeComponent();
+            this.Feature = feature;
             this.Sprint = sprint;
-            this.PreviewMouseDown += (s, e) => AddFor.Invoke(Sprint);
+            this.PreviewMouseDown += (s, e) => AddFor.Invoke(Feature, Sprint);
         }
     }
 }
