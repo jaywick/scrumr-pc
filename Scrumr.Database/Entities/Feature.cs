@@ -21,5 +21,10 @@ namespace Scrumr.Database
         public long ProjectId { get; set; }
 
         public virtual Project Project { get; set; }
+
+        public IEnumerable<Ticket> GetTickets(ScrumrContext Context)
+        {
+            return Context.Tickets.Where(x => x.FeatureId == ID);
+        }
     }
 }

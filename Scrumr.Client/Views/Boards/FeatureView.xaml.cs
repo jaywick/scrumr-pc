@@ -66,28 +66,21 @@ namespace Scrumr.Client.Views
                 featureHeader.PreviewMouseDown += (s, e) => ToggleVisibility(featurePanel);
                 RootItems.Children.Add(featureHeader);
 
-                foreach (var sprint in Project.Sprints)
+                foreach (var ticket in feature.GetTickets(Context).OrderBy(x => x.SprintId))
                 {
-                    var sprintPanel = CreateSprintPanel(sprint);
-                    featurePanel.Children.Add(CreateSprintHeader(sprint));
-                    featurePanel.Children.Add(sprintPanel);
+                    var ticketView = new TileTicketView(ticket);
 
-                    foreach (var ticket in Project.GetTickets(Context, feature, sprint))
-                    {
-                        var ticketView = new TileTicketView(ticket);
+                    ticketView.RequestClose += (t) => CloseTicket(t as Ticket);
+                    ticketView.RequestReopen += (t) => OpenTicket(t as Ticket);
+                    ticketView.RequestEdit += (t) => EditTicket(t as Ticket);
+                    ticketView.RequestRemove += (t) => RemoveEntity(t as Ticket);
 
-                        ticketView.RequestClose += (t) => CloseTicket(t as Ticket);
-                        ticketView.RequestReopen += (t) => OpenTicket(t as Ticket);
-                        ticketView.RequestEdit += (t) => EditTicket(t as Ticket);
-                        ticketView.RequestRemove += (t) => RemoveEntity(t as Ticket);
-
-                        sprintPanel.Children.Add(ticketView);
-                    }
-
-                    var addTile = new AddButtonTileView(feature, sprint);
-                    addTile.AddFor += AddTicketFor;
-                    sprintPanel.Children.Add(addTile);
+                    featurePanel.Children.Add(ticketView);
                 }
+
+                var addTile = new AddButtonTileView(feature, feature.Project.Backlog);
+                addTile.AddFor += AddTicketFor;
+                featurePanel.Children.Add(addTile);
 
                 RootItems.Children.Add(featurePanel);
             }
@@ -136,30 +129,12 @@ namespace Scrumr.Client.Views
             return new Label
             {
                 Content = feature.Name,
-                FontSize = 25,
+                FontSize = 16,
                 Foreground = Brushes.Black,
             };
         }
 
-        private UIElement CreateSprintHeader(Database.Sprint sprint)
-        {
-            return new Label
-            {
-                Content = sprint.Name,
-                FontSize = 16,
-                Foreground = Brushes.CadetBlue,
-            };
-        }
-
         private Panel CreateFeaturePanel(Database.Feature feature)
-        {
-            return new StackPanel
-            {
-                Margin = new Thickness(10),
-            };
-        }
-
-        private Panel CreateSprintPanel(Database.Sprint sprint)
         {
             return new WrapPanel
             {
