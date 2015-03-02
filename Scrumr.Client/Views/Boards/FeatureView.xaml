@@ -6,7 +6,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
-        <ScrollViewer>
+        <ScrollViewer PanningMode="VerticalOnly">
             <StackPanel x:Name="RootItems" Margin="20"/>
         </ScrollViewer>
     </Grid>
