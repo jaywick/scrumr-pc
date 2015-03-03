@@ -52,6 +52,31 @@ namespace Scrumr.Client
             LayoutRoot.Children.Add(addTile);
         }
 
+        void FeaturePanel_ManipulationDelta(object sender, ManipulationDeltaEventArgs e)
+        {
+            var zoomAmount = Math.Abs(e.DeltaManipulation.Scale.Length - Math.Sqrt(2));
+
+            if ((TouchesOver.Count() == 2))
+            {
+                if (Math.Abs(zoomAmount - 0) > 0.1)
+                {
+                    ResizeTickets(-zoomAmount);
+                }
+            }
+
+            e.Handled = true;
+            base.OnManipulationDelta(e);
+        }
+
+        private void ResizeTickets(double factor)
+        {
+            foreach (var ticketView in LayoutRoot.Children.OfType<TileTicketView>())
+            {
+                ticketView.Width = factor * 139;
+                ticketView.Height = factor * 84;
+            }
+        }
+
         private void OpenTicket(Ticket ticket)
         {
             ticket.Open();
