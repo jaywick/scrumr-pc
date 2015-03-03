@@ -63,6 +63,7 @@ namespace Scrumr.Client
                 Added.Invoke(new Ticket
                 {
                     Name = TicketSummary.Text,
+                    Description = "",
                     State = TicketState.Open,
                     Type = TicketType.Task,
                     SprintId = Sprint.ID,
