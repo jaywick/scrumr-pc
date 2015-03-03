@@ -31,6 +31,7 @@ namespace Scrumr.Client
             this.Sprint = sprint;
 
             this.PreviewMouseDown += AddButtonTileView_PreviewMouseDown;
+            this.PreviewLostKeyboardFocus += (s,e) => Reset();
             TicketSummary.PreviewKeyDown += TicketSummary_PreviewKeyDown;
         }
 
