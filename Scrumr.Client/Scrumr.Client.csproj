@@ -104,15 +104,18 @@
     <Compile Include="PropertyViews\NumericPropertyView.cs" />
     <Compile Include="PropertyViews\PropertyView.cs" />
     <Compile Include="PropertyViews\TextPropertyView.cs" />
-    <Compile Include="Views\Boards\FeatureView.xaml.cs">
+    <Compile Include="Views\Boards\Features\FeaturePanel.xaml.cs">
+      <DependentUpon>FeaturePanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Boards\Features\FeatureView.xaml.cs">
       <DependentUpon>FeatureView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Boards\IBoardView.cs" />
-    <Compile Include="Views\Boards\MatrixView.xaml.cs">
+    <Compile Include="Views\Boards\Matrix\MatrixView.xaml.cs">
       <DependentUpon>MatrixView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Common.cs" />
-    <Compile Include="Views\CellView.xaml.cs">
+    <Compile Include="Views\Boards\Matrix\CellView.xaml.cs">
       <DependentUpon>CellView.xaml</DependentUpon>
     </Compile>
     <Compile Include="EditViews\EditTicket.cs" />
@@ -122,30 +125,34 @@
     <Compile Include="EditViews\EditView.xaml.cs">
       <DependentUpon>EditView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\HeaderView.xaml.cs">
+    <Compile Include="Views\Boards\Matrix\HeaderView.xaml.cs">
       <DependentUpon>HeaderView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ShortcutMaps.cs" />
-    <Compile Include="Views\Tickets\ITicketView.cs" />
-    <Compile Include="Views\Tickets\AddButtonTileView.xaml.cs">
+    <Compile Include="Views\Boards\ITicketView.cs" />
+    <Compile Include="Views\Boards\Features\AddButtonTileView.xaml.cs">
       <DependentUpon>AddButtonTileView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Tickets\TileTicketView.xaml.cs">
+    <Compile Include="Views\Boards\Features\TileTicketView.xaml.cs">
       <DependentUpon>TileTicketView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Tickets\TicketView.xaml.cs">
+    <Compile Include="Views\Boards\Matrix\TicketView.xaml.cs">
       <DependentUpon>TicketView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ViewDirector.cs" />
-    <Page Include="Views\Boards\FeatureView.xaml">
+    <Page Include="Views\Boards\Features\FeaturePanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Boards\MatrixView.xaml">
+    <Page Include="Views\Boards\Features\FeatureView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\CellView.xaml">
+    <Page Include="Views\Boards\Matrix\MatrixView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Boards\Matrix\CellView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -153,7 +160,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\HeaderView.xaml">
+    <Page Include="Views\Boards\Matrix\HeaderView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -169,15 +176,15 @@
       <DependentUpon>ShellView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\Tickets\AddButtonTileView.xaml">
+    <Page Include="Views\Boards\Features\AddButtonTileView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Tickets\TileTicketView.xaml">
+    <Page Include="Views\Boards\Features\TileTicketView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Tickets\TicketView.xaml">
+    <Page Include="Views\Boards\Matrix\TicketView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
