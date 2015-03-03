@@ -32,6 +32,8 @@ namespace Scrumr.Client
 
         private string SourceFile { get; set; }
 
+        private const string SampleDatabaseFileName = "scrumr.sqlite";
+
         public MainWindow()
         {
             InitializeComponent();
@@ -99,7 +101,15 @@ namespace Scrumr.Client
         {
             using (BusyDisplay)
             {
-                SourceFile = App.Preferences[Preferences.SourceFileKey] ?? "scrumr.sqlite";
+                SourceFile = App.Preferences[Preferences.SourceFileKey] ?? SampleDatabaseFileName;
+
+                if (!System.IO.File.Exists(SourceFile))
+                {
+                    await this.ShowMessageAsync("Database is missing", "Perhaps it was moved, deleted or renamed?\nExepected file at: " + SourceFile);
+                    ChooseFile();
+                    return;
+                }
+
                 Board.Context = FileSystem.LoadContext(SourceFile, App.SchemaVersion);
 
                 Task errorMessageTask = null;
