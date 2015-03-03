@@ -10,13 +10,7 @@
     <metro:MetroWindow.Flyouts>
         <metro:FlyoutsControl>
             <metro:Flyout Name="MenuFlyout" Header="Menu">
-                <StackPanel Width="200" Orientation="Vertical">
-                    <Button x:Name="AddButton" Content="ADD" FontSize="15" BorderBrush="{x:Null}" Background="{x:Null}"/>
-                    <Separator/>
-                    <ListBox x:Name="ProjectsList" DisplayMemberPath="Name" FontSize="15" FontWeight="Bold" BorderBrush="{x:Null}" Background="{x:Null}" SelectionChanged="OnProjectSelected"/>
-                    <Separator/>
-                    <Button x:Name="ManageProjectsButton" Content="MANAGE" FontSize="15" Width="111" BorderBrush="{x:Null}" Background="{x:Null}"/>
-                </StackPanel>
+                <local:MenuFlyoutContent x:Name="MenuFlyoutContent"/>
             </metro:Flyout>
         </metro:FlyoutsControl>
     </metro:MetroWindow.Flyouts>

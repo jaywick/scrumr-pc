@@ -18,41 +18,22 @@ namespace Scrumr.Client.Views
 {
     public partial class FeatureView : UserControl, IBoardView
     {
-        public event Action<Project> OnProjectAdded;
-
         public Database.ScrumrContext Context { get; set; }
-        public Database.Project Project { get; set; }
+
+        private Database.Project _project;
+        public Database.Project Project
+        {
+            get { return _project; }
+            set
+            {
+                _project = value;
+                Update();
+            }
+        }
 
         public FeatureView()
         {
             InitializeComponent();
-        }
-
-        public void NewSprint()
-        {
-            ViewDirector.AddEntity<Sprint>(Context, Project.ID);
-            Update();
-        }
-
-        public void NewFeature()
-        {
-            ViewDirector.AddEntity<Feature>(Context, Project.ID);
-            Update();
-        }
-
-        public void NewTicket()
-        {
-            ViewDirector.AddTicket(Context, Project.ID);
-            Update();
-        }
-
-        public void NewProject()
-        {
-            var project = ViewDirector.AddEntity<Project>(Context);
-            Update();
-
-            if (OnProjectAdded != null)
-                OnProjectAdded.Invoke(project);
         }
 
         public void Update()
@@ -91,7 +72,7 @@ namespace Scrumr.Client.Views
             };
         }
 
-        Dictionary<Feature, Visibility> featureVisibilityMap = new Dictionary<Feature,Visibility>();
+        Dictionary<Feature, Visibility> featureVisibilityMap = new Dictionary<Feature, Visibility>();
         private void SaveView()
         {
             foreach (var featurePanel in RootItems.Children.OfType<FeaturePanel>())

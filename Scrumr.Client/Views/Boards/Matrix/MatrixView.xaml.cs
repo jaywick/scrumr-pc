@@ -18,8 +18,6 @@ namespace Scrumr.Client
 {
     public partial class MatrixView : UserControl, IBoardView
     {
-        public event Action<Project> OnProjectAdded;
-
         public ScrumrContext Context { get; set; }
 
         public Func<Sprint, bool> SprintFilter { get; set; }
@@ -227,9 +225,6 @@ namespace Scrumr.Client
         {
             var project = ViewDirector.AddEntity<Project>(Context);
             Update();
-
-            if (OnProjectAdded != null)
-                OnProjectAdded.Invoke(project);
         }
 
         public void OnBoardScroll(object sender, ScrollChangedEventArgs e)

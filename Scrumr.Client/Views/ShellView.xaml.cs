@@ -25,9 +25,6 @@ namespace Scrumr.Client
 {
     public partial class MainWindow : MetroWindow
     {
-        private bool _lockProjectSelection = false;
-        private ContextMenu _addMenu;
-        private ContextMenu _projectsList;
         private ShortcutMaps _shortcuts = new ShortcutMaps();
 
         private string SourceFile { get; set; }
@@ -40,12 +37,8 @@ namespace Scrumr.Client
             this.LeftWindowCommands = new WindowCommands();
             this.BoardControl.Content = new FeatureView();
 
-            this.ProjectsList.Items.Clear();
             this.Loaded += async (s, e) => await LoadAsync();
             this.Closing += async (s, e) => await SaveAsync();
-
-            loadCommands();
-            loadShortcuts();
         }
 
         public IBoardView Board
@@ -54,10 +47,9 @@ namespace Scrumr.Client
             set { BoardControl.Content = value; }
         }
 
-        private void loadShortcuts()
+        private void LoadShortcuts()
         {
-            _shortcuts.Add(ModifierKeys.Control, Key.N, () => _addMenu.IsOpen = true);
-            _shortcuts.Add(ModifierKeys.Control, Key.T, () => Board.NewTicket());
+            _shortcuts.Add(ModifierKeys.Control, Key.T, () => NewTicket());
             _shortcuts.Add(ModifierKeys.Control, Key.S, async () => await Save());
             _shortcuts.Add(ModifierKeys.Control, Key.O, () => ChooseFile());
         }
@@ -72,29 +64,21 @@ namespace Scrumr.Client
             savedDisplay.FadeOut(1);
         }
 
-        private void loadCommands()
+        private void LoadCommands()
         {
-            _addMenu = new ContextMenu();
-            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Ticket", Board.NewTicket));
-            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Feature", Board.NewFeature));
-            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Sprint", Board.NewSprint));
-            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Project", Board.NewProject));
-            _addMenu.PreviewKeyDown += (s, e) => ProcessAddMenuShortcut(e.Key);
-
             MenuButton.Click += (s, e) => MenuFlyout.IsOpen = !MenuFlyout.IsOpen;
+            
+            MenuFlyoutContent.RequestEditProject += () => EditProject();
+            MenuFlyoutContent.RequestChooseFile += () => ChooseFile();
+            MenuFlyoutContent.RequestCreateFile += () => CreateFile();
+            MenuFlyoutContent.RequestNewTicket += () => NewTicket();
+            MenuFlyoutContent.RequestNewFeature += () => NewFeature();
+            MenuFlyoutContent.RequestNewSprint += () => NewSprint();
+            MenuFlyoutContent.RequestNewProject += () => NewProject();
+            MenuFlyoutContent.RequestCloseFlyout += () => MenuFlyout.IsOpen = !MenuFlyout.IsOpen;
+            MenuFlyoutContent.ProjectSelected += (p) => SwitchProject(p);
 
-            AddButton.Click += (s, e) => _addMenu.IsOpen = true;
-            _addMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
-            _addMenu.PlacementTarget = AddButton;
-
-            _projectsList = new ContextMenu();
-            _projectsList.Items.Add(ViewDirector.CreateMenuItem("Configure project", EditProject));
-            _projectsList.Items.Add(ViewDirector.CreateMenuItem("Choose database", ChooseFile));
-            _projectsList.Items.Add(ViewDirector.CreateMenuItem("Create new database", CreateFile));
-
-            ManageProjectsButton.Click += (s, e) => _projectsList.IsOpen = true;
-            _projectsList.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
-            _projectsList.PlacementTarget = ManageProjectsButton;
+            MenuFlyoutContent.Load(Board.Context);
         }
 
         private async Task LoadAsync()
@@ -136,49 +120,14 @@ namespace Scrumr.Client
                 }
 
                 Board.Project = await GetDefaultProjectAsync();
-                this.ProjectsList.SelectedItem = Board.Project;
+                MenuFlyoutContent.SelectProject(Board.Project);
                 Board.Update();
 
-                ReloadProjectsList();
+                LoadCommands();
+                LoadShortcuts();
+
+                MenuFlyoutContent.Update();
             }
-        }
-
-        private void ReloadProjectsList()
-        {
-            ProjectsList.Items.Clear();
-
-            foreach (var item in Board.Context.Projects)
-                ProjectsList.Items.Add(item);
-        }
-
-        private void OnProjectSelected(object s, SelectionChangedEventArgs e)
-        {
-            if (_lockProjectSelection)
-                return;
-
-            if (e.AddedItems.Count == 0)
-                return;
-
-            Project selectedProject;
-
-            if (e.AddedItems.Count > 0)
-                selectedProject = e.AddedItems[e.AddedItems.Count - 1] as Project;
-            else
-                selectedProject = e.AddedItems[0] as Project;
-
-            if (selectedProject == null)
-                return;
-
-            SwitchProject(selectedProject);
-        }
-
-        private void OnProjectAdded(Project project)
-        {
-            _lockProjectSelection = true;
-            ReloadProjectsList();
-            _lockProjectSelection = false;
-
-            ProjectsList.SelectedItem = project;
         }
 
         private void SwitchProject(Project project)
@@ -276,26 +225,32 @@ namespace Scrumr.Client
 
         #endregion
 
-        #region Shortcuts
-
         private void MetroWindow_PreviewKeyDown(object sender, KeyEventArgs e)
         {
             _shortcuts.Process(Keyboard.Modifiers, e.Key);
         }
-
-        private void ProcessAddMenuShortcut(Key key)
+        public void NewSprint()
         {
-            switch (key)
-            {
-                case Key.T: Board.NewTicket();break;
-                case Key.S: Board.NewSprint(); break;
-                case Key.F: Board.NewFeature(); break;
-                case Key.P: Board.NewProject(); break;
-                default: break;
-            }
+            ViewDirector.AddEntity<Sprint>(Board.Context, Board.Project.ID);
+            Board.Update();
         }
 
-        #endregion
+        public void NewFeature()
+        {
+            ViewDirector.AddEntity<Feature>(Board.Context, Board.Project.ID);
+            Board.Update();
+        }
 
+        public void NewTicket()
+        {
+            ViewDirector.AddTicket(Board.Context, Board.Project.ID);
+            Board.Update();
+        }
+
+        public void NewProject()
+        {
+            var project = ViewDirector.AddEntity<Project>(Board.Context);
+            Board.Update();
+        }
     }
 }

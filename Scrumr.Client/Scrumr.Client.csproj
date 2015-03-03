@@ -110,6 +110,9 @@
     <Compile Include="Views\Boards\Features\FeatureView.xaml.cs">
       <DependentUpon>FeatureView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Boards\Features\MenuFlyoutContent.xaml.cs">
+      <DependentUpon>MenuFlyoutContent.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Boards\IBoardView.cs" />
     <Compile Include="Views\Boards\Matrix\MatrixView.xaml.cs">
       <DependentUpon>MatrixView.xaml</DependentUpon>
@@ -145,6 +148,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Boards\Features\FeatureView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Boards\Features\MenuFlyoutContent.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

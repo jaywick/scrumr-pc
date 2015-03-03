@@ -75,6 +75,9 @@ namespace Scrumr.Client
         {
             var newItem = new MenuItem();
             newItem.Header = text;
+            newItem.FontSize = 16;
+            newItem.Padding = new Thickness(20, 10, 10, 20);
+            newItem.VerticalContentAlignment = VerticalAlignment.Center;
             newItem.Click += (s, e) => action.Invoke();
 
             return newItem;

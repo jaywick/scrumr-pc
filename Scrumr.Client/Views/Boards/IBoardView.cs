@@ -9,12 +9,6 @@ namespace Scrumr.Client
 {
     public interface IBoardView
     {
-        event System.Action<Project> OnProjectAdded;
-
-        void NewTicket();
-        void NewFeature();
-        void NewSprint();
-        void NewProject();
         void Update();
 
         ScrumrContext Context { get; set; }
