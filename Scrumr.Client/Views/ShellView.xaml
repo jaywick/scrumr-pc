@@ -7,28 +7,38 @@
         Title="Scrumr for Desktop" Height="571" Width="1000" TextOptions.TextFormattingMode="Display" WindowStartupLocation="CenterScreen"
         GlowBrush="{DynamicResource AccentColorBrush}" WindowTitleBrush="White" TitleForeground="Black" Background="White" NonActiveWindowTitleBrush="White" ShowTitleBar="False" PreviewKeyDown="MetroWindow_PreviewKeyDown" Icon="/Scrumr.Client;component/app.ico" WindowState="Maximized">
 
+    <metro:MetroWindow.Flyouts>
+        <metro:FlyoutsControl>
+            <metro:Flyout Name="MenuFlyout" Header="Menu">
+                <StackPanel Width="200" Orientation="Vertical">
+                    <Button x:Name="AddButton" Content="ADD" FontSize="15" BorderBrush="{x:Null}" Background="{x:Null}"/>
+                    <Separator/>
+                    <ListBox x:Name="ProjectsList" DisplayMemberPath="Name" FontSize="15" FontWeight="Bold" BorderBrush="{x:Null}" Background="{x:Null}" SelectionChanged="OnProjectSelected"/>
+                    <Separator/>
+                    <Button x:Name="ManageProjectsButton" Content="MANAGE" FontSize="15" Width="111" BorderBrush="{x:Null}" Background="{x:Null}"/>
+                </StackPanel>
+            </metro:Flyout>
+        </metro:FlyoutsControl>
+    </metro:MetroWindow.Flyouts>
+
     <Grid Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Margin="10,0,100,0" >
-            <WrapPanel>
-                <Grid>
-                    <Label Content="Scrumr" FontSize="22" FontFamily="Segoe UI Semibold" HorizontalAlignment="Left"/>
-                    <Label Content="for PC" FontSize="22" Foreground="Gray" Margin="76,0,0,0" HorizontalAlignment="Left" />
-                </Grid>
-                <Grid x:Name="savedDisplay" Margin="20,0" HorizontalAlignment="Left" Width="65.583" Visibility="Hidden">
-            	    <Path Data="M164.5,-38 L173.625,-47.125 171.75,-49 164.75,-42 162.41639,-44.666667 160.41667,-42.416667 z" Fill="#FF09A0D8" HorizontalAlignment="Left" Height="12" Margin="2,14,0,0" Stretch="Fill" VerticalAlignment="Top" Width="14.208"/>
-            	    <Label Content="Saved" FontSize="13.333" Foreground="Gray" Margin="17.583,0,0,0" VerticalContentAlignment="Center" FontStyle="Italic" />
-                </Grid>
-                <DockPanel HorizontalAlignment="Right">
-                    <Button x:Name="AddButton" Content="Add" FontSize="15" Width="75" BorderBrush="{x:Null}" Background="{x:Null}"/>
-                    <ComboBox x:Name="ProjectsList" DisplayMemberPath="Name" FontSize="15" FontWeight="Bold" Width="200" BorderBrush="{x:Null}" Background="{x:Null}" SelectionChanged="OnProjectSelected"/>
-                    <Button x:Name="ManageProjectsButton" Content="MANAGE" FontSize="15" Width="111" BorderBrush="{x:Null}" Background="{x:Null}"/>
-                </DockPanel>
-            </WrapPanel>
+        <Grid Grid.Row="0">
+            <StackPanel Orientation="Horizontal" >
+                <Button x:Name="MenuButton" Background="{x:Null}" BorderBrush="{x:Null}">
+                    <Image Width="20" Source="/Scrumr.Client;component/hamburger.png" />
+                </Button>
+                <Label Content="Scrumr" FontSize="22" FontFamily="Segoe UI Semibold" HorizontalAlignment="Left"/>
+                <Label Content="for PC" FontSize="22" Foreground="Gray" HorizontalAlignment="Left" />
+            </StackPanel>
+            <Grid x:Name="savedDisplay" Margin="20,0" HorizontalAlignment="Left" Width="65.583" Visibility="Hidden">
+                <Path Data="M164.5,-38 L173.625,-47.125 171.75,-49 164.75,-42 162.41639,-44.666667 160.41667,-42.416667 z" Fill="#FF09A0D8" HorizontalAlignment="Left" Height="12" Margin="2,14,0,0" Stretch="Fill" VerticalAlignment="Top" Width="14.208"/>
+                <Label Content="Saved" FontSize="13.333" Foreground="Gray" Margin="17.583,0,0,0" VerticalContentAlignment="Center" FontStyle="Italic" />
+            </Grid>
         </Grid>
 
         <ContentControl Grid.Row="1" x:Name="BoardControl" Visibility="Collapsed"/>

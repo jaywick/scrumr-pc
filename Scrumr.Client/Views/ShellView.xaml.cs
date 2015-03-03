@@ -79,6 +79,8 @@ namespace Scrumr.Client
             _addMenu.Items.Add(ViewDirector.CreateMenuItem("Project", Board.NewProject));
             _addMenu.PreviewKeyDown += (s, e) => ProcessAddMenuShortcut(e.Key);
 
+            MenuButton.Click += (s, e) => MenuFlyout.IsOpen = !MenuFlyout.IsOpen;
+
             AddButton.Click += (s, e) => _addMenu.IsOpen = true;
             _addMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Bottom;
             _addMenu.PlacementTarget = AddButton;
