@@ -13,46 +13,6 @@ namespace Scrumr.Client
 {
     public class ViewDirector
     {
-        public static Ticket AddTicket(ScrumrContext context, int? projectId = null, int? sprintId = null, int? featureId = null)
-        {
-            var properties = new PropertyBag();
-            properties.Add("projectId", projectId);
-            properties.Add("sprintId", sprintId);
-            properties.Add("featureId", featureId);
-
-            var editor = EditEntityBase<Ticket>.Create(context, null, properties);
-            return (Ticket)editor.GetResult();
-        }
-
-        public static T AddEntity<T>(ScrumrContext context, int? projectId = null) where T : Entity
-        {
-            var properties = new PropertyBag();
-            properties.Add("projectId", projectId);
-
-            var editor = EditEntityBase<T>.Create(context, null, properties);
-            return (T)editor.GetResult();
-        }
-
-        public static void EditTicket(Ticket ticket, ScrumrContext context)
-        {
-            var properties = new PropertyBag();
-            properties.Add("projectId", ticket.ProjectId);
-            properties.Add("sprintId", ticket.SprintId);
-            properties.Add("featureId", ticket.FeatureId);
-
-            var editor = EditEntityBase<Ticket>.Create(context, ticket, properties);
-            editor.Show();
-        }
-
-        public static void EditEntity<T>(T entity, ScrumrContext context, int? projectId = null) where T : Entity
-        {
-            var properties = new PropertyBag();
-            properties.Add("projectId", projectId);
-
-            var editor = EditEntityBase<T>.Create(context, entity, properties);
-            editor.Show();
-        }
-
         public static async void RemoveEntity<T>(T entity, ScrumrContext context) where T : Entity
         {
             if (await (App.Current.MainWindow as MainWindow).ShowMessageAsync("Scrumr", "Are you sure you wish to delete this " + entity.GetType().Name + "?", MessageDialogStyle.AffirmativeAndNegative) == MessageDialogResult.Negative)

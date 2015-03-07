@@ -47,7 +47,7 @@ namespace Scrumr.Client
         {
             _shortcuts.Add(ModifierKeys.Control, Key.T, () => NewTicket());
             _shortcuts.Add(ModifierKeys.Control, Key.S, async () => await Save());
-            _shortcuts.Add(ModifierKeys.Control, Key.O, () => ChooseFile());
+            _shortcuts.Add(ModifierKeys.Control, Key.O, async () => await ChooseFile());
         }
 
         private async Task Save()
@@ -138,7 +138,7 @@ namespace Scrumr.Client
 
         private void EditProject()
         {
-            ViewDirector.EditEntity(Board.Project, Board.Context);
+            new EditProjectView(Board.Context, Board.Project).ShowDialog();
         }
 
         private async Task ChooseFile()
@@ -232,25 +232,25 @@ namespace Scrumr.Client
         }
         public void NewSprint()
         {
-            ViewDirector.AddEntity<Sprint>(Board.Context, Board.Project.ID);
+            new EditSprintView(Board.Context, Board.Project.ID).ShowDialog();
             Board.Update();
         }
 
         public void NewFeature()
         {
-            ViewDirector.AddEntity<Feature>(Board.Context, Board.Project.ID);
+            new EditFeatureView(Board.Context, Board.Project.ID).ShowDialog();
             Board.Update();
         }
 
         public void NewTicket()
         {
-            ViewDirector.AddTicket(Board.Context, Board.Project.ID);
+            new EditTicketView(Board.Context, Board.Project.ID).ShowDialog();
             Board.Update();
         }
 
         public void NewProject()
         {
-            var project = ViewDirector.AddEntity<Project>(Board.Context);
+            new EditProjectView(Board.Context).ShowDialog();
             Board.Update();
         }
     }

@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\ForeignAttribute.cs" />
+    <Compile Include="Attributes\IgnoreRenderAttribute.cs" />
     <Compile Include="Attributes\PrimaryAttribute.cs" />
     <Compile Include="DatabaseContainer.cs" />
     <Compile Include="Entities\Entity.cs" />

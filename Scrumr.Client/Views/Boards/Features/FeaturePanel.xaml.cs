@@ -91,7 +91,7 @@ namespace Scrumr.Client
 
         private void EditTicket(Ticket ticket)
         {
-            ViewDirector.EditTicket(ticket, Context);
+            var editTicket = new EditTicketView(Context, ticket);
             Updated();
         }
 
