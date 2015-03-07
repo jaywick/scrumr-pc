@@ -10,6 +10,16 @@ namespace Scrumr.Database
 {
     public class Ticket : Entity
     {
+        public Ticket()
+            : base(null)
+        {
+        }
+
+        public Ticket(ScrumrContext context)
+            : base(context)
+        {
+        }
+
         public string Description { get; set; }
 
         [Foreign]

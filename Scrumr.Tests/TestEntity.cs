@@ -10,6 +10,11 @@ namespace Scrumr.Tests
 {
     class TestEntity : Entity
     {
+        public TestEntity(ScrumrContext context)
+            : base(context)
+        {
+        }
+
         [Primary]
         public int PrimaryKey { get; set; }
 
@@ -31,5 +36,10 @@ namespace Scrumr.Tests
     }
 
     class TestForeignEntity : Entity
-    { }
+    {
+        public TestForeignEntity(ScrumrContext context)
+            : base(context)
+        {
+        }
+    }
 }

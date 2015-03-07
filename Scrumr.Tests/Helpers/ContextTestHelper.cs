@@ -11,7 +11,7 @@ namespace Scrumr.Tests
     {
         internal static Ticket CreateTestTicket(string name, Project project)
         {
-            return new Ticket
+            return new Ticket(null)
             {
                 Name = "Ticket X.1",
                 Description = "",

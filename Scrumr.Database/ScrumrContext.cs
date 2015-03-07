@@ -90,19 +90,27 @@ namespace Scrumr.Database
                 .HasOptional(p => p.DefaultFeature);
         }*/
 
+
+        public IEnumerable<Ticket> GetTickets(ScrumrContext context, Feature feature, Sprint sprint)
+        {
+            return Tickets
+                .Where(x => x.FeatureId == feature.ID)
+                .Where(x => x.SprintId == sprint.ID);
+        }
+
         public async Task AddNewProject(Project project)
         {
             Projects.Insert(project);
             await SaveChangesAsync();
 
-            var feature = new Feature { Name = "General", Project = project };
-            var sprint = new Sprint { Name = "Backlog", Project = project };
+            var feature = new Feature("General", project);
+            var sprint = new Sprint("Backlog", project);
 
             Features.Insert(feature);
             Sprints.Insert(sprint);
 
-            project.DefaultFeature = feature;
-            project.Backlog = sprint;
+            project.DefaultFeatureId = feature.ID;
+            project.BacklogId = sprint.ID;
             project.NextProjectTicketId = 1;
             await SaveChangesAsync();
         }
@@ -139,7 +147,7 @@ namespace Scrumr.Database
             Tickets.RemoveRange(linkedTickets);
 
             var linkedProjects = Projects.Where(x => x.DefaultFeatureId == feature.ID);
-            Projects.ToList().ForEach(x => x.DefaultFeature = null);
+            Projects.ToList().ForEach(x => x.DefaultFeatureId = 0);
 
             Features.Remove(feature);
 
@@ -158,7 +166,7 @@ namespace Scrumr.Database
             Tickets.RemoveRange(linkedTickets);
 
             var linkedProjects = Projects.Where(x => x.BacklogId == sprint.ID);
-            Projects.ToList().ForEach(x => x.Backlog = null);
+            Projects.ToList().ForEach(x => x.BacklogId = 0);
 
             Sprints.Remove(sprint);
 
@@ -181,11 +189,11 @@ namespace Scrumr.Database
                 var reader = new JsonTextReader(stream);
                 var database = new JsonSerializer().Deserialize<DatabaseContainer>(reader);
 
-                Projects.Load(database.Projects);
-                Features.Load(database.Features);
-                Sprints.Load(database.Sprints);
-                Tickets.Load(database.Tickets);
-                Meta.Load(database.Meta);
+                Projects.Load(database.Projects, this);
+                Features.Load(database.Features, this);
+                Sprints.Load(database.Sprints, this);
+                Tickets.Load(database.Tickets, this);
+                Meta.Load(database.Meta, this);
 
                 reader.Close();
             }

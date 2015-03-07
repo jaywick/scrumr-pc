@@ -9,18 +9,44 @@ namespace Scrumr.Database
 {
     public class Sprint : Entity
     {
-        public Sprint() { }
+        public Sprint()
+            : base(null)
+        {
+        }
+
+        public Sprint(ScrumrContext context)
+            : base(context)
+        {
+        }
 
         public Sprint(string name, Project project)
+            : base(project.Context)
         {
             this.Name = name;
-            this.Project = project;
+            this.ProjectId = project.ID;
         }
 
         [Foreign]
         public int ProjectId { get; set; }
 
         [JsonIgnore]
-        public virtual Project Project { get; set; }
+        public virtual Project Project
+        {
+            get
+            {
+                return Context.Projects
+                    .Single(x => x.ID == ProjectId);
+            }
+        }
+
+        [JsonIgnore]
+        public IEnumerable<Ticket> Tickets
+        {
+            get
+            {
+                return Context.Tickets
+                    .Where(x => x.FeatureId == ID);
+            }
+        }
     }
 }

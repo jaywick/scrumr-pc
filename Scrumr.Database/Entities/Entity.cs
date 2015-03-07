@@ -8,8 +8,15 @@ namespace Scrumr.Database
 {
     public class Entity : Identifiable
     {
-        [Primary]
-        public int ID { get; set; }
+        public Entity()
+            : base(null)
+        {
+        }
+
+        public Entity(ScrumrContext context)
+            : base(context)
+        {
+        }
 
         public string Name { get; set; }
     }

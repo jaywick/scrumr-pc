@@ -10,6 +10,16 @@ namespace Scrumr.Database
 {
     public class Meta : Identifiable
     {
+        public Meta()
+            : base(null)
+        {
+        }
+
+        public Meta(ScrumrContext context)
+            : base(context)
+        {
+        }
+
         [Primary]
         public int ID { get; set; }
 

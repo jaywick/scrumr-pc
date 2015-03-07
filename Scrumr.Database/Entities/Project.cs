@@ -10,20 +10,23 @@ namespace Scrumr.Database
 {
     public class Project : Entity
     {
-        public Project() { }
+        public Project()
+            : base(null)
+        {
+        }
 
-        public Project(string name)
+        public Project(ScrumrContext context)
+            : base(context)
+        {
+        }
+
+        public Project(string name, ScrumrContext context)
+            : base(context)
         {
             Name = name;
         }
 
         public int NextProjectTicketId { get; set; }
-
-        [JsonIgnore]
-        public ICollection<Sprint> Sprints { get; set; }
-
-        [JsonIgnore]
-        public ICollection<Feature> Features { get; set; }
 
         [Foreign]
         public int? BacklogId { get; set; }
@@ -32,16 +35,53 @@ namespace Scrumr.Database
         public int? DefaultFeatureId { get; set; }
 
         [JsonIgnore]
-        public virtual Sprint Backlog { get; set; }
+        public Sprint Backlog
+        {
+            get
+            {
+                return Context.Sprints
+                    .Single(x => x.ID == BacklogId);
+            }
+        }
 
         [JsonIgnore]
-        public virtual Feature DefaultFeature { get; set; }
-
-        public IEnumerable<Ticket> GetTickets(ScrumrContext context, Feature feature, Sprint sprint)
+        public Feature DefaultFeature
         {
-            return context.Tickets
-                .Where(x => x.FeatureId == feature.ID)
-                .Where(x => x.SprintId == sprint.ID);
+            get
+            {
+                return Context.Features
+                    .Single(x => x.ID == DefaultFeatureId);
+            }
+        }
+
+        [JsonIgnore]
+        public IEnumerable<Feature> Features
+        {
+            get
+            {
+                return Context.Features
+                    .Where(x => x.ProjectId == this.ID);
+            }
+        }
+
+        [JsonIgnore]
+        public IEnumerable<Sprint> Sprints
+        {
+            get
+            {
+                return Context.Sprints
+                    .Where(x => x.ProjectId == this.ID);
+            }
+        }
+
+        [JsonIgnore]
+        public IEnumerable<Ticket> Tickets
+        {
+            get
+            {
+                return Context.Tickets
+                    .Where(x => x.Feature.ProjectId == this.ID);
+            }
         }
     }
 }

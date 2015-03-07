@@ -29,7 +29,7 @@ namespace Scrumr.Tests
         public async Task ShouldAddNewProject()
         {
             var context = await ContextTestHelper.CreateTestDatabase(_workspace);
-            var project = new Project("Project X");
+            var project = new Project("Project X", context);
             await context.AddNewProject(project);
 
             var expected = project;
@@ -42,7 +42,7 @@ namespace Scrumr.Tests
         public async Task ShouldDeleteProject()
         {
             var context = await ContextTestHelper.CreateTestDatabase(_workspace);
-            var project = new Project("Project X");
+            var project = new Project("Project X", context);
             await context.AddNewProject(project);
             await context.DeleteProject(project);
 
@@ -55,7 +55,7 @@ namespace Scrumr.Tests
         public async Task ShouldDeleteProjectAndFeatures()
         {
             var context = await ContextTestHelper.CreateTestDatabase(_workspace);
-            var project = new Project("Project X");
+            var project = new Project("Project X", context);
             await context.AddNewProject(project);
 
             var features = new List<Feature>()
@@ -79,7 +79,7 @@ namespace Scrumr.Tests
         public async Task ShouldDeleteProjectAndSprints()
         {
             var context = await ContextTestHelper.CreateTestDatabase(_workspace);
-            var project = new Project("Project X");
+            var project = new Project("Project X", context);
             await context.AddNewProject(project);
 
             var sprints = new List<Sprint>()
@@ -103,7 +103,7 @@ namespace Scrumr.Tests
         public async Task ShouldDeleteProjectAndTickets()
         {
             var context = await ContextTestHelper.CreateTestDatabase(_workspace);
-            var project = new Project("Project X");
+            var project = new Project("Project X", context);
             await context.AddNewProject(project);
 
             var tickets = new List<Ticket>()
@@ -126,7 +126,7 @@ namespace Scrumr.Tests
         public async Task ShouldCreateBacklogOnAddingNewProject()
         {
             var context = await ContextTestHelper.CreateTestDatabase(_workspace);
-            await context.AddNewProject(new Project("Project X"));
+            await context.AddNewProject(new Project("Project X", context));
 
             var projectAdded = context.Projects.Single();
             var sprintAdded = context.Sprints.Single();
@@ -141,7 +141,7 @@ namespace Scrumr.Tests
         public async Task ShouldCreateDefaultFeatureOnAddingNewProject()
         {
             var context = await ContextTestHelper.CreateTestDatabase(_workspace);
-            await context.AddNewProject(new Project("Project X"));
+            await context.AddNewProject(new Project("Project X", context));
 
             var projectAdded = context.Projects.Single();
             var featureAdded = context.Features.Single();
@@ -156,7 +156,7 @@ namespace Scrumr.Tests
         public async Task ShouldSetDefaultValueForNextTicketIdOnAddNewProject()
         {
             var context = await ContextTestHelper.CreateTestDatabase(_workspace);
-            await context.AddNewProject(new Project("Project X"));
+            await context.AddNewProject(new Project("Project X", context));
 
             var expected = 1;
             var actual = context.Projects.First().NextProjectTicketId;
@@ -168,7 +168,7 @@ namespace Scrumr.Tests
         public async Task ShouldReturnFirstProjectTicketIdOnAddingNewTicket()
         {
             var context = await ContextTestHelper.CreateTestDatabase(_workspace);
-            var project = new Project("Project X");
+            var project = new Project("Project X", context);
             await context.AddNewProject(project);
             await context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket X", project));
 
@@ -182,7 +182,7 @@ namespace Scrumr.Tests
         public async Task ShouldIncrementNextTicketIdOnAddingNewTicket()
         {
             var context = await ContextTestHelper.CreateTestDatabase(_workspace);
-            var project = new Project("Project X");
+            var project = new Project("Project X", context);
             await context.AddNewProject(project);
             await context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket 1", project));
             await context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket 2", project)); ;
@@ -199,12 +199,12 @@ namespace Scrumr.Tests
         public async Task ShouldNotIncrementProjectTicketIdOnAddingTicketToAnotherProject()
         {
             var context = await ContextTestHelper.CreateTestDatabase(_workspace);
-            var project = new Project("Project X");
+            var project = new Project("Project X", context);
             await context.AddNewProject(project);
             await context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket X.1", project));
             await context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket X.2", project));
 
-            var project2 = new Project("Project Y");
+            var project2 = new Project("Project Y", context);
             await context.AddNewProject(project2);
             await context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket Y.1", project2));
 

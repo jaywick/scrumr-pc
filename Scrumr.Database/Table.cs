@@ -46,10 +46,13 @@ namespace Scrumr.Database
                 Insert(item);
         }
 
-        public void Load(IEnumerable<TIdentifiable> items)
+        public void Load(IEnumerable<TIdentifiable> items, ScrumrContext context)
         {
             foreach (var item in items)
+            {
+                item.Context = context;
                 _items.Add(item.ID, item);
+            }
         }
 
         public void Clear()

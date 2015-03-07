@@ -35,7 +35,7 @@ namespace Scrumr.Client
             Context = context;
             Feature = feature;
 
-            foreach (var ticket in Feature.GetTickets(Context).OrderBy(x => x.SprintId))
+            foreach (var ticket in Feature.Tickets.OrderBy(x => x.SprintId))
             {
                 var ticketView = new TileTicketView(ticket);
 

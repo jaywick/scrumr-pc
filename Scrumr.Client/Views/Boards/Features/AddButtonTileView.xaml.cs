@@ -61,7 +61,7 @@ namespace Scrumr.Client
         {
             if (e.Key == Key.Enter)
             {
-                Added.Invoke(new Ticket
+                Added.Invoke(new Ticket(null)
                 {
                     Name = TicketSummary.Text,
                     Description = "",
