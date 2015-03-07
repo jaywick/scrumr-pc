@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using Scrumr.Database;
+using Newtonsoft.Json;
 
 namespace Scrumr.Client
 {
@@ -72,7 +73,7 @@ namespace Scrumr.Client
 
         public bool IsRenderingIgnored
         {
-            get { return Attributes.IsOneOf(typeof(NotMappedAttribute)); }
+            get { return Attributes.IsOneOf(typeof(JsonIgnoreAttribute)); }
         }
 
         public bool IsEntityType
@@ -92,7 +93,7 @@ namespace Scrumr.Client
 
         public bool IsNumericType
         {
-            get { return Type.IsOneOf(typeof(int), typeof(long), typeof(double), typeof(float), typeof(decimal)); }
+            get { return Type.IsOneOf(typeof(int), typeof(int), typeof(double), typeof(float), typeof(decimal)); }
         }
 
     }

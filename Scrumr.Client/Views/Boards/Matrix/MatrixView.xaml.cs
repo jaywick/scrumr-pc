@@ -136,7 +136,7 @@ namespace Scrumr.Client
             }
         }
 
-        private void CreateTicketCell(int column, int row, long sprintId, long featureId)
+        private void CreateTicketCell(int column, int row, int sprintId, int featureId)
         {
             var cellView = new CellView(sprintId, featureId);
             Board.InsertAt(cellView, column, row);
@@ -189,13 +189,13 @@ namespace Scrumr.Client
             Update();
         }
 
-        public void NewTicket(long sprintId, long featureId)
+        public void NewTicket(int sprintId, int featureId)
         {
             ViewDirector.AddTicket(Context, Project.ID, sprintId, featureId);
             Update();
         }
 
-        private void MoveTicket(Ticket ticket, long sprintId, long featureId)
+        private void MoveTicket(Ticket ticket, int sprintId, int featureId)
         {
             ticket.SprintId = sprintId;
             ticket.FeatureId = featureId;

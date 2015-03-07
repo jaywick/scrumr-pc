@@ -103,7 +103,7 @@ namespace Scrumr.Client
 
         public async void AddedTicket(Ticket ticket)
         {
-            Context.Tickets.Add(ticket);
+            Context.Tickets.Insert(ticket);
             await Context.SaveChangesAsync();
 
             Updated();

@@ -21,5 +21,13 @@ namespace Scrumr.Tests
                 Type = TicketType.Task
             };
         }
+
+        internal async static Task<ScrumrContext> CreateTestDatabase(DisposableTestWorkspace _testFiles)
+        {
+            var testFile = _testFiles.Create();
+
+            await FileSystem.CreateNew(testFile, 0, false);
+            return await ScrumrContext.Load(testFile, 0);
+        }
     }
 }

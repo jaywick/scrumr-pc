@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,7 +13,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Runtime;
-using System.Data.Entity;
 using MahApps.Metro.Controls;
 using Scrumr.Database;
 using Microsoft.Win32;
@@ -28,8 +26,6 @@ namespace Scrumr.Client
         private ShortcutMaps _shortcuts = new ShortcutMaps();
 
         private string SourceFile { get; set; }
-
-        private const string SampleDatabaseFileName = "scrumr.sqlite";
 
         public MainWindow()
         {
@@ -69,8 +65,8 @@ namespace Scrumr.Client
             MenuButton.Click += (s, e) => MenuFlyout.IsOpen = !MenuFlyout.IsOpen;
             
             MenuFlyoutContent.RequestEditProject += () => EditProject();
-            MenuFlyoutContent.RequestChooseFile += () => ChooseFile();
-            MenuFlyoutContent.RequestCreateFile += () => CreateFile();
+            MenuFlyoutContent.RequestChooseFile += async () => await ChooseFile();
+            MenuFlyoutContent.RequestCreateFile += async () => await CreateFile();
             MenuFlyoutContent.RequestNewTicket += () => NewTicket();
             MenuFlyoutContent.RequestNewFeature += () => NewFeature();
             MenuFlyoutContent.RequestNewSprint += () => NewSprint();
@@ -85,21 +81,25 @@ namespace Scrumr.Client
         {
             using (BusyDisplay)
             {
-                SourceFile = App.Preferences[Preferences.SourceFileKey] ?? SampleDatabaseFileName;
+                SourceFile = App.Preferences[Preferences.SourceFileKey];
 
+                if (String.IsNullOrWhiteSpace(SourceFile))
+                {
+                    await this.ShowMessageAsync("Welcome to Scrumr!", "Lets create your first database");
+                    await CreateFile();
+                    return;
+                }
                 if (!System.IO.File.Exists(SourceFile))
                 {
                     await this.ShowMessageAsync("Database is missing", "Perhaps it was moved, deleted or renamed?\nExepected file at: " + SourceFile);
-                    ChooseFile();
+                    await ChooseFile();
                     return;
                 }
-
-                Board.Context = FileSystem.LoadContext(SourceFile, App.SchemaVersion);
 
                 Task errorMessageTask = null;
                 try
                 {
-                    await Board.Context.LoadAllAsync();
+                    Board.Context = await FileSystem.LoadContext(SourceFile, App.SchemaVersion);
                 }
                 catch (SchemaMismatchException ex)
                 {
@@ -119,7 +119,7 @@ namespace Scrumr.Client
                     return;
                 }
 
-                Board.Project = await GetDefaultProjectAsync();
+                Board.Project = GetDefaultProject();
                 MenuFlyoutContent.SelectProject(Board.Project);
                 Board.Update();
 
@@ -141,12 +141,12 @@ namespace Scrumr.Client
             ViewDirector.EditEntity(Board.Project, Board.Context);
         }
 
-        private async void ChooseFile()
+        private async Task ChooseFile()
         {
             var dialog = new OpenFileDialog
             {
-                DefaultExt = ".sqlite",
-                Filter = "SQLite Database File (*.sqlite)|*.sqlite",
+                DefaultExt = ".scrumr",
+                Filter = "Scrumr Database File (*.scrumr)|*.scrumr",
                 CheckFileExists = true,
             };
 
@@ -157,12 +157,12 @@ namespace Scrumr.Client
             await LoadAsync();
         }
 
-        private async void CreateFile()
+        private async Task CreateFile()
         {
             var dialog = new SaveFileDialog
             {
-                DefaultExt = ".sqlite",
-                Filter = "SQLite Database File (*.sqlite)|*.sqlite",
+                DefaultExt = ".scrumr",
+                Filter = "Scrumr Database File (*.scrumr)|*.scrumr",
                 OverwritePrompt = true,
             };
 
@@ -172,27 +172,28 @@ namespace Scrumr.Client
             var path = dialog.FileName;
 
             await FileSystem.CreateNew(path, App.SchemaVersion);
-
+            
             App.Preferences[Preferences.SourceFileKey] = path;
             await LoadAsync();
         }
 
         private async Task SaveAsync()
         {
-            await Board.Context.SaveChangesAsync();
+            if (Board.Context != null)
+                await Board.Context.SaveChangesAsync();
         }
 
-        private async Task<Project> GetDefaultProjectAsync()
+        private Project GetDefaultProject()
         {
             var defaultProject = App.Preferences[Preferences.DefaultProjectKey];
 
             if (defaultProject == null)
-                return await Board.Context.Projects.FirstAsync();
+                return Board.Context.Projects.First();
 
-            var project = await Board.Context.Projects.SingleOrDefaultAsync(x => x.Name == defaultProject);
+            var project = Board.Context.Projects.SingleOrDefault(x => x.Name == defaultProject);
 
             if (project == null)
-                return await Board.Context.Projects.FirstAsync();
+                return Board.Context.Projects.First();
 
             return project;
         }

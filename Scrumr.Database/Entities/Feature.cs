@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -6,7 +7,6 @@ using System.Text;
 
 namespace Scrumr.Database
 {
-    [Table("Features")]
     public class Feature : Entity
     {
         public Feature() { }
@@ -18,8 +18,9 @@ namespace Scrumr.Database
         }
 
         [Foreign]
-        public long ProjectId { get; set; }
+        public int ProjectId { get; set; }
 
+        [JsonIgnore]
         public virtual Project Project { get; set; }
 
         public IEnumerable<Ticket> GetTickets(ScrumrContext Context)

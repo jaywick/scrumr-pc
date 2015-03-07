@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Core.EntityClient;
-using System.Data.SqlClient;
-using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -18,54 +14,23 @@ namespace Scrumr.Database
         private const string SampleFeatureName = "General";
         private const string SampleProjectName = "Project A";
 
-        public static ScrumrContext LoadContext(string filename, int expectedSchemaVersion)
+        public static async Task<ScrumrContext> LoadContext(string filename, int expectedSchemaVersion)
         {
             if (!File.Exists(filename))
                 throw new FileNotFoundException(String.Format("Cannot find database '{0}'", filename));
 
-            return new ScrumrContext(filename, expectedSchemaVersion);
+            return await ScrumrContext.Load(filename, expectedSchemaVersion);
         }
 
-        public async static Task CreateNew(string filename, int schemaVersion)
+        public static async Task CreateNew(string filename, int schemaVersion, bool initialise = true)
         {
-            CreateEmpty(filename);
-            await PopulateSampleData(filename, schemaVersion);
-        }
-
-        public static void CreateEmpty(string filename)
-        {
-            var entities = typeof(ScrumrContext).GetProperties()
-                .Where(x => x.PropertyType.IsGenericType)
-                .Where(x => x.PropertyType.GetGenericTypeDefinition() == typeof(DbSet<>))
-                .Select(x => x.PropertyType.GetGenericArguments().Single());
-
-            SQLiteConnection.CreateFile(filename);
-
-            using (var connection = new SQLiteConnection("Data Source=" + filename))
+            var context = await ScrumrContext.CreateBlank(filename, schemaVersion);
+            
+            if (initialise)
             {
-                connection.Open();
-
-                var command = connection.CreateCommand();
-                var commandText = new StringBuilder();
-
-                foreach (var entity in entities)
-                {
-                    commandText.AppendLine(SqlGenerator.GenerateCreateScriptFor(entity));
-                }
-
-                command.CommandText = commandText.ToString();
-                command.ExecuteNonQuery();
-
-                connection.Close();
-            }
-        }
-
-        private static async Task PopulateSampleData(string filename, int schemaVersion)
-        {
-            using (var context = new ScrumrContext(filename, schemaVersion))
-            {
-                context.Meta.Add(new Meta { SchemaVersion = schemaVersion });
+                context.Meta.Insert(new Meta { SchemaVersion = schemaVersion });
                 await context.AddNewProject(new Project { Name = "Project 1" });
+                await context.SaveChangesAsync();
             }
         }
     }

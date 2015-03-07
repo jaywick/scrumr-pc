@@ -3,30 +3,53 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Data.Entity;
-using System.Data.SQLite;
 using Scrumr.Database;
 using System.IO;
+using Newtonsoft.Json;
 
 namespace Scrumr.Database
 {
-    public class ScrumrContext : DbContext
+    public class ScrumrContext
     {
-        public DbSet<Project> Projects { get; set; }
-        public DbSet<Ticket> Tickets { get; set; }
-        public DbSet<Feature> Features { get; set; }
-        public DbSet<Sprint> Sprints { get; set; }
-        public DbSet<Meta> Meta { get; set; }
+        public Table<Project> Projects { get; set; }
+        public Table<Ticket> Tickets { get; set; }
+        public Table<Feature> Features { get; set; }
+        public Table<Sprint> Sprints { get; set; }
+        public Table<Meta> Meta { get; set; }
 
-        public FileInfo DatabaseFile { get; private set; }
+        private FileInfo DatabaseFile { get; set; }
 
-        private int _expectedSchemaVersion;
+        private int ExpectedSchemaVersion { get; set; }
 
-        public ScrumrContext(string filename, int expectedSchemaVersion)
-            : base(new SQLiteConnection() { ConnectionString = new SQLiteConnectionStringBuilder() { DataSource = filename, ForeignKeys = true }.ConnectionString }, true)
+        private ScrumrContext()
         {
-            DatabaseFile = new FileInfo(filename);
-            _expectedSchemaVersion = expectedSchemaVersion;
+            Projects = new Table<Project>();
+            Tickets = new Table<Ticket>();
+            Features = new Table<Feature>();
+            Sprints = new Table<Sprint>();
+            Meta = new Table<Meta>();
+        }
+
+        public static async Task<ScrumrContext> CreateBlank(string filename, int schemaVersion)
+        {
+            var instance = new ScrumrContext();
+            instance.DatabaseFile = new FileInfo(filename);
+            instance.ExpectedSchemaVersion = schemaVersion;
+
+            await instance.SaveChangesAsync();
+
+            return instance;
+        }
+
+        public static async Task<ScrumrContext> Load(string filename, int expectedSchemaVersion)
+        {
+            var instance = new ScrumrContext();
+            instance.DatabaseFile = new FileInfo(filename);
+            instance.ExpectedSchemaVersion = expectedSchemaVersion;
+
+            await instance.LoadDatabaseAsync();
+
+            return instance;
         }
 
         public Meta SchemaInfo
@@ -34,27 +57,17 @@ namespace Scrumr.Database
             get { return Meta.SingleOrDefault(); }
         }
 
-        public async Task LoadAllAsync()
-        {
-            await Meta.LoadAsync();
-            CheckSchema();
-
-            await Projects.LoadAsync();
-            await Features.LoadAsync();
-            await Sprints.LoadAsync();
-            await Tickets.LoadAsync();
-        }
-
         public void CheckSchema()
         {
             if (SchemaInfo == null)
                 throw new SchemaMismatchException(DatabaseFile.FullName);
 
-            if (SchemaInfo.SchemaVersion != _expectedSchemaVersion)
-                throw new SchemaMismatchException(DatabaseFile.FullName, _expectedSchemaVersion, SchemaInfo.SchemaVersion);
+            if (SchemaInfo.SchemaVersion != ExpectedSchemaVersion)
+                throw new SchemaMismatchException(DatabaseFile.FullName, ExpectedSchemaVersion, SchemaInfo.SchemaVersion);
         }
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        //todo: mange this with attributres in in entity classes
+        /*protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Sprint>()
                 .HasKey(s => s.ID)
@@ -75,43 +88,30 @@ namespace Scrumr.Database
             modelBuilder.Entity<Project>()
                 .HasKey(p => p.ID)
                 .HasOptional(p => p.DefaultFeature);
-        }
+        }*/
 
         public async Task AddNewProject(Project project)
         {
-            using (var transaction = Database.BeginTransaction())
-            {
-                try
-                {
-                    Projects.Add(project);
-                    await SaveChangesAsync();
+            Projects.Insert(project);
+            await SaveChangesAsync();
 
-                    var feature = new Feature { Name = "General", Project = project };
-                    var sprint = new Sprint { Name = "Backlog", Project = project };
+            var feature = new Feature { Name = "General", Project = project };
+            var sprint = new Sprint { Name = "Backlog", Project = project };
 
-                    Features.Add(feature);
-                    Sprints.Add(sprint);
+            Features.Insert(feature);
+            Sprints.Insert(sprint);
 
-                    project.DefaultFeature = feature;
-                    project.Backlog = sprint;
-                    project.NextProjectTicketId = 1;
-                    await SaveChangesAsync();
-
-                    transaction.Commit();
-                }
-                catch (Exception)
-                {
-                    transaction.Rollback();
-                    throw;
-                }
-            }
+            project.DefaultFeature = feature;
+            project.Backlog = sprint;
+            project.NextProjectTicketId = 1;
+            await SaveChangesAsync();
         }
 
         public async Task AddNewTicket(Ticket ticket)
         {
             ticket.ProjectTicketId = ticket.Project.NextProjectTicketId++;
 
-            Tickets.Add(ticket);
+            Tickets.Insert(ticket);
             await SaveChangesAsync();
         }
 
@@ -163,6 +163,51 @@ namespace Scrumr.Database
             Sprints.Remove(sprint);
 
             await SaveChangesAsync();
+        }
+
+        private async Task LoadDatabaseAsync()
+        {
+            await Task.Run(() => LoadDatabase());
+        }
+
+        public async Task SaveChangesAsync()
+        {
+            await Task.Run(() => SaveChanges());
+        }
+        private void LoadDatabase()
+        {
+            using (var stream = File.OpenText(DatabaseFile.FullName))
+            {
+                var reader = new JsonTextReader(stream);
+                var database = new JsonSerializer().Deserialize<DatabaseContainer>(reader);
+
+                Projects.Load(database.Projects);
+                Features.Load(database.Features);
+                Sprints.Load(database.Sprints);
+                Tickets.Load(database.Tickets);
+                Meta.Load(database.Meta);
+
+                reader.Close();
+            }
+        }
+
+        public void SaveChanges()
+        {
+            using (var stream = File.CreateText(DatabaseFile.FullName))
+            {
+                var database = new DatabaseContainer();
+                database.Projects.AddRange(Projects);
+                database.Features.AddRange(Features);
+                database.Sprints.AddRange(Sprints);
+                database.Tickets.AddRange(Tickets);
+                database.Meta.AddRange(Meta);
+
+                var writer = new JsonTextWriter(stream);
+                var serialiser = new JsonSerializer();
+                serialiser.Formatting = Formatting.Indented;
+                serialiser.Serialize(writer, database);
+                writer.Close();
+            }
         }
     }
 }

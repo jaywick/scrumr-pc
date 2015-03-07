@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -7,28 +8,29 @@ using System.Threading.Tasks;
 
 namespace Scrumr.Database
 {
-    [Table("Tickets")]
     public class Ticket : Entity
     {
         public string Description { get; set; }
 
         [Foreign]
-        public long FeatureId { get; set; }
+        public int FeatureId { get; set; }
 
         [Foreign]
-        public long SprintId { get; set; }
+        public int SprintId { get; set; }
 
-        public long ProjectTicketId { get; set; }
+        public int ProjectTicketId { get; set; }
 
+        [JsonIgnore]
         public virtual Feature Feature { get; set; }
 
+        [JsonIgnore]
         public virtual Sprint Sprint { get; set; }
 
         public TicketType Type { get; set; }
 
         public TicketState State { get; set; }
 
-        [NotMapped]
+        [JsonIgnore]
         public Project Project
         {
             get
@@ -40,8 +42,8 @@ namespace Scrumr.Database
             }
         }
 
-        [NotMapped]
-        public long? ProjectId
+        [JsonIgnore]
+        public int? ProjectId
         {
             get
             {
@@ -52,7 +54,7 @@ namespace Scrumr.Database
             }
         }
 
-        [NotMapped]
+        [JsonIgnore]
         public bool IsOpen
         {
             get { return State == TicketState.Open; }

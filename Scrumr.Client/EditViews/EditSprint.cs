@@ -13,7 +13,7 @@ namespace Scrumr.Client
         public EditSprint(ScrumrContext context, Sprint sprint = null, PropertyBag properties = null)
             : base(context, sprint)
         {
-            var projectId = properties.GetValue<long>("projectId");
+            var projectId = properties.GetValue<int>("projectId");
             LoadProjectsList(projectId);
         }
 
@@ -25,11 +25,11 @@ namespace Scrumr.Client
 
         protected override async Task OnCreated(Sprint sprint)
         {
-            Context.Sprints.Add(sprint);
+            Context.Sprints.Insert(sprint);
             await Context.SaveChangesAsync();
         }
 
-        private void LoadProjectsList(long? projectId)
+        private void LoadProjectsList(int? projectId)
         {
             var projectsView = GetView<Project, DataListPropertyView>();
             projectsView.Source = Context.Projects;

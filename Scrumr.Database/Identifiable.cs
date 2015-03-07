@@ -6,11 +6,8 @@ using System.Threading.Tasks;
 
 namespace Scrumr.Database
 {
-    public class Entity : Identifiable
+    public interface Identifiable
     {
-        [Primary]
-        public int ID { get; set; }
-
-        public string Name { get; set; }
+        int ID { get; set; }
     }
 }

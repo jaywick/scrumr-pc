@@ -9,7 +9,7 @@ namespace Scrumr.Tests
     [TestFixture, Category("SQL Generation")]
     public class SqlGeneratorTests
     {
-        [TestCase(typeof(long?), "INTEGER")]
+        [TestCase(typeof(int?), "INTEGER")]
         [TestCase(typeof(byte?), "INTEGER")]
         [TestCase(typeof(bool?), "INTEGER")]
         public void ShouldReturnNullableType(Type input, string expected)
@@ -18,7 +18,7 @@ namespace Scrumr.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        [TestCase(typeof(long), null)]
+        [TestCase(typeof(int), null)]
         [TestCase(typeof(byte), null)]
         [TestCase(typeof(bool), null)]
         public void ShouldReturnNullForNonNullableTypes(Type input, string expected)
@@ -27,8 +27,8 @@ namespace Scrumr.Tests
             Assert.AreEqual(expected, actual);
         }
 
-        [TestCase(typeof(long), "INTEGER NOT NULL")]
-        [TestCase(typeof(long?), "INTEGER")]
+        [TestCase(typeof(int), "INTEGER NOT NULL")]
+        [TestCase(typeof(int?), "INTEGER")]
         public void ShouldReturnSqlDataType(Type input, string expected)
         {
             var actual = SqlGenerator.GetSqlDataType(input);

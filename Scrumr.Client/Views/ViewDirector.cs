@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -14,7 +13,7 @@ namespace Scrumr.Client
 {
     public class ViewDirector
     {
-        public static Ticket AddTicket(ScrumrContext context, long? projectId = null, long? sprintId = null, long? featureId = null)
+        public static Ticket AddTicket(ScrumrContext context, int? projectId = null, int? sprintId = null, int? featureId = null)
         {
             var properties = new PropertyBag();
             properties.Add("projectId", projectId);
@@ -25,7 +24,7 @@ namespace Scrumr.Client
             return (Ticket)editor.GetResult();
         }
 
-        public static T AddEntity<T>(ScrumrContext context, long? projectId = null) where T : Entity
+        public static T AddEntity<T>(ScrumrContext context, int? projectId = null) where T : Entity
         {
             var properties = new PropertyBag();
             properties.Add("projectId", projectId);
@@ -45,7 +44,7 @@ namespace Scrumr.Client
             editor.Show();
         }
 
-        public static void EditEntity<T>(T entity, ScrumrContext context, long? projectId = null) where T : Entity
+        public static void EditEntity<T>(T entity, ScrumrContext context, int? projectId = null) where T : Entity
         {
             var properties = new PropertyBag();
             properties.Add("projectId", projectId);
@@ -68,7 +67,7 @@ namespace Scrumr.Client
             else
                 throw new NotSupportedException("Unexpected entity being removed. Operation failed.");
 
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
         public static MenuItem CreateMenuItem(string text, System.Action action)

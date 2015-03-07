@@ -11,19 +11,19 @@ namespace Scrumr.Tests
     class TestEntity : Entity
     {
         [Primary]
-        public long PrimaryKey { get; set; }
+        public int PrimaryKey { get; set; }
 
         public string Message { get; set; }
 
-        public long? NullableValue { get; set; }
+        public int? NullableValue { get; set; }
 
-        public long AnotherValue { get; set; }
-
-        [Foreign]
-        public long? NullableForeignKeyId { get; set; }
+        public int AnotherValue { get; set; }
 
         [Foreign]
-        public long ForeignKeyId { get; set; }
+        public int? NullableForeignKeyId { get; set; }
+
+        [Foreign]
+        public int ForeignKeyId { get; set; }
 
         public TestForeignEntity NullableForeignKeyReference { get; set; }
 
