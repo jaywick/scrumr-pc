@@ -8,21 +8,30 @@ using System.Threading.Tasks;
 
 namespace Scrumr.Database
 {
-    public class Meta : Identifiable
+    public class Meta
     {
         public Meta()
-            : base(null)
         {
+            NextProjectIndex = 1;
+            NextSprintIndex = 1;
+            NextFeatureIndex = 1;
+            NextTicketIndex = 1;
         }
 
-        public Meta(ScrumrContext context)
-            : base(context)
+        public Meta(int schemaVersion)
+            : this()
         {
+            SchemaVersion = schemaVersion;
         }
-
-        [Primary]
-        public int ID { get; set; }
 
         public int SchemaVersion { get; set; }
+
+        public int NextProjectIndex { get; set; }
+
+        public int NextSprintIndex { get; set; }
+
+        public int NextFeatureIndex { get; set; }
+
+        public int NextTicketIndex { get; set; }
     }
 }

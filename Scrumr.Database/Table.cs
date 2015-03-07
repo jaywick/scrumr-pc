@@ -8,17 +8,23 @@ namespace Scrumr.Database
 {
     public class Table<TIdentifiable> : IEnumerable<TIdentifiable> where TIdentifiable : Identifiable
     {
-        private int nextIndex = 1;
-        private Dictionary<int, TIdentifiable> _items = new Dictionary<int, TIdentifiable>();
+        internal int NextIndex { get; private set; }
+        private Dictionary<int, TIdentifiable> Items { get; set; }
+
+        public Table()
+        {
+            NextIndex = 1;
+            Items = new Dictionary<int, TIdentifiable>();
+        }
 
         public IEnumerator<TIdentifiable> GetEnumerator()
         {
-            return _items.Values.GetEnumerator();
+            return Items.Values.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return _items.Values.GetEnumerator();
+            return Items.Values.GetEnumerator();
         }
 
         public void RemoveRange(IEnumerable<TIdentifiable> items)
@@ -29,15 +35,15 @@ namespace Scrumr.Database
 
         public TIdentifiable this[int index]
         {
-            get { return _items[index]; }
+            get { return Items[index]; }
         }
 
         public void Insert(TIdentifiable item)
         {
             if (item.ID == 0)
-                item.ID = nextIndex++;
+                item.ID = NextIndex++;
 
-            _items.Add(item.ID, item);
+            Items.Add(item.ID, item);
         }
 
         public void InsertRange(IEnumerable<TIdentifiable> items)
@@ -46,33 +52,35 @@ namespace Scrumr.Database
                 Insert(item);
         }
 
-        public void Load(IEnumerable<TIdentifiable> items, ScrumrContext context)
+        public void Load(ScrumrContext context, IEnumerable<TIdentifiable> items, int nextIndex)
         {
             foreach (var item in items)
             {
                 item.Context = context;
-                _items.Add(item.ID, item);
+                Items.Add(item.ID, item);
             }
+
+            NextIndex = nextIndex;
         }
 
         public void Clear()
         {
-            _items.Clear();
+            Items.Clear();
         }
 
         public bool Contains(TIdentifiable item)
         {
-            return _items.ContainsValue(item);
+            return Items.ContainsValue(item);
         }
 
         public void CopyTo(TIdentifiable[] array, int arrayIndex)
         {
-            _items.Values.CopyTo(array, arrayIndex);
+            Items.Values.CopyTo(array, arrayIndex);
         }
 
         public int Count
         {
-            get { return _items.Count; }
+            get { return Items.Count; }
         }
 
         public bool IsReadOnly
@@ -82,7 +90,7 @@ namespace Scrumr.Database
 
         public bool Remove(TIdentifiable item)
         {
-            return _items.Remove(item.ID);
+            return Items.Remove(item.ID);
         }
     }
 }

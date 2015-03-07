@@ -15,7 +15,7 @@ namespace Scrumr.Database
         public Table<Ticket> Tickets { get; set; }
         public Table<Feature> Features { get; set; }
         public Table<Sprint> Sprints { get; set; }
-        public Table<Meta> Meta { get; set; }
+        public Meta Meta { get; set; }
 
         private FileInfo DatabaseFile { get; set; }
 
@@ -23,11 +23,11 @@ namespace Scrumr.Database
 
         private ScrumrContext()
         {
+            Meta = new Meta();
             Projects = new Table<Project>();
             Tickets = new Table<Ticket>();
             Features = new Table<Feature>();
             Sprints = new Table<Sprint>();
-            Meta = new Table<Meta>();
         }
 
         public static async Task<ScrumrContext> CreateBlank(string filename, int schemaVersion)
@@ -52,18 +52,13 @@ namespace Scrumr.Database
             return instance;
         }
 
-        public Meta SchemaInfo
-        {
-            get { return Meta.SingleOrDefault(); }
-        }
-
         public void CheckSchema()
         {
-            if (SchemaInfo == null)
+            if (Meta == null)
                 throw new SchemaMismatchException(DatabaseFile.FullName);
 
-            if (SchemaInfo.SchemaVersion != ExpectedSchemaVersion)
-                throw new SchemaMismatchException(DatabaseFile.FullName, ExpectedSchemaVersion, SchemaInfo.SchemaVersion);
+            if (Meta.SchemaVersion != ExpectedSchemaVersion)
+                throw new SchemaMismatchException(DatabaseFile.FullName, ExpectedSchemaVersion, Meta.SchemaVersion);
         }
 
         //todo: mange this with attributres in in entity classes
@@ -189,11 +184,11 @@ namespace Scrumr.Database
                 var reader = new JsonTextReader(stream);
                 var database = new JsonSerializer().Deserialize<DatabaseContainer>(reader);
 
-                Projects.Load(database.Projects, this);
-                Features.Load(database.Features, this);
-                Sprints.Load(database.Sprints, this);
-                Tickets.Load(database.Tickets, this);
-                Meta.Load(database.Meta, this);
+                Meta = database.Meta;
+                Projects.Load(this, database.Projects, database.Meta.NextProjectIndex);
+                Features.Load(this, database.Features, database.Meta.NextFeatureIndex);
+                Sprints.Load(this, database.Sprints, database.Meta.NextSprintIndex);
+                Tickets.Load(this, database.Tickets, database.Meta.NextTicketIndex);
 
                 reader.Close();
             }
@@ -203,12 +198,7 @@ namespace Scrumr.Database
         {
             using (var stream = File.CreateText(DatabaseFile.FullName))
             {
-                var database = new DatabaseContainer();
-                database.Projects.AddRange(Projects);
-                database.Features.AddRange(Features);
-                database.Sprints.AddRange(Sprints);
-                database.Tickets.AddRange(Tickets);
-                database.Meta.AddRange(Meta);
+                var database = new DatabaseContainer(this);
 
                 var writer = new JsonTextWriter(stream);
                 var serialiser = new JsonSerializer();

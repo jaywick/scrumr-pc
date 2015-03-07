@@ -28,7 +28,7 @@ namespace Scrumr.Database
             
             if (initialise)
             {
-                context.Meta.Insert(new Meta(context) { SchemaVersion = schemaVersion });
+                context.Meta = new Meta(schemaVersion);
                 await context.AddNewProject(new Project(context) { Name = "Project 1" });
                 await context.SaveChangesAsync();
             }
