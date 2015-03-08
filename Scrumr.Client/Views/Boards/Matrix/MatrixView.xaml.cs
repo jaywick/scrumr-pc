@@ -106,7 +106,7 @@ namespace Scrumr.Client
                 LeftHeader.RowDefinitions.Add(new RowDefinition { Height = new GridLength(300) });
 
                 var headerView = new HeaderView(feature, Orientation.Vertical);
-                headerView.RequestEdit += (h) => EditFeature(h as Feature);
+                headerView.RequestEdit += (h) => EditEntity(h as Feature);
                 headerView.RequestRemove += (h) => RemoveEntity(h as Feature);
 
                 LeftHeader.InsertAt(headerView, 0, i);
@@ -127,7 +127,7 @@ namespace Scrumr.Client
                 TopHeader.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(300) });
 
                 var headerView = new HeaderView(sprint, Orientation.Horizontal);
-                headerView.RequestEdit += (h) => EditSprint(h as Sprint);
+                headerView.RequestEdit += (h) => EditEntity(h as Sprint);
                 headerView.RequestRemove += (h) => RemoveEntity(h as Sprint);
 
                 TopHeader.InsertAt(headerView, i, 0);
@@ -173,25 +173,13 @@ namespace Scrumr.Client
 
         private void EditTicket(Ticket ticket)
         {
-            new EditTicketView(Context, ticket).ShowDialog();
+            ViewDirector.EditTicket(ticket, Context);
             Update();
         }
 
-        private void EditProject(Project project)
+        private void EditEntity<T>(T entity) where T : Entity
         {
-            new EditProjectView(Context, project).ShowDialog();
-            Update();
-        }
-
-        private void EditFeature(Feature feature)
-        {
-            new EditFeatureView(Context, feature).ShowDialog();
-            Update();
-        }
-
-        private void EditSprint(Sprint sprint)
-        {
-            new EditSprintView(Context, sprint).ShowDialog();
+            ViewDirector.EditEntity(entity, Context);
             Update();
         }
 
@@ -203,7 +191,7 @@ namespace Scrumr.Client
 
         public void NewTicket(int sprintId, int featureId)
         {
-            new EditTicketView(Context, sprintId, featureId).ShowDialog();
+            ViewDirector.AddTicket(Context, Project.ID, sprintId, featureId);
             Update();
         }
 
@@ -217,25 +205,25 @@ namespace Scrumr.Client
 
         public void NewSprint()
         {
-            new EditSprintView(Context, Project.ID).ShowDialog();
+            ViewDirector.AddEntity<Sprint>(Context, Project.ID);
             Update();
         }
 
         public void NewFeature()
         {
-            new EditFeatureView(Context, Project.ID).ShowDialog();
+            ViewDirector.AddEntity<Feature>(Context, Project.ID);
             Update();
         }
 
         public void NewTicket()
         {
-            new EditTicketView(Context, Project.ID).ShowDialog();
+            ViewDirector.AddTicket(Context, Project.ID);
             Update();
         }
 
         public void NewProject()
         {
-            new EditProjectView(Context).ShowDialog();
+            var project = ViewDirector.AddEntity<Project>(Context);
             Update();
         }
 

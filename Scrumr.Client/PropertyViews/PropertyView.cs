@@ -73,7 +73,7 @@ namespace Scrumr.Client
 
         public bool IsRenderingIgnored
         {
-            get { return Attributes.IsOneOf(typeof(IgnoreRenderAttribute)); }
+            get { return Attributes.IsOneOf(typeof(JsonIgnoreAttribute)); }
         }
 
         public bool IsEntityType

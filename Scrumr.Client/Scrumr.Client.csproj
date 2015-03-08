@@ -77,16 +77,7 @@
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
-    <Compile Include="EditViews\EditTicketView.xaml.cs">
-      <DependentUpon>EditTicketView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="EditViews\EditSprintView.xaml.cs">
-      <DependentUpon>EditSprintView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="EditViews\EditFeatureView.xaml.cs">
-      <DependentUpon>EditFeatureView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="EditViews\Modes.cs" />
+    <Compile Include="EditViews\EditEntityBase.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="Preferences.cs" />
     <Compile Include="PropertyViews\EnumPropertyView.cs" />
@@ -112,8 +103,12 @@
     <Compile Include="Views\Boards\Matrix\CellView.xaml.cs">
       <DependentUpon>CellView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="EditViews\EditProjectView.xaml.cs">
-      <DependentUpon>EditProjectView.xaml</DependentUpon>
+    <Compile Include="EditViews\EditTicket.cs" />
+    <Compile Include="EditViews\EditProject.cs" />
+    <Compile Include="EditViews\EditSprint.cs" />
+    <Compile Include="EditViews\EditFeature.cs" />
+    <Compile Include="EditViews\EditView.xaml.cs">
+      <DependentUpon>EditView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Boards\Matrix\HeaderView.xaml.cs">
       <DependentUpon>HeaderView.xaml</DependentUpon>
@@ -130,18 +125,6 @@
       <DependentUpon>TicketView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ViewDirector.cs" />
-    <Page Include="EditViews\EditTicketView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="EditViews\EditSprintView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="EditViews\EditFeatureView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\Boards\Features\FeaturePanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -162,7 +145,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="EditViews\EditProjectView.xaml">
+    <Page Include="EditViews\EditView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
