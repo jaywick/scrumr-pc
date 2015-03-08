@@ -32,48 +32,77 @@ namespace Scrumr.Client
 
         public Modes Mode { get; private set; }
 
-        public EditTicketView(ScrumrContext context, int projectId)
+        public EditTicketView(ScrumrContext context, Modes mode)
         {
-            Mode = Modes.Creating;
             InitializeComponent();
-
             Context = context;
-            _projectId = projectId;
+            Mode = mode;
         }
 
-        public EditTicketView(ScrumrContext context, int sprintId, int featureId)
+        public static bool? Create(ScrumrContext context, int projectId)
         {
-            Mode = Modes.Creating;
-            InitializeComponent();
-
-            Context = context;
-            _sprintId = sprintId;
-            _featureId = featureId;
+            var instance = new EditTicketView(context, Modes.Creating);
+            instance._projectId = projectId;
+            instance.Load();
+            
+            return instance.ShowDialog();
         }
 
-        public EditTicketView(ScrumrContext context, Ticket ticket)
+        public static bool? Create(ScrumrContext context, int sprintId, int featureId)
         {
-            Mode = Modes.Updating;
-            InitializeComponent();
+            var instance = new EditTicketView(context, Modes.Creating);
+            instance._sprintId = sprintId;
+            instance._featureId = featureId;
+            instance.Load();
 
-            Context = context;
-            Ticket = ticket;
+            return instance.ShowDialog();
+        }
 
-            TicketName.Text = ticket.Name;
+        public static bool? Edit(ScrumrContext context, Ticket ticket)
+        {
+            var instance = new EditTicketView(context, Modes.Creating);
+            instance.Ticket = ticket;
+            instance.Load();
+            
+            return instance.ShowDialog();
+        }
+
+        private void Load()
+        {
+            TicketName.Text = Ticket.Name;
+            TicketDescription.Text = Ticket.Description;
+            
             FeatureList.ItemsSource = Context.Features;
-            FeatureList.SelectedItem = ticket.Feature;
+            FeatureList.SelectedItem = Ticket.Feature;
+            
             SprintList.ItemsSource = Context.Sprints;
-            SprintList.SelectedItem = ticket.Sprint;
-            //TypeList.ItemsSource = 
-            //TypeList.SelectedItem = ticket.;
-            //StateList.ItemsSource = 
-            //StateList.SelectedItem = ticket.;
+            SprintList.SelectedItem = Ticket.Sprint;
+            
+            TypeList.ItemsSource = Enum.GetValues(typeof(TicketType)).Cast<TicketType>();
+            TypeList.SelectedItem = Ticket.Type;
+
+            StateList.ItemsSource = Enum.GetValues(typeof(TicketState)).Cast<TicketState>();
+            StateList.SelectedItem = Ticket.State;
         }
 
-        private void Save_Click(object sender, RoutedEventArgs e)
+        private void Save()
         {
-            Context.Tickets.Insert(Ticket);
+            Ticket.Name = TicketName.Text;
+            Ticket.Description = TicketDescription.Text;
+            Ticket.FeatureId = ((Feature)FeatureList.SelectedItem).ID;
+            Ticket.SprintId = ((Sprint)SprintList.SelectedItem).ID;
+            Ticket.Type = ((TicketType)TypeList.SelectedItem);
+            Ticket.State = ((TicketState)StateList.SelectedItem);
+        }
 
+        private async void Save_Click(object sender, RoutedEventArgs e)
+        {
+            if (Mode == Modes.Creating)
+                Context.Tickets.Insert(Ticket);
+            else
+                Save();
+
+            await Context.SaveChangesAsync();
             DialogResult = true;
             Hide();
         }
