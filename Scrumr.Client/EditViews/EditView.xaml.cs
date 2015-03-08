@@ -149,10 +149,18 @@ namespace Scrumr.Client
         {
             switch (Mode)
             {
-                case Modes.Creating: return Activator.CreateInstance(EntityType) as Entity;
+                case Modes.Creating: return CreateNew();
                 case Modes.Updating: return Entity;
                 default: throw new NotSupportedException();
             }
+        }
+
+        private Entity CreateNew()
+        {
+            var entity = (Entity)Activator.CreateInstance(EntityType);
+            entity.Context = Context;
+
+            return entity;
         }
 
         private void DrawItems()

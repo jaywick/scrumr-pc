@@ -10,7 +10,7 @@ namespace Scrumr.Database
     public abstract class Identifiable
     {
         [JsonIgnore]
-        public ScrumrContext Context { get; internal set; }
+        public ScrumrContext Context { get; set; }
 
         [Primary]
         public int ID { get; set; }

@@ -26,7 +26,7 @@ namespace Scrumr.Database
             this.ProjectId = project.ID;
         }
 
-        [Foreign]
+        [Foreign, IgnoreRender]
         public int ProjectId { get; set; }
 
         [JsonIgnore]
@@ -34,12 +34,15 @@ namespace Scrumr.Database
         {
             get
             {
-                return Context.Projects
-                    .Single(x => x.ID == ProjectId);
+                return Context.Projects[ProjectId];
+            }
+            set
+            {
+                ProjectId = value.ID;
             }
         }
 
-        [JsonIgnore]
+        [JsonIgnore, IgnoreRender]
         public IEnumerable<Ticket> Tickets
         {
             get

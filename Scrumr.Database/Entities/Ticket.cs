@@ -31,10 +31,29 @@ namespace Scrumr.Database
         public int ProjectTicketId { get; set; }
 
         [JsonIgnore]
-        public virtual Feature Feature { get; set; }
-
+        public Feature Feature
+        {
+            get
+            {
+                return Context.Features[FeatureId];
+            }
+            set
+            {
+                FeatureId = value.ID;
+            }
+        }
         [JsonIgnore]
-        public virtual Sprint Sprint { get; set; }
+        public Sprint Sprint
+        {
+            get
+            {
+                return Context.Sprints[SprintId];
+            }
+            set
+            {
+                SprintId = value.ID;
+            }
+        }
 
         public TicketType Type { get; set; }
 
@@ -69,7 +88,7 @@ namespace Scrumr.Database
         {
             get { return State == TicketState.Open; }
         }
-        
+
         public void Open()
         {
             State = TicketState.Open;

@@ -30,12 +30,15 @@ namespace Scrumr.Database
         public int ProjectId { get; set; }
 
         [JsonIgnore]
-        public virtual Project Project
+        public Project Project
         {
             get
             {
-                return Context.Projects
-                    .Single(x => x.ID == ProjectId);
+                return Context.Projects[ProjectId];
+            }
+            set
+            {
+                ProjectId = value.ID;
             }
         }
 

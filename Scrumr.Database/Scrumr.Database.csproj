@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\IgnoreRenderAttribute.cs" />
     <Compile Include="Attributes\ForeignAttribute.cs" />
     <Compile Include="Attributes\PrimaryAttribute.cs" />
     <Compile Include="DatabaseContainer.cs" />

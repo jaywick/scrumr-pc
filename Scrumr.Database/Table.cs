@@ -36,6 +36,7 @@ namespace Scrumr.Database
         public TIdentifiable this[int index]
         {
             get { return Items[index]; }
+            set { Items[index] = value; }
         }
 
         public void Insert(TIdentifiable item)

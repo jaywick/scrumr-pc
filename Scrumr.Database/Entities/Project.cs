@@ -39,8 +39,14 @@ namespace Scrumr.Database
         {
             get
             {
-                return Context.Sprints
-                    .Single(x => x.ID == BacklogId);
+                if (!BacklogId.HasValue)
+                    return null;
+
+                return Context.Sprints[BacklogId.Value];
+            }
+            set
+            {
+                BacklogId = value.ID;
             }
         }
 
@@ -49,8 +55,14 @@ namespace Scrumr.Database
         {
             get
             {
-                return Context.Features
-                    .Single(x => x.ID == DefaultFeatureId);
+                if (!DefaultFeatureId.HasValue)
+                    return null;
+
+                return Context.Features[DefaultFeatureId.Value];
+            }
+            set
+            {
+                DefaultFeatureId = value.ID;
             }
         }
 
