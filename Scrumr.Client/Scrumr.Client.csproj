@@ -216,6 +216,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Scrumr.Core\Scrumr.Core.csproj">
+      <Project>{250f5631-9576-466e-994e-a673edecb4af}</Project>
+      <Name>Scrumr.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Scrumr.Database\Scrumr.Database.csproj">
       <Project>{cbdf0634-9c6d-40bd-8d95-141ccb946f56}</Project>
       <Name>Scrumr.Database</Name>

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Scrumr.Database;
 using System.IO;
 using Newtonsoft.Json;
+using Scrumr.Core;
 
 namespace Scrumr.Database
 {
@@ -175,7 +176,9 @@ namespace Scrumr.Database
 
         public async Task SaveChangesAsync()
         {
+            Logger.Log("called SaveChangesAsync()");
             await Task.Run(() => SaveChanges());
+            Logger.Log("finished SaveChangesAsync()");
         }
 
         private void LoadDatabase()
@@ -197,16 +200,30 @@ namespace Scrumr.Database
 
         public void SaveChanges()
         {
+            Logger.Log("called SaveChanges()");
+
             using (var stream = File.CreateText(DatabaseFile.FullName))
             {
                 var database = new DatabaseContainer(this);
+                Logger.Log("waypoint 1");
 
                 var writer = new JsonTextWriter(stream);
+                Logger.Log("waypoint 2");
+
                 var serialiser = new JsonSerializer();
+                Logger.Log("waypoint 3");
+
                 serialiser.Formatting = Formatting.Indented;
+                Logger.Log("waypoint 4");
+
                 serialiser.Serialize(writer, database);
+                Logger.Log("waypoint 5");
+
                 writer.Close();
+                Logger.Log("waypoint 6");
             }
+
+            Logger.Log("finished SaveChanges()");
         }
     }
 }

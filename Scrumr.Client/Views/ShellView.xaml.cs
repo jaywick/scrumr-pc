@@ -18,6 +18,7 @@ using Scrumr.Database;
 using Microsoft.Win32;
 using MahApps.Metro.Controls.Dialogs;
 using Scrumr.Client.Views;
+using Scrumr.Core;
 
 namespace Scrumr.Client
 {
@@ -32,6 +33,8 @@ namespace Scrumr.Client
             InitializeComponent();
             this.LeftWindowCommands = new WindowCommands();
             this.BoardControl.Content = new FeatureView();
+
+            Logger.Log("Application started");
 
             this.Loaded += async (s, e) => await LoadAsync();
             this.Closing += async (s, e) => await SaveAsync();
@@ -200,8 +203,15 @@ namespace Scrumr.Client
 
         private async Task SaveAsync()
         {
+            Logger.Log("called SaveAsync()");
+
             if (Board.Context != null)
+            {
+                Logger.Log("Met condition: Board.Context != null");
                 await Board.Context.SaveChangesAsync();
+            }
+
+            Logger.Log("finished SaveAsync()");
         }
 
         private Project GetDefaultProject()

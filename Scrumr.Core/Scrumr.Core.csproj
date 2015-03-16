@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CBDF0634-9C6D-40BD-8D95-141CCB946F56}</ProjectGuid>
+    <ProjectGuid>{250F5631-9576-466E-994E-A673EDECB4AF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Scrumr.Database</RootNamespace>
-    <AssemblyName>Scrumr.Database</AssemblyName>
+    <RootNamespace>Scrumr.Core</RootNamespace>
+    <AssemblyName>Scrumr.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>ae9d2f0a</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,12 +30,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -45,36 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\IgnoreRenderAttribute.cs" />
-    <Compile Include="Attributes\ForeignAttribute.cs" />
-    <Compile Include="Attributes\PrimaryAttribute.cs" />
-    <Compile Include="DatabaseContainer.cs" />
-    <Compile Include="Entities\Entity.cs" />
-    <Compile Include="Entities\Feature.cs" />
-    <Compile Include="Entities\Meta.cs" />
-    <Compile Include="Entities\Project.cs" />
-    <Compile Include="Entities\Sprint.cs" />
-    <Compile Include="Entities\Ticket.cs" />
-    <Compile Include="Entities\TicketState.cs" />
-    <Compile Include="Entities\TicketType.cs" />
-    <Compile Include="Extensions.cs" />
-    <Compile Include="FileSystem.cs" />
-    <Compile Include="Identifiable.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Exceptions.cs" />
-    <Compile Include="ScrumrContext.cs" />
-    <Compile Include="SqlGenerator.cs" />
-    <Compile Include="Table.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Scrumr.Core\Scrumr.Core.csproj">
-      <Project>{250f5631-9576-466e-994e-a673edecb4af}</Project>
-      <Name>Scrumr.Core</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
