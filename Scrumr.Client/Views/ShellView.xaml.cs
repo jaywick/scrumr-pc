@@ -47,7 +47,7 @@ namespace Scrumr.Client
         {
             _shortcuts.Add(ModifierKeys.Control, Key.T, () => NewTicket());
             _shortcuts.Add(ModifierKeys.Control, Key.S, async () => await Save());
-            _shortcuts.Add(ModifierKeys.Control, Key.O, () => ChooseFile());
+            _shortcuts.Add(ModifierKeys.Control, Key.O, async () => await ChooseFileAsync());
         }
 
         private async Task Save()
@@ -65,8 +65,8 @@ namespace Scrumr.Client
             MenuButton.Click += (s, e) => MenuFlyout.IsOpen = !MenuFlyout.IsOpen;
             
             MenuFlyoutContent.RequestEditProject += () => EditProject();
-            MenuFlyoutContent.RequestChooseFile += async () => await ChooseFile();
-            MenuFlyoutContent.RequestCreateFile += async () => await CreateFile();
+            MenuFlyoutContent.RequestChooseFile += async () => await ChooseFileAsync();
+            MenuFlyoutContent.RequestCreateFile += async () => await CreateFileAsync();
             MenuFlyoutContent.RequestNewTicket += () => NewTicket();
             MenuFlyoutContent.RequestNewFeature += () => NewFeature();
             MenuFlyoutContent.RequestNewSprint += () => NewSprint();
@@ -83,16 +83,16 @@ namespace Scrumr.Client
             {
                 SourceFile = App.Preferences[Preferences.SourceFileKey];
 
+                HideBlank();
                 if (String.IsNullOrWhiteSpace(SourceFile))
                 {
-                    await this.ShowMessageAsync("Welcome to Scrumr!", "Lets create your first database");
-                    await CreateFile();
+                    ShowBlank("Welcome to Scrumr. You can load an existing database or create a new one.");
                     return;
                 }
+
                 if (!System.IO.File.Exists(SourceFile))
                 {
-                    await this.ShowMessageAsync("Database is missing", "Perhaps it was moved, deleted or renamed?\nExepected file at: " + SourceFile);
-                    await ChooseFile();
+                    ShowBlank("Database is missing. Perhaps it was moved, deleted or renamed?\nExepected file at: " + SourceFile);
                     return;
                 }
 
@@ -130,6 +130,17 @@ namespace Scrumr.Client
             }
         }
 
+        private void HideBlank()
+        {
+            BlankPanel.Visibility = System.Windows.Visibility.Visible;
+        }
+
+        private void ShowBlank(string message)
+        {
+            BlankPanel.Visibility = System.Windows.Visibility.Visible;
+            BlankPanel.Message = message;
+        }
+
         private void SwitchProject(Project project)
         {
             Board.Project = project;
@@ -141,7 +152,12 @@ namespace Scrumr.Client
             ViewDirector.EditEntity(Board.Project, Board.Context);
         }
 
-        private async Task ChooseFile()
+        private async void ChooseFile()
+        {
+            await ChooseFileAsync();
+        }
+
+        private async Task ChooseFileAsync()
         {
             var dialog = new OpenFileDialog
             {
@@ -157,7 +173,12 @@ namespace Scrumr.Client
             await LoadAsync();
         }
 
-        private async Task CreateFile()
+        private async void CreateFile()
+        {
+            await CreateFileAsync();
+        }
+
+        private async Task CreateFileAsync()
         {
             var dialog = new SaveFileDialog
             {

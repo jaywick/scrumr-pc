@@ -86,6 +86,9 @@
     <Compile Include="PropertyViews\NumericPropertyView.cs" />
     <Compile Include="PropertyViews\PropertyView.cs" />
     <Compile Include="PropertyViews\TextPropertyView.cs" />
+    <Compile Include="Views\BlankView.xaml.cs">
+      <DependentUpon>BlankView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Boards\Features\FeaturePanel.xaml.cs">
       <DependentUpon>FeaturePanel.xaml</DependentUpon>
     </Compile>
@@ -125,6 +128,10 @@
       <DependentUpon>TicketView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ViewDirector.cs" />
+    <Page Include="Views\BlankView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Boards\Features\FeaturePanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

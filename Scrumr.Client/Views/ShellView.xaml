@@ -34,8 +34,9 @@
                 <Label Content="Saved" FontSize="13.333" Foreground="Gray" Margin="17.583,0,0,0" VerticalContentAlignment="Center" FontStyle="Italic" />
             </Grid>
         </Grid>
-
+        
         <ContentControl Grid.Row="1" x:Name="BoardControl" Visibility="Collapsed"/>
+        <local:BlankView Grid.Row="1" x:Name="BlankPanel" Visibility="Collapsed" RequestOpen="ChooseFile" RequestNew="CreateFile" />
         <metro:ProgressRing Grid.Row="1" x:Name="ProgressBusy" IsActive="True" />
     </Grid>
 </metro:MetroWindow >

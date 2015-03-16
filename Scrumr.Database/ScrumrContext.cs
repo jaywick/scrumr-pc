@@ -177,6 +177,7 @@ namespace Scrumr.Database
         {
             await Task.Run(() => SaveChanges());
         }
+
         private void LoadDatabase()
         {
             using (var stream = File.OpenText(DatabaseFile.FullName))
