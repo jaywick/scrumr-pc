@@ -80,10 +80,16 @@ namespace Scrumr.Client
         private void SetSelections()
         {
             if (_sprintId.HasValue)
-                SprintView.Value = Context.Sprints.Get(_sprintId.Value);
+                SprintView.Value = Context.Sprints[_sprintId.Value];
 
             if (_featureId.HasValue)
-                FeatureView.Value = Context.Features.Get(_featureId.Value);
+                FeatureView.Value = Context.Features[_featureId.Value];
+
+            if (_projectId.HasValue)
+            {
+                SprintView.Value = Context.Projects[_projectId.Value].Backlog;
+                FeatureView.Value = Context.Projects[_projectId.Value].DefaultFeature;
+            }
 
             TypeView.Value = TicketType.Task;
             StateView.Value = TicketState.Open;
