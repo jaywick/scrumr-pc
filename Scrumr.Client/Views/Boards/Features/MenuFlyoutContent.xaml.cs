@@ -28,7 +28,6 @@ namespace Scrumr.Client
         public event Action RequestNewFeature;
         public event Action RequestNewSprint;
         public event Action RequestNewProject;
-        public event Action RequestCloseFlyout;
 
         private ContextMenu _addMenu;
         private ContextMenu _projectsList;
@@ -46,19 +45,19 @@ namespace Scrumr.Client
             Context = context;
 
             _addMenu = new ContextMenu();
-            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Ticket", () => { RequestCloseFlyout(); RequestNewTicket(); }));
-            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Feature", () => { RequestCloseFlyout(); RequestNewFeature(); }));
-            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Sprint", () => { RequestCloseFlyout(); RequestNewSprint(); }));
-            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Project", () => { RequestCloseFlyout(); RequestNewProject(); }));
+            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Ticket", () => RequestNewTicket()));
+            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Feature", () => RequestNewFeature()));
+            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Sprint", () => RequestNewSprint()));
+            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Project", () => RequestNewProject()));
 
             AddButton.Click += (s, e) => _addMenu.IsOpen = true;
             _addMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Right;
             _addMenu.PlacementTarget = AddButton;
 
             _projectsList = new ContextMenu();
-            _projectsList.Items.Add(ViewDirector.CreateMenuItem("Configure project", () => { RequestCloseFlyout(); RequestEditProject(); }));
-            _projectsList.Items.Add(ViewDirector.CreateMenuItem("Choose database", () => { RequestCloseFlyout(); RequestChooseFile(); }));
-            _projectsList.Items.Add(ViewDirector.CreateMenuItem("Create new database", () => { RequestCloseFlyout(); RequestCreateFile(); }));
+            _projectsList.Items.Add(ViewDirector.CreateMenuItem("Configure project", () => RequestEditProject()));
+            _projectsList.Items.Add(ViewDirector.CreateMenuItem("Choose database", () => RequestChooseFile()));
+            _projectsList.Items.Add(ViewDirector.CreateMenuItem("Create new database", () => RequestCreateFile()));
 
             ManageProjectsButton.Click += (s, e) => _projectsList.IsOpen = true;
             _projectsList.Placement = System.Windows.Controls.Primitives.PlacementMode.Right;
@@ -91,21 +90,16 @@ namespace Scrumr.Client
             ProjectSelected(selectedProject);
         }
 
-        private void OnProjectAdded(Project project)
-        {
-            _lockProjectSelection = true;
-            Update();
-            _lockProjectSelection = false;
-
-            SelectProject(project);
-        }
-
         public void Update()
         {
+            _lockProjectSelection = true;
+
             ProjectsList.Items.Clear();
 
             foreach (var item in Context.Projects)
                 ProjectsList.Items.Add(item);
+
+            _lockProjectSelection = false;
         }
     }
 }

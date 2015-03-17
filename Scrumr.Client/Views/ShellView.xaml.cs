@@ -25,6 +25,7 @@ namespace Scrumr.Client
     public partial class MainWindow : MetroWindow
     {
         private ShortcutMaps _shortcuts = new ShortcutMaps();
+        private bool _isShuttingDown = false;
 
         private string SourceFile { get; set; }
 
@@ -36,19 +37,10 @@ namespace Scrumr.Client
 
             Logger.Log("Application started");
 
-            this.Loaded += MainWindow_Loaded;
-            this.Closing += MainWindow_Closing;
+            this.Loaded += async (s, e) => await LoadAsync();
+            this.Closing += async (s, e) => { e.Cancel = true; await SaveAndExitAsync(); };
         }
 
-        private async void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            await SaveAsync();
-        }
-
-        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
-            await LoadAsync();
-        }
 
         public IBoardView Board
         {
@@ -66,7 +58,7 @@ namespace Scrumr.Client
         private async Task Save()
         {
             savedDisplay.FadeIn(0.1);
-            
+
             await SaveAsync();
             await Task.Delay(TimeSpan.FromSeconds(3));
 
@@ -76,16 +68,15 @@ namespace Scrumr.Client
         private void LoadCommands()
         {
             MenuButton.Click += (s, e) => MenuFlyout.IsOpen = !MenuFlyout.IsOpen;
-            
-            MenuFlyoutContent.RequestEditProject += () => EditProject();
-            MenuFlyoutContent.RequestChooseFile += async () => await ChooseFileAsync();
-            MenuFlyoutContent.RequestCreateFile += async () => await CreateFileAsync();
-            MenuFlyoutContent.RequestNewTicket += () => NewTicket();
-            MenuFlyoutContent.RequestNewFeature += () => NewFeature();
-            MenuFlyoutContent.RequestNewSprint += () => NewSprint();
+
+            MenuFlyoutContent.RequestEditProject += () => { MenuFlyout.IsOpen = false; EditProject(); };
+            MenuFlyoutContent.RequestChooseFile += async () => { MenuFlyout.IsOpen = false; await ChooseFileAsync(); };
+            MenuFlyoutContent.RequestCreateFile += async () => { MenuFlyout.IsOpen = false; await CreateFileAsync(); };
+            MenuFlyoutContent.RequestNewTicket += () => { MenuFlyout.IsOpen = false; NewTicket(); };
+            MenuFlyoutContent.RequestNewFeature += () => { MenuFlyout.IsOpen = false; NewFeature(); };
+            MenuFlyoutContent.RequestNewSprint += () => { MenuFlyout.IsOpen = false; NewSprint(); };
             MenuFlyoutContent.RequestNewProject += () => NewProject();
-            MenuFlyoutContent.RequestCloseFlyout += () => MenuFlyout.IsOpen = !MenuFlyout.IsOpen;
-            MenuFlyoutContent.ProjectSelected += (p) => SwitchProject(p);
+            MenuFlyoutContent.ProjectSelected += (p) => { MenuFlyout.IsOpen = false; SwitchProject(p); };
 
             MenuFlyoutContent.Load(Board.Context);
         }
@@ -204,21 +195,45 @@ namespace Scrumr.Client
             var path = dialog.FileName;
 
             await FileSystem.CreateNew(path, App.SchemaVersion);
-            
+
             App.Preferences[Preferences.SourceFileKey] = path;
             await LoadAsync();
         }
 
-        private async Task SaveAsync()
+        private async Task SaveAndExitAsync()
         {
-            Logger.Log("called SaveAsync()");
+            if (_isShuttingDown)
+            {
+                Logger.Log("Prevented continueing SaveAndExitAsync() given _isShuttingDown = true");
+                return;
+            }
+
+            _isShuttingDown = true;
+            Logger.Log("Setting _isShuttingDown = true");
+
+            Logger.Log("called SaveAndExitAsync()");
 
             if (Board.Context != null)
             {
                 Logger.Log("Met condition: Board.Context != null");
                 await Board.Context.SaveChangesAsync();
             }
+            else
+            {
+                Logger.Log("WARN: Board.Context == null while trying to save");
+            }
 
+            Logger.Log("finished SaveAndExitAsync()");
+
+            Application.Current.Shutdown();
+
+            Logger.Log("Shutting down application");
+        }
+
+        private async Task SaveAsync()
+        {
+            Logger.Log("called SaveAsync()");
+            await Board.Context.SaveChangesAsync();
             Logger.Log("finished SaveAsync()");
         }
 
@@ -290,7 +305,12 @@ namespace Scrumr.Client
         public void NewProject()
         {
             var project = ViewDirector.AddEntity<Project>(Board.Context);
-            Board.Update();
+
+            if (project == null)
+                return;
+
+            MenuFlyoutContent.Update();
+            MenuFlyoutContent.SelectProject(project);
         }
     }
 }

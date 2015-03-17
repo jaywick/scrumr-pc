@@ -176,9 +176,9 @@ namespace Scrumr.Database
 
         public async Task SaveChangesAsync()
         {
-            Logger.Log("called SaveChangesAsync()");
+            Logger.Log("called Context.SaveChangesAsync()");
             await Task.Run(() => SaveChanges());
-            Logger.Log("finished SaveChangesAsync()");
+            Logger.Log("finished Context.SaveChangesAsync()");
         }
 
         private void LoadDatabase()
@@ -200,7 +200,7 @@ namespace Scrumr.Database
 
         public void SaveChanges()
         {
-            Logger.Log("called SaveChanges()");
+            Logger.Log("called Context.SaveChanges()");
 
             using (var stream = File.CreateText(DatabaseFile.FullName))
             {
@@ -223,7 +223,7 @@ namespace Scrumr.Database
                 Logger.Log("waypoint 6");
             }
 
-            Logger.Log("finished SaveChanges()");
+            Logger.Log("finished Context.SaveChanges()");
         }
     }
 }
