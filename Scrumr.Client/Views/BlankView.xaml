@@ -9,8 +9,8 @@
         <StackPanel>
             <Label x:Name="MessageText" FontSize="15" Margin="0 0 0 30" HorizontalContentAlignment="Center">There's no database to load.</Label>
             <UniformGrid Width="300">
-                <Button Content="New"  FontSize="15" Margin="10" Click="Open_Click"/>
-                <Button Content="Open" FontSize="15" Margin="10" Click="New_Click"/>
+                <Button Content="Open"  FontSize="15" Margin="10" Click="Open_Click"/>
+                <Button Content="New" FontSize="15" Margin="10" Click="New_Click"/>
             </UniformGrid>
         </StackPanel>
     </Grid>
