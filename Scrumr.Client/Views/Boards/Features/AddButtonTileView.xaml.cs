@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Scrumr.Client;
+using System.Diagnostics;
 
 namespace Scrumr.Client
 {
@@ -23,6 +24,8 @@ namespace Scrumr.Client
 
         private Feature Feature { get; set; }
         private Sprint Sprint { get; set; }
+
+        private Process _oskProcess;
 
         public AddButtonTileView(Feature feature, Sprint sprint)
         {
@@ -43,6 +46,8 @@ namespace Scrumr.Client
 
         private void StartQuickEdit()
         {
+            _oskProcess = Process.Start(@"C:\Program Files\Common Files\Microsoft Shared\ink\TabTip.exe");
+
             TicketSummary.Visibility = Visibility.Visible;
             AddIconLabel.Visibility = Visibility.Collapsed;
 
@@ -71,13 +76,22 @@ namespace Scrumr.Client
                     FeatureId = Feature.ID,
                 });
 
+                HideKeyboard();
                 e.Handled = true;
             }
             else if (e.Key == Key.Escape)
             {
                 Reset();
+                HideKeyboard();
                 e.Handled = true;
             }
+        }
+
+        private void HideKeyboard()
+        {
+            Process.GetProcessesByName("tabtip")
+                .ToList()
+                .ForEach(x => x.Kill());
         }
     }
 }
