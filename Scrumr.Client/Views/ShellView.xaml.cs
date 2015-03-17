@@ -36,8 +36,18 @@ namespace Scrumr.Client
 
             Logger.Log("Application started");
 
-            this.Loaded += async (s, e) => await LoadAsync();
-            this.Closing += async (s, e) => await SaveAsync();
+            this.Loaded += MainWindow_Loaded;
+            this.Closing += MainWindow_Closing;
+        }
+
+        private async void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            await SaveAsync();
+        }
+
+        private async void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            await LoadAsync();
         }
 
         public IBoardView Board
@@ -95,30 +105,28 @@ namespace Scrumr.Client
 
                 if (!System.IO.File.Exists(SourceFile))
                 {
+                    Logger.Log("Expected database file missing: " + SourceFile);
                     ShowBlank("Database is missing. Perhaps it was moved, deleted or renamed?\nExepected file at: " + SourceFile);
                     return;
                 }
 
-                Task errorMessageTask = null;
                 try
                 {
                     Board.Context = await FileSystem.LoadContext(SourceFile, App.SchemaVersion);
                 }
                 catch (SchemaMismatchException ex)
                 {
-                    errorMessageTask = this.ShowMessageAsync("", String.Format(
+                    Logger.Log("ERROR: " + ex.Message);
+                    ShowBlank(String.Format(
                         "The database you are trying to laod is out of date and cannot be used with this version of the application.\n" +
                         "Application expects v{0}, however database is v{1}.\n\n" +
                         "{2}", ex.ExpectedVersion, ex.ActualVersion, ex.FilePath));
+                    return;
                 }
                 catch (Exception ex)
                 {
-                    errorMessageTask = this.ShowMessageAsync("Could not load database", ex.Message);
-                }
-
-                if (errorMessageTask != null)
-                {
-                    await errorMessageTask;
+                    Logger.Log("ERROR: " + ex.Message);
+                    ShowBlank("Could not load database\n" + ex.Message);
                     return;
                 }
 
@@ -135,7 +143,7 @@ namespace Scrumr.Client
 
         private void HideBlank()
         {
-            BlankPanel.Visibility = System.Windows.Visibility.Visible;
+            BlankPanel.Visibility = System.Windows.Visibility.Collapsed;
         }
 
         private void ShowBlank(string message)
