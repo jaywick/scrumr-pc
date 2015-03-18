@@ -152,6 +152,12 @@ namespace Scrumr.Client
         private void EditProject()
         {
             ViewDirector.EditEntity(Board.Project, Board.Context);
+
+            if (Board.Project == null)
+                return;
+
+            MenuFlyoutContent.Update();
+            MenuFlyoutContent.SelectProject(Board.Context.Projects.FirstOrDefault());
         }
 
         private async void ChooseFile()
