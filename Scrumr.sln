@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scrumr.Database", "Scrumr.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scrumr.Core", "Scrumr.Core\Scrumr.Core.csproj", "{250F5631-9576-466E-994E-A673EDECB4AF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scrumr.Sync", "Scrumr.Sync\Scrumr.Sync.csproj", "{294EEB60-6658-4D85-B877-5BA69F0CABC2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{250F5631-9576-466E-994E-A673EDECB4AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{250F5631-9576-466E-994E-A673EDECB4AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{250F5631-9576-466E-994E-A673EDECB4AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{294EEB60-6658-4D85-B877-5BA69F0CABC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{294EEB60-6658-4D85-B877-5BA69F0CABC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{294EEB60-6658-4D85-B877-5BA69F0CABC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{294EEB60-6658-4D85-B877-5BA69F0CABC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
