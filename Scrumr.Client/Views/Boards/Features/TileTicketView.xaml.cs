@@ -32,7 +32,9 @@ namespace Scrumr.Client
             Ticket = ticket;
 
             labelName.Text = ticket.Name.ToString();
-            labelName.Foreground = ticket.State == TicketState.Open ? Brushes.Black : Brushes.Gray;
+            labelName.Foreground = Brushes.White;//ticket.State == TicketState.Open ? Brushes.Black : Brushes.Gray;
+
+            this.Opacity = ticket.State == TicketState.Open ? 1 : 0.7;
 
             ContextMenu = new ContextMenu();
 

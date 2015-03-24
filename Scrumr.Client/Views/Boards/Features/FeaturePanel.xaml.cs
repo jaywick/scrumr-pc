@@ -35,14 +35,14 @@ namespace Scrumr.Client
             Context = context;
             Feature = feature;
 
-            foreach (var ticket in Feature.Tickets.OrderBy(x => x.SprintId))
+            foreach (var ticket in Feature.Tickets.OrderBy(x => x.ID))
             {
                 var ticketView = new TileTicketView(ticket);
 
                 ticketView.RequestClose += (t) => CloseTicket(t as Ticket);
                 ticketView.RequestReopen += (t) => OpenTicket(t as Ticket);
                 ticketView.RequestEdit += (t) => EditTicket(t as Ticket);
-                ticketView.RequestRemove += (t) => RemoveEntity(t as Ticket);
+                ticketView.RequestRemove += async (t) => await RemoveEntity(t as Ticket);
 
                 LayoutRoot.Children.Add(ticketView);
             }
@@ -95,9 +95,9 @@ namespace Scrumr.Client
             Updated();
         }
 
-        private void RemoveEntity<T>(T entity) where T : Entity
+        private async Task RemoveEntity<T>(T entity) where T : Entity
         {
-            ViewDirector.RemoveEntity(entity, Context);
+            await ViewDirector.RemoveEntity(entity, Context);
             Updated();
         }
 

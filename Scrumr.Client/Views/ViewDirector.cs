@@ -53,7 +53,7 @@ namespace Scrumr.Client
             editor.Show();
         }
 
-        public static async void RemoveEntity<T>(T entity, ScrumrContext context) where T : Entity
+        public static async Task RemoveEntity<T>(T entity, ScrumrContext context) where T : Entity
         {
             if (await (App.Current.MainWindow as MainWindow).ShowMessageAsync("Scrumr", "Are you sure you wish to delete this " + entity.GetType().Name + "?", MessageDialogStyle.AffirmativeAndNegative) == MessageDialogResult.Negative)
                 return;

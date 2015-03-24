@@ -171,13 +171,13 @@ namespace Scrumr.Database
 
         private async Task LoadDatabaseAsync()
         {
-            await Task.Run(() => LoadDatabase());
+            await Task.Factory.StartNew(() => LoadDatabase());
         }
 
         public async Task SaveChangesAsync()
         {
             Logger.Log("called Context.SaveChangesAsync()");
-            await Task.Run(() => SaveChanges());
+            await Task.Factory.StartNew(() => SaveChanges());
             Logger.Log("finished Context.SaveChangesAsync()");
         }
 
