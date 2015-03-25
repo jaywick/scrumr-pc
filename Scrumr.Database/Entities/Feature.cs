@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
@@ -25,6 +25,10 @@ namespace Scrumr.Database
             this.Name = name;
             this.ProjectId = project.ID;
         }
+
+        public bool IsArchived { get; set; }
+
+        public bool IsMinimised { get; set; }
 
         [Foreign, IgnoreRender]
         public int ProjectId { get; set; }
