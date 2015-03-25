@@ -35,8 +35,10 @@
             </Grid>
         </Grid>
         
-        <ContentControl Grid.Row="1" x:Name="BoardControl" Visibility="Collapsed"/>
-        <local:BlankView Grid.Row="1" x:Name="BlankPanel" Visibility="Collapsed" RequestOpen="ChooseFile" RequestNew="CreateFile" />
-        <metro:ProgressRing Grid.Row="1" x:Name="ProgressBusy" IsActive="True" />
+        <ContentControl     Grid.Row="1" x:Name="BoardControl" Visibility="Collapsed"/>
+        <local:BlankView    Grid.Row="1" x:Name="BlankPanel" Visibility="Visible" RequestOpen="ChooseFile" RequestNew="CreateFile" />
+        <metro:ProgressRing Grid.Row="1" x:Name="ProgressBusy" IsActive="False" />
+        
+        <Grid               Grid.RowSpan="2" x:Name="FlyoutOverlay" Visibility="Collapsed" MouseDown="CloseFlyout" Background="#66000000"/>
     </Grid>
 </metro:MetroWindow >

@@ -35,8 +35,6 @@ namespace Scrumr.Client
             this.LeftWindowCommands = new WindowCommands();
             this.BoardControl.Content = new FeatureView();
 
-            Logger.Log("Application started");
-
             this.Loaded += async (s, e) => await LoadAsync();
             this.Closing += async (s, e) => { e.Cancel = true; await SaveAndExitAsync(); };
         }
@@ -67,18 +65,32 @@ namespace Scrumr.Client
 
         private void LoadCommands()
         {
-            MenuButton.Click += (s, e) => MenuFlyout.IsOpen = !MenuFlyout.IsOpen;
+            MenuButton.Click += (s, e) => FlyoutMenu(!MenuFlyout.IsOpen); ;
 
-            MenuFlyoutContent.RequestEditProject += () => { MenuFlyout.IsOpen = false; EditProject(); };
-            MenuFlyoutContent.RequestChooseFile += async () => { MenuFlyout.IsOpen = false; await ChooseFileAsync(); };
-            MenuFlyoutContent.RequestCreateFile += async () => { MenuFlyout.IsOpen = false; await CreateFileAsync(); };
-            MenuFlyoutContent.RequestNewTicket += () => { MenuFlyout.IsOpen = false; NewTicket(); };
-            MenuFlyoutContent.RequestNewFeature += () => { MenuFlyout.IsOpen = false; NewFeature(); };
-            MenuFlyoutContent.RequestNewSprint += () => { MenuFlyout.IsOpen = false; NewSprint(); };
+            MenuFlyoutContent.RequestEditProject += () => { FlyoutMenu(false); EditProject(); };
+            MenuFlyoutContent.RequestChooseFile += async () => { FlyoutMenu(false); await ChooseFileAsync(); };
+            MenuFlyoutContent.RequestCreateFile += async () => { FlyoutMenu(false); await CreateFileAsync(); };
+            MenuFlyoutContent.RequestNewTicket += () => { FlyoutMenu(false); NewTicket(); };
+            MenuFlyoutContent.RequestNewFeature += () => { FlyoutMenu(false); NewFeature(); };
+            MenuFlyoutContent.RequestNewSprint += () => { FlyoutMenu(false); NewSprint(); };
             MenuFlyoutContent.RequestNewProject += () => NewProject();
-            MenuFlyoutContent.ProjectSelected += (p) => { MenuFlyout.IsOpen = false; SwitchProject(p); };
+            MenuFlyoutContent.ProjectSelected += (p) => { FlyoutMenu(false); SwitchProject(p); };
 
             MenuFlyoutContent.Load(Board.Context);
+        }
+
+        private void FlyoutMenu(bool isVisible)
+        {
+            if (isVisible)
+            {
+                MenuFlyout.IsOpen = true;
+                FlyoutOverlay.FadeIn(0.5);
+            }
+            else
+            {
+                MenuFlyout.IsOpen = false;
+                FlyoutOverlay.FadeOut(0.5);
+            }
         }
 
         private async Task LoadAsync()
@@ -209,19 +221,12 @@ namespace Scrumr.Client
         private async Task SaveAndExitAsync()
         {
             if (_isShuttingDown)
-            {
-                Logger.Log("Prevented continueing SaveAndExitAsync() given _isShuttingDown = true");
                 return;
-            }
 
             _isShuttingDown = true;
-            Logger.Log("Setting _isShuttingDown = true");
-
-            Logger.Log("called SaveAndExitAsync()");
 
             if (Board.Context != null)
             {
-                Logger.Log("Met condition: Board.Context != null");
                 await Board.Context.SaveChangesAsync();
             }
             else
@@ -229,18 +234,12 @@ namespace Scrumr.Client
                 Logger.Log("WARN: Board.Context == null while trying to save");
             }
 
-            Logger.Log("finished SaveAndExitAsync()");
-
             Application.Current.Shutdown();
-
-            Logger.Log("Shutting down application");
         }
 
         private async Task SaveAsync()
         {
-            Logger.Log("called SaveAsync()");
             await Board.Context.SaveChangesAsync();
-            Logger.Log("finished SaveAsync()");
         }
 
         private Project GetDefaultProject()
@@ -317,6 +316,11 @@ namespace Scrumr.Client
 
             MenuFlyoutContent.Update();
             MenuFlyoutContent.SelectProject(project);
+        }
+
+        private void CloseFlyout(object sender, MouseButtonEventArgs e)
+        {
+            FlyoutMenu(false);
         }
     }
 }

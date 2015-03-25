@@ -41,8 +41,8 @@ namespace Scrumr.Client
             // make target visible if not already
             if (targetControl.Visibility == Visibility.Collapsed || targetControl.Visibility == Visibility.Hidden)
                 targetControl.Visibility = Visibility.Visible;
-            else
-                targetControl.Opacity = 0;
+
+            targetControl.Opacity = 0;
 
             var fadeInAnimation = new DoubleAnimation(0, 1, new Duration(TimeSpan.FromSeconds(seconds)));
             Storyboard.SetTarget(fadeInAnimation, targetControl);
@@ -66,7 +66,13 @@ namespace Scrumr.Client
 
             var sb = new Storyboard();
             sb.Children.Add(fadeInAnimation);
-            sb.Completed += (s, e) => { if (callback != null) callback.Invoke(); };
+            sb.Completed += (s, e) =>
+            {
+                if (callback != null)
+                    callback.Invoke();
+
+                targetControl.Visibility = Visibility.Collapsed;
+            };
 
             sb.Begin();
         }

@@ -44,13 +44,13 @@ namespace Scrumr.Client
             e.Handled = true;
         }
 
-        private void StartQuickEdit()
+        public void StartQuickEdit()
         {
             _oskProcess = Process.Start(@"C:\Program Files\Common Files\Microsoft Shared\ink\TabTip.exe");
 
             TicketSummary.Visibility = Visibility.Visible;
             AddIconLabel.Visibility = Visibility.Collapsed;
-
+            
             TicketSummary.Focus();
         }
 
