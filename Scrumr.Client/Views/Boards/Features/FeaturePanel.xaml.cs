@@ -109,12 +109,12 @@ namespace Scrumr.Client
             Updated();
         }
 
-        public void ToggleVisiblity()
+        public void SetVisiblity(bool isVisible)
         {
-            if (this.Visibility == System.Windows.Visibility.Visible)
-                this.Visibility = System.Windows.Visibility.Collapsed;
-            else
+            if (isVisible)
                 this.Visibility = System.Windows.Visibility.Visible;
+            else
+                this.Visibility = System.Windows.Visibility.Collapsed;
         }
     }
 }

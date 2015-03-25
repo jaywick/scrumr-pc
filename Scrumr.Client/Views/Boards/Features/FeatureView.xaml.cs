@@ -38,9 +38,7 @@ namespace Scrumr.Client.Views
 
         public void Update()
         {
-            SaveView();
             RootItems.Children.Clear();
-            featureVisibilityMap.Clear();
 
             foreach (var feature in Project.Features)
             {
@@ -48,18 +46,19 @@ namespace Scrumr.Client.Views
                 var featureHeader = CreateFeatureHeader(feature);
 
                 featurePanel.Updated += () => Update();
+                featurePanel.SetVisiblity(!feature.IsMinimised);
+
                 featureHeader.PreviewMouseDown += (s, e) => ToggleVisibility(featurePanel);
 
                 RootItems.Children.Add(featureHeader);
                 RootItems.Children.Add(featurePanel);
             }
-
-            RestoreView();
         }
 
         private void ToggleVisibility(FeaturePanel featurePanel)
         {
-            featurePanel.ToggleVisiblity();
+            featurePanel.Feature.IsMinimised = !featurePanel.Feature.IsMinimised;
+            featurePanel.SetVisiblity(!featurePanel.Feature.IsMinimised);
         }
 
         private UIElement CreateFeatureHeader(Database.Feature feature)
@@ -70,26 +69,6 @@ namespace Scrumr.Client.Views
                 FontSize = 16,
                 Foreground = Brushes.Black,
             };
-        }
-
-        Dictionary<Feature, Visibility> featureVisibilityMap = new Dictionary<Feature, Visibility>();
-        private void SaveView()
-        {
-            foreach (var featurePanel in RootItems.Children.OfType<FeaturePanel>())
-            {
-                featureVisibilityMap.Add(featurePanel.Feature, featurePanel.Visibility);
-            }
-        }
-
-        private void RestoreView()
-        {
-            foreach (var featurePanel in RootItems.Children.OfType<FeaturePanel>())
-            {
-                if (featureVisibilityMap.ContainsKey(featurePanel.Feature))
-                    RootItems.Visibility = featureVisibilityMap[featurePanel.Feature];
-                else
-                    RootItems.Visibility = System.Windows.Visibility.Visible;
-            }
         }
     }
 }
