@@ -51,5 +51,14 @@ namespace Scrumr.Database
                     .Where(x => x.FeatureId == ID);
             }
         }
+
+        [JsonIgnore]
+        public bool IsBacklog
+        {
+            get
+            {
+                return this.ID == Project.BacklogId;
+            }
+        }
     }
 }

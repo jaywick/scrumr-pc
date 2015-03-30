@@ -89,6 +89,12 @@ namespace Scrumr.Database
             get { return State == TicketState.Open; }
         }
 
+        [JsonIgnore]
+        public bool IsBacklogged
+        {
+            get { return Sprint.IsBacklog; }
+        }
+
         public void Open()
         {
             State = TicketState.Open;
