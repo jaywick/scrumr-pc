@@ -41,7 +41,7 @@ namespace Scrumr.Client
                 return new CheckPropertyView(propertyItem);
 
             if (propertyItem.IsType<string>())
-                return new TextPropertyView(propertyItem);
+                return new TextPropertyView(propertyItem, propertyItem.IsLargeText);
 
             if (propertyItem.IsNumericType)
                 return new NumericPropertyView(propertyItem);
@@ -74,6 +74,11 @@ namespace Scrumr.Client
         public bool IsRenderingIgnored
         {
             get { return Attributes.IsOneOf(typeof(IgnoreRenderAttribute)); }
+        }
+
+        public bool IsLargeText
+        {
+            get { return Attributes.IsOneOf(typeof(LargeTextAttribute)); }
         }
 
         public bool IsEntityType

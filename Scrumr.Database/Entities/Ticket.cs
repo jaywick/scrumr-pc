@@ -20,6 +20,7 @@ namespace Scrumr.Database
         {
         }
 
+        [LargeText]
         public string Description { get; set; }
 
         [Foreign]
