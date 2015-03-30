@@ -89,16 +89,19 @@
     <Compile Include="Views\BlankView.xaml.cs">
       <DependentUpon>BlankView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Boards\Features\FeaturePanel.xaml.cs">
-      <DependentUpon>FeaturePanel.xaml</DependentUpon>
+    <Compile Include="Views\Boards\Features\Components\FeatureTile.xaml.cs">
+      <DependentUpon>FeatureTile.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Boards\Features\FeatureView.xaml.cs">
       <DependentUpon>FeatureView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Boards\Features\MenuFlyoutContent.xaml.cs">
+    <Compile Include="Views\Boards\IUpdatableView.cs" />
+    <Compile Include="Views\Boards\Features\ProjectView.xaml.cs">
+      <DependentUpon>ProjectView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Boards\Features\Components\MenuFlyoutContent.xaml.cs">
       <DependentUpon>MenuFlyoutContent.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Boards\IBoardView.cs" />
     <Compile Include="Views\Boards\Matrix\MatrixView.xaml.cs">
       <DependentUpon>MatrixView.xaml</DependentUpon>
     </Compile>
@@ -118,10 +121,10 @@
     </Compile>
     <Compile Include="Views\ShortcutMaps.cs" />
     <Compile Include="Views\Boards\ITicketView.cs" />
-    <Compile Include="Views\Boards\Features\AddButtonTileView.xaml.cs">
+    <Compile Include="Views\Boards\Features\Components\AddButtonTileView.xaml.cs">
       <DependentUpon>AddButtonTileView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Boards\Features\TileTicketView.xaml.cs">
+    <Compile Include="Views\Boards\Features\Components\TileTicketView.xaml.cs">
       <DependentUpon>TileTicketView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Boards\Matrix\TicketView.xaml.cs">
@@ -132,15 +135,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Boards\Features\FeaturePanel.xaml">
-      <SubType>Designer</SubType>
+    <Page Include="Views\Boards\Features\Components\FeatureTile.xaml">
       <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Boards\Features\FeatureView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Boards\Features\MenuFlyoutContent.xaml">
+    <Page Include="Views\Boards\Features\ProjectView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Boards\Features\Components\MenuFlyoutContent.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -172,11 +179,11 @@
       <DependentUpon>ShellView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\Boards\Features\AddButtonTileView.xaml">
+    <Page Include="Views\Boards\Features\Components\AddButtonTileView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Views\Boards\Features\TileTicketView.xaml">
+    <Page Include="Views\Boards\Features\Components\TileTicketView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

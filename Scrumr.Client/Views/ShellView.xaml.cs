@@ -29,21 +29,37 @@ namespace Scrumr.Client
 
         private string SourceFile { get; set; }
 
+        private ScrumrContext Context { get; set; }
+
+        private Project CurrentProject { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
             this.LeftWindowCommands = new WindowCommands();
-            this.BoardControl.Content = new FeaturesView();
 
             this.Loaded += async (s, e) => await LoadAsync();
             this.Closing += async (s, e) => { e.Cancel = true; await SaveAndExitAsync(); };
         }
 
-
-        public IBoardView Board
+        private void Open(Feature feature)
         {
-            get { return (IBoardView)BoardControl.Content; }
-            set { BoardControl.Content = value; }
+            var featurePanel = new FeatureView(Context, feature);
+            this.BoardControl.Content = featurePanel;
+        }
+
+        private void Open(Project project)
+        {
+            var projectView = new ProjectView(Context, project);
+            projectView.RequestOpenFeature += f => Open(f);
+            
+            this.BoardControl.Content = projectView;
+            MenuFlyoutContent.SelectProject(project);
+        }
+
+        private void UpdateView()
+        {
+            ((IUpdatableView)this.BoardControl.Content).Update();
         }
 
         private void LoadShortcuts()
@@ -76,7 +92,7 @@ namespace Scrumr.Client
             MenuFlyoutContent.RequestNewProject += () => NewProject();
             MenuFlyoutContent.ProjectSelected += (p) => { FlyoutMenu(false); SwitchProject(p); };
 
-            MenuFlyoutContent.Load(Board.Context);
+            MenuFlyoutContent.Load(Context);
         }
 
         private void FlyoutMenu(bool isVisible)
@@ -115,7 +131,7 @@ namespace Scrumr.Client
 
                 try
                 {
-                    Board.Context = await FileSystem.LoadContext(SourceFile, App.SchemaVersion);
+                    Context = await FileSystem.LoadContext(SourceFile, App.SchemaVersion);
                 }
                 catch (SchemaMismatchException ex)
                 {
@@ -133,9 +149,7 @@ namespace Scrumr.Client
                     return;
                 }
 
-                Board.Project = GetDefaultProject();
-                MenuFlyoutContent.SelectProject(Board.Project);
-                Board.Update();
+                Open(GetDefaultProject());
 
                 LoadCommands();
                 LoadShortcuts();
@@ -157,19 +171,19 @@ namespace Scrumr.Client
 
         private void SwitchProject(Project project)
         {
-            Board.Project = project;
+            CurrentProject = project;
             App.Preferences[Preferences.DefaultProjectKey] = project.Name;
         }
 
         private void EditProject()
         {
-            ViewDirector.EditEntity(Board.Project, Board.Context);
+            ViewDirector.EditEntity(CurrentProject, Context);
 
-            if (Board.Project == null)
+            if (CurrentProject == null)
                 return;
 
             MenuFlyoutContent.Update();
-            MenuFlyoutContent.SelectProject(Board.Context.Projects.FirstOrDefault());
+            MenuFlyoutContent.SelectProject(Context.Projects.FirstOrDefault());
         }
 
         private async void ChooseFile()
@@ -225,13 +239,13 @@ namespace Scrumr.Client
 
             _isShuttingDown = true;
 
-            if (Board.Context != null)
+            if (Context != null)
             {
-                await Board.Context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
             }
             else
             {
-                Logger.Log("WARN: Board.Context == null while trying to save");
+                Logger.Log("WARN: Context == null while trying to save");
             }
 
             Application.Current.Shutdown();
@@ -239,7 +253,7 @@ namespace Scrumr.Client
 
         private async Task SaveAsync()
         {
-            await Board.Context.SaveChangesAsync();
+            await Context.SaveChangesAsync();
         }
 
         private Project GetDefaultProject()
@@ -247,12 +261,12 @@ namespace Scrumr.Client
             var defaultProject = App.Preferences[Preferences.DefaultProjectKey];
 
             if (defaultProject == null)
-                return Board.Context.Projects.First();
+                return Context.Projects.First();
 
-            var project = Board.Context.Projects.SingleOrDefault(x => x.Name == defaultProject);
+            var project = Context.Projects.SingleOrDefault(x => x.Name == defaultProject);
 
             if (project == null)
-                return Board.Context.Projects.First();
+                return Context.Projects.First();
 
             return project;
         }
@@ -289,27 +303,28 @@ namespace Scrumr.Client
         {
             _shortcuts.Process(Keyboard.Modifiers, e.Key);
         }
+
         public void NewSprint()
         {
-            ViewDirector.AddEntity<Sprint>(Board.Context, Board.Project.ID);
-            Board.Update();
+            ViewDirector.AddEntity<Sprint>(Context, CurrentProject.ID);
+            UpdateView();
         }
 
         public void NewFeature()
         {
-            ViewDirector.AddEntity<Feature>(Board.Context, Board.Project.ID);
-            Board.Update();
+            ViewDirector.AddEntity<Feature>(Context, CurrentProject.ID);
+            UpdateView();
         }
 
         public void NewTicket()
         {
-            ViewDirector.AddTicket(Board.Context, Board.Project.ID);
-            Board.Update();
+            ViewDirector.AddTicket(Context, CurrentProject.ID);
+            UpdateView();
         }
 
         public void NewProject()
         {
-            var project = ViewDirector.AddEntity<Project>(Board.Context);
+            var project = ViewDirector.AddEntity<Project>(Context);
 
             if (project == null)
                 return;

@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 
 namespace Scrumr.Client
 {
-    public partial class MatrixView : UserControl, IBoardView
+    public partial class MatrixView : UserControl
     {
         public ScrumrContext Context { get; set; }
 
