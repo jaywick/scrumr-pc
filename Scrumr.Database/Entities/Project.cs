@@ -95,5 +95,16 @@ namespace Scrumr.Database
                     .Where(x => x.Feature.ProjectId == this.ID);
             }
         }
+
+        [JsonIgnore]
+        public Sprint LatestSprint
+        {
+            get
+            {
+                return Sprints
+                    .OrderByDescending(x => x.ID)
+                    .FirstOrDefault();
+            }
+        }
     }
 }

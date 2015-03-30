@@ -35,7 +35,12 @@ namespace Scrumr.Client
             Context = context;
             Feature = feature;
 
-            foreach (var ticket in Feature.Tickets.OrderBy(x => x.ID))
+            var orderedTickets = Feature.Tickets
+                .OrderBy(x => !x.IsBacklogged)
+                .ThenByDescending(x => x.State)
+                .ThenBy(x => x.ID);
+
+            foreach (var ticket in orderedTickets)
             {
                 var ticketView = new TileTicketView(ticket);
 
@@ -47,7 +52,7 @@ namespace Scrumr.Client
                 LayoutRoot.Children.Add(ticketView);
             }
 
-            var addTile = new AddButtonTileView(Feature, Feature.Project.Backlog);
+            var addTile = new AddButtonTileView(Feature, Feature.Project.LatestSprint);
             addTile.Added += AddedTicket;
             LayoutRoot.Children.Add(addTile);
         }
