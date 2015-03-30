@@ -18,6 +18,8 @@ namespace Scrumr.Client
 {
     public partial class FeatureView : UserControl, IUpdatableView
     {
+        public event Action<Project> RequestOpenProject;
+        
         public Feature Feature { get; set; }
 
         private ScrumrContext Context { get; set; }
@@ -95,6 +97,8 @@ namespace Scrumr.Client
 
         public void Update()
         {
+            labelProject.Content = Feature.Project.Name;
+
             var orderedTickets = Feature.Tickets
                 .OrderBy(x => !x.IsBacklogged)
                 .ThenByDescending(x => x.State)
@@ -123,6 +127,11 @@ namespace Scrumr.Client
                 this.Visibility = System.Windows.Visibility.Visible;
             else
                 this.Visibility = System.Windows.Visibility.Collapsed;
+        }
+
+        private void labelProject_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            RequestOpenProject(Feature.Project);
         }
     }
 }

@@ -45,6 +45,8 @@ namespace Scrumr.Client
         private void Open(Feature feature)
         {
             var featurePanel = new FeatureView(Context, feature);
+            featurePanel.RequestOpenProject += p => Open(p);
+
             this.BoardControl.Content = featurePanel;
         }
 
