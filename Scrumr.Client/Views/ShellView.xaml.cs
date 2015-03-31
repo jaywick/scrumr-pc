@@ -33,7 +33,7 @@ namespace Scrumr.Client
         {
             InitializeComponent();
             this.LeftWindowCommands = new WindowCommands();
-            this.BoardControl.Content = new FeatureView();
+            this.BoardControl.Content = new FeaturesView();
 
             this.Loaded += async (s, e) => await LoadAsync();
             this.Closing += async (s, e) => { e.Cancel = true; await SaveAndExitAsync(); };

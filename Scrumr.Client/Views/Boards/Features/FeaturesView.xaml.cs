@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 
 namespace Scrumr.Client.Views
 {
-    public partial class FeatureView : UserControl, IBoardView
+    public partial class FeaturesView : UserControl, IBoardView
     {
         public Database.ScrumrContext Context { get; set; }
 
@@ -31,7 +31,7 @@ namespace Scrumr.Client.Views
             }
         }
 
-        public FeatureView()
+        public FeaturesView()
         {
             InitializeComponent();
         }
