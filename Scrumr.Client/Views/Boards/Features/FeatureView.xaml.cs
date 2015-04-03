@@ -14,124 +14,61 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Scrumr.Client
+namespace Scrumr.Client.Views
 {
-    public partial class FeatureView : UserControl, IUpdatableView
+    public partial class FeatureView : UserControl, IBoardView
     {
-        public event Action<Project> RequestOpenProject;
-        
-        public Feature Feature { get; set; }
+        public Database.ScrumrContext Context { get; set; }
 
-        private ScrumrContext Context { get; set; }
+        private Database.Project _project;
+        public Database.Project Project
+        {
+            get { return _project; }
+            set
+            {
+                _project = value;
+                Update();
+            }
+        }
 
         public FeatureView()
         {
             InitializeComponent();
         }
 
-        public FeatureView(ScrumrContext context, Feature feature)
-            : this()
-        {
-            Context = context;
-            Feature = feature;
-
-            Update();
-        }
-
-        void FeaturePanel_ManipulationDelta(object sender, ManipulationDeltaEventArgs e)
-        {
-            var zoomAmount = Math.Abs(e.DeltaManipulation.Scale.Length - Math.Sqrt(2));
-
-            if ((TouchesOver.Count() == 2))
-            {
-                if (Math.Abs(zoomAmount - 0) > 0.1)
-                {
-                    ResizeTickets(-zoomAmount);
-                }
-            }
-
-            e.Handled = true;
-            base.OnManipulationDelta(e);
-        }
-
-        private void ResizeTickets(double factor)
-        {
-            foreach (var ticketView in RootItems.Children.OfType<TileTicketView>())
-            {
-                ticketView.Width = factor * 139;
-                ticketView.Height = factor * 84;
-            }
-        }
-
-        private void OpenTicket(Ticket ticket)
-        {
-            ticket.Open();
-            Update();
-        }
-
-        private void CloseTicket(Ticket ticket)
-        {
-            ticket.Close();
-            Update();
-        }
-
-        private void EditTicket(Ticket ticket)
-        {
-            ViewDirector.EditTicket(ticket, Context);
-            Update();
-        }
-
-        private async Task RemoveEntity<T>(T entity) where T : Entity
-        {
-            await ViewDirector.RemoveEntity(entity, Context);
-            Update();
-        }
-
-        public async void AddedTicket(Ticket ticket)
-        {
-            Context.Tickets.Insert(ticket);
-            await Context.SaveChangesAsync();
-
-            Update();
-        }
-
         public void Update()
         {
-            labelProject.Content = Feature.Project.Name;
+            RootItems.Children.Clear();
 
-            var orderedTickets = Feature.Tickets
-                .OrderBy(x => !x.IsBacklogged)
-                .ThenByDescending(x => x.State)
-                .ThenBy(x => x.ID);
-
-            foreach (var ticket in orderedTickets)
+            foreach (var feature in Project.Features)
             {
-                var ticketView = new TileTicketView(ticket);
+                var featurePanel = new FeaturePanel(Context, feature);
+                var featureHeader = CreateFeatureHeader(feature);
 
-                ticketView.RequestClose += (t) => CloseTicket(t as Ticket);
-                ticketView.RequestReopen += (t) => OpenTicket(t as Ticket);
-                ticketView.RequestEdit += (t) => EditTicket(t as Ticket);
-                ticketView.RequestRemove += async (t) => await RemoveEntity(t as Ticket);
+                featurePanel.Updated += () => Update();
+                featurePanel.SetVisiblity(!feature.IsMinimised);
 
-                RootItems.Children.Add(ticketView);
+                featureHeader.PreviewMouseDown += (s, e) => ToggleVisibility(featurePanel);
+
+                RootItems.Children.Add(featureHeader);
+                RootItems.Children.Add(featurePanel);
             }
-
-            var addTile = new AddButtonTileView(Feature, Feature.Project.LatestSprint);
-            addTile.Added += AddedTicket;
-            RootItems.Children.Add(addTile);
         }
 
-        public void SetVisiblity(bool isVisible)
+        private void ToggleVisibility(FeaturePanel featurePanel)
         {
-            if (isVisible)
-                this.Visibility = System.Windows.Visibility.Visible;
-            else
-                this.Visibility = System.Windows.Visibility.Collapsed;
+            featurePanel.Feature.IsMinimised = !featurePanel.Feature.IsMinimised;
+            featurePanel.SetVisiblity(!featurePanel.Feature.IsMinimised);
         }
 
-        private void labelProject_MouseDown(object sender, MouseButtonEventArgs e)
+        private UIElement CreateFeatureHeader(Database.Feature feature)
         {
-            RequestOpenProject(Feature.Project);
+            return new Label
+            {
+                Content = feature.Name,
+                FontSize = 16,
+                Foreground = Brushes.Black,
+            };
         }
     }
 }
