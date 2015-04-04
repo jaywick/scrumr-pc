@@ -8,10 +8,10 @@
              d:DesignHeight="300" d:DesignWidth="300">
     
     <Grid Margin="20">
-        <TabControl>
+        <TabControl x:Name="tabMain">
             <TabItem Header="Project">
                 <ScrollViewer PanningMode="VerticalOnly">
-                    <local:ProjectPanel x:Name="panelProject"/>
+                    <ContentControl x:Name="controlProjectPanel"/>
                 </ScrollViewer>
             </TabItem>
             <TabItem Header="Features">

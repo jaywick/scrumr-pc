@@ -37,7 +37,7 @@ namespace Scrumr.Client
             ContextMenu.Items.Add(ViewDirector.CreateMenuItem("Edit", () => RequestEdit(project)));
             ContextMenu.Items.Add(ViewDirector.CreateMenuItem("Remove", () => RequestRemove(project)));
 
-            TouchUp += (s, e) => RequestOpenProject(project);
+            MouseUp += (s, e) => RequestOpenProject(project);
         }
     }
 }

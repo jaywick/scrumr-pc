@@ -23,7 +23,7 @@ namespace Scrumr.Client
 
         private ScrumrContext Context { get; set; }
 
-        public ProjectPanel()
+        private ProjectPanel()
         {
             InitializeComponent();
         }

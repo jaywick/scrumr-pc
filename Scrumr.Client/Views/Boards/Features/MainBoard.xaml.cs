@@ -34,16 +34,20 @@ namespace Scrumr.Client.Views
         public MainBoard()
         {
             InitializeComponent();
-            panelProject.RequestOpenProject += project => OpenProject(project);
         }
 
         private void OpenProject(Project project)
         {
             Project = project;
+            tabMain.SelectedIndex = 1; //select features tab
         }
 
         public void Update()
         {
+            var projectPanel = new ProjectPanel(Context);
+            projectPanel.RequestOpenProject += project => OpenProject(project);
+            controlProjectPanel.Content = projectPanel;
+
             stackFeatureTickets.Children.Clear();
 
             foreach (var feature in Project.Features)
