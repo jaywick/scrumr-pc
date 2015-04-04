@@ -21,6 +21,7 @@ namespace Scrumr.Client
         public event Action Updated;
 
         public Feature Feature { get; set; }
+        public Sprint Sprint { get; set; }
 
         private ScrumrContext Context { get; set; }
 
@@ -29,13 +30,15 @@ namespace Scrumr.Client
             InitializeComponent();
         }
 
-        public FeatureTicketsPanel(ScrumrContext context, Feature feature)
+        public FeatureTicketsPanel(ScrumrContext context, Feature feature, Sprint sprint)
             : this()
         {
             Context = context;
             Feature = feature;
+            Sprint = sprint;
 
             var orderedTickets = Feature.Tickets
+                .Where(MatchSprint)
                 .OrderBy(x => !x.IsBacklogged)
                 .ThenByDescending(x => x.State)
                 .ThenBy(x => x.ID);
@@ -52,9 +55,17 @@ namespace Scrumr.Client
                 LayoutRoot.Children.Add(ticketView);
             }
 
-            var addTile = new AddTicketTile(Feature, Feature.Project.LatestSprint);
+            var addTile = new AddTicketTile(Feature, sprint);
             addTile.Added += AddedTicket;
             LayoutRoot.Children.Add(addTile);
+        }
+
+        private bool MatchSprint(Ticket ticket)
+        {
+            if (Sprint == null)
+                return true;
+
+            return ticket.SprintId == Sprint.ID;
         }
 
         void FeaturePanel_ManipulationDelta(object sender, ManipulationDeltaEventArgs e)

@@ -14,11 +14,13 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Scrumr.Client.Views
+namespace Scrumr.Client
 {
     public partial class MainBoard : UserControl, IBoardView
     {
         public Database.ScrumrContext Context { get; set; }
+
+        private Sprint Sprint { get; set; }
 
         private Database.Project _project;
         public Database.Project Project
@@ -39,20 +41,47 @@ namespace Scrumr.Client.Views
         private void OpenProject(Project project)
         {
             Project = project;
-            tabMain.SelectedIndex = 1; //select features tab
+            tabMain.SelectedValue = FeatureTab;
         }
 
         public void Update()
         {
+            UpdateBreadcrumb();
+            UpdateProjects();
+            UpdateSprints();
+            UpdateFeatures();
+        }
+
+        private void UpdateBreadcrumb()
+        {
+            FeatureTab.Header = Project.Name + " > Features";
+        }
+
+        private void UpdateProjects()
+        {
             var projectPanel = new ProjectPanel(Context);
             projectPanel.RequestOpenProject += project => OpenProject(project);
             controlProjectPanel.Content = projectPanel;
+        }
 
-            stackFeatureTickets.Children.Clear();
+        private void UpdateSprints()
+        {
+            tabSprints.Items.Clear();
+
+            tabSprints.Items.Add(SprintTab.AllSprints); // all
+            foreach (var sprint in Project.Sprints)
+            {
+                tabSprints.Items.Add(new SprintTab(sprint));
+            }
+        }
+
+        private void UpdateFeatures()
+        {
+            featureTicketsStack.Children.Clear();
 
             foreach (var feature in Project.Features)
             {
-                var featurePanel = new FeatureTicketsPanel(Context, feature);
+                var featurePanel = new FeatureTicketsPanel(Context, feature, Sprint);
                 var featureHeader = CreateFeatureHeader(feature);
 
                 featurePanel.Updated += () => Update();
@@ -60,8 +89,8 @@ namespace Scrumr.Client.Views
 
                 featureHeader.PreviewMouseDown += (s, e) => ToggleVisibility(featurePanel);
 
-                stackFeatureTickets.Children.Add(featureHeader);
-                stackFeatureTickets.Children.Add(featurePanel);
+                featureTicketsStack.Children.Add(featureHeader);
+                featureTicketsStack.Children.Add(featurePanel);
             }
         }
 
@@ -79,6 +108,15 @@ namespace Scrumr.Client.Views
                 FontSize = 16,
                 Foreground = Brushes.Black,
             };
+        }
+
+        private void tabSprints_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (e.AddedItems.IsNullOrEmpty())
+                return;
+
+            Sprint = e.AddedItems.Cast<SprintTab>().First().Sprint;
+            UpdateFeatures();
         }
     }
 }

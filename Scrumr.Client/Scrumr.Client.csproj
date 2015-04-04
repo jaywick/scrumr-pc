@@ -104,6 +104,7 @@
     <Compile Include="Views\Boards\Features\ProjectTile.xaml.cs">
       <DependentUpon>ProjectTile.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Boards\Features\SprintTab.cs" />
     <Compile Include="Views\Boards\IBoardView.cs" />
     <Compile Include="Views\Boards\Matrix\MatrixView.xaml.cs">
       <DependentUpon>MatrixView.xaml</DependentUpon>

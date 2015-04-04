@@ -36,6 +36,14 @@ namespace Scrumr.Client
             return target.GetData(typeof(T)) as T;
         }
 
+        public static bool IsNullOrEmpty(this System.Collections.ICollection target)
+        {
+            if (target == null)
+                return true;
+
+            return target.Count == 0;
+        }
+
         public static void FadeIn(this UIElement targetControl, Double seconds = 1.5, Action callback = null, double delay = 0.0)
         {
             // make target visible if not already

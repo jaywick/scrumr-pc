@@ -31,7 +31,7 @@ namespace Scrumr.Client
         {
             InitializeComponent();
             this.Feature = feature;
-            this.Sprint = sprint;
+            this.Sprint = sprint ?? feature.Project.Backlog;
 
             this.PreviewMouseDown += AddButtonTileView_PreviewMouseDown;
             this.PreviewLostKeyboardFocus += (s,e) => Reset();
