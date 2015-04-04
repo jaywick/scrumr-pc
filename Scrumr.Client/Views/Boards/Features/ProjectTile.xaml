@@ -3,11 +3,14 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d">
     <Grid>
-        <Label Margin="8,4" x:Name="textContainer" BorderBrush="#009CCC" Background="#ff0097" BorderThickness="0 0 0 0" Height="84" Width="139" Padding="5" FontSize="12.5" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <TextBlock x:Name="labelName" TextWrapping="WrapWithOverflow" Padding="8,5" Text="test text" Foreground="White"/>
-        </Label>
+        <metro:Tile x:Name="tileProject" Width="300" Margin="8,4">
+            <Label x:Name="textContainer" FontSize="20" HorizontalContentAlignment="Right" VerticalContentAlignment="Bottom" Height="140" Width="300" >
+                <TextBlock x:Name="labelName" TextWrapping="WrapWithOverflow" Padding="8,5" Text="test text" Foreground="White"/>
+            </Label>
+        </metro:Tile>
     </Grid>
     
 </UserControl>

@@ -2,12 +2,15 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d">
     <Grid>
-        <Label Margin="8,4" x:Name="textContainer" BorderBrush="#009CCC" Background="#FF40B8D8" BorderThickness="0 0 0 0" Height="84" Width="139" Padding="5" FontSize="12.5" HorizontalAlignment="Left" VerticalAlignment="Top">
-            <TextBlock x:Name="labelName" TextWrapping="WrapWithOverflow" Padding="8,5" Text="test text" Foreground="White"/>
-        </Label>
+        <metro:Tile x:Name="tileTicket" Height="84" Width="139" Margin="8,4" BorderBrush="#009CCC" Background="#FF40B8D8" >
+            <Label Height="84" Width="139" FontSize="12.5">
+                <TextBlock x:Name="labelName" TextWrapping="WrapWithOverflow" Padding="8,5" Text="test text" Foreground="White"/>
+            </Label>
+        </metro:Tile>
     </Grid>
     
 </UserControl>

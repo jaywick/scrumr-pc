@@ -36,15 +36,15 @@ namespace Scrumr.Client
 
             if (ticket.State == TicketState.Closed)
             {
-                textContainer.Background = CreateBrush("#99b433");
+                tileTicket.Background = CreateBrush("#99b433");
             }
             else if (ticket.IsBacklogged)
             {
-                textContainer.Background = CreateBrush("#ffc40d");
+                tileTicket.Background = CreateBrush("#ffc40d");
             }
             else
             {
-                textContainer.Background = CreateBrush("#2d89ef");
+                tileTicket.Background = CreateBrush("#2d89ef");
             }
 
             ContextMenu = new ContextMenu();
@@ -58,10 +58,10 @@ namespace Scrumr.Client
             ContextMenu.Items.Add(ViewDirector.CreateMenuItem("Edit", () => RequestEdit(ticket)));
             ContextMenu.Items.Add(ViewDirector.CreateMenuItem("Remove", () => RequestRemove(ticket)));
 
-            PreviewMouseMove += UserControl_PreviewMouseMove;
-            PreviewMouseDoubleClick += (s, e) => RequestEdit(ticket);
+            tileTicket.Click += (s, e) => RequestEdit(ticket);
         }
 
+        [Obsolete]
         void UserControl_PreviewMouseMove(object sender, MouseEventArgs e)
         {
             if (e.LeftButton == MouseButtonState.Pressed)
