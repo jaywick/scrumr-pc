@@ -8,6 +8,6 @@ namespace Scrumr.Client
 {
     public interface ITicketView
     {
-        Database.Ticket Ticket { get; set; }
+        Database.Ticket Project { get; set; }
     }
 }

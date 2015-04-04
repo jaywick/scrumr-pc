@@ -34,11 +34,17 @@ namespace Scrumr.Client.Views
         public MainBoard()
         {
             InitializeComponent();
+            panelProject.RequestOpenProject += project => OpenProject(project);
+        }
+
+        private void OpenProject(Project project)
+        {
+            Project = project;
         }
 
         public void Update()
         {
-            RootItems.Children.Clear();
+            stackFeatureTickets.Children.Clear();
 
             foreach (var feature in Project.Features)
             {
@@ -50,8 +56,8 @@ namespace Scrumr.Client.Views
 
                 featureHeader.PreviewMouseDown += (s, e) => ToggleVisibility(featurePanel);
 
-                RootItems.Children.Add(featureHeader);
-                RootItems.Children.Add(featurePanel);
+                stackFeatureTickets.Children.Add(featureHeader);
+                stackFeatureTickets.Children.Add(featurePanel);
             }
         }
 

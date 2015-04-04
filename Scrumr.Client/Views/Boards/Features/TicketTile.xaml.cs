@@ -23,13 +23,13 @@ namespace Scrumr.Client
         public event Action<Ticket> RequestEdit;
         public event Action<Ticket> RequestRemove;
 
-        public Ticket Ticket { get; set; }
+        public Ticket Project { get; set; }
 
         public TicketTile(Ticket ticket)
         {
             InitializeComponent();
 
-            Ticket = ticket;
+            Project = ticket;
 
             labelName.Text = ticket.Name.ToString();
             labelName.Foreground = Brushes.White;
@@ -49,7 +49,7 @@ namespace Scrumr.Client
 
             ContextMenu = new ContextMenu();
 
-            if (Ticket.IsOpen)
+            if (Project.IsOpen)
                 ContextMenu.Items.Add(ViewDirector.CreateMenuItem("Close", () => RequestClose(ticket)));
             else
                 ContextMenu.Items.Add(ViewDirector.CreateMenuItem("Reopen", () => RequestReopen(ticket)));
@@ -68,7 +68,7 @@ namespace Scrumr.Client
             {
                 var ticketView = (ITicketView)sender;
                 var dependancyProperty = (DependencyObject)sender;
-                DragDrop.DoDragDrop(dependancyProperty, new DataObject(typeof(Ticket), ticketView.Ticket), DragDropEffects.Move);
+                DragDrop.DoDragDrop(dependancyProperty, new DataObject(typeof(Ticket), ticketView.Project), DragDropEffects.Move);
             }
         }
 

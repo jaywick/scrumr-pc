@@ -92,11 +92,17 @@
     <Compile Include="Views\Boards\Features\FeatureTicketsPanel.xaml.cs">
       <DependentUpon>FeatureTicketsPanel.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Boards\Features\ProjectPanel.xaml.cs">
+      <DependentUpon>ProjectPanel.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Boards\Features\MainBoard.xaml.cs">
       <DependentUpon>MainBoard.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Boards\Features\MenuFlyoutContent.xaml.cs">
       <DependentUpon>MenuFlyoutContent.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Boards\Features\ProjectTile.xaml.cs">
+      <DependentUpon>ProjectTile.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Boards\IBoardView.cs" />
     <Compile Include="Views\Boards\Matrix\MatrixView.xaml.cs">
@@ -132,6 +138,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Boards\Features\ProjectPanel.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\Boards\Features\FeatureTicketsPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -143,6 +153,10 @@
     <Page Include="Views\Boards\Features\MenuFlyoutContent.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Boards\Features\ProjectTile.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Views\Boards\Matrix\MatrixView.xaml">
       <SubType>Designer</SubType>
