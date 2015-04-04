@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 
 namespace Scrumr.Client.Views
 {
-    public partial class FeatureView : UserControl, IBoardView
+    public partial class MainBoard : UserControl, IBoardView
     {
         public Database.ScrumrContext Context { get; set; }
 
@@ -31,7 +31,7 @@ namespace Scrumr.Client.Views
             }
         }
 
-        public FeatureView()
+        public MainBoard()
         {
             InitializeComponent();
         }
@@ -42,7 +42,7 @@ namespace Scrumr.Client.Views
 
             foreach (var feature in Project.Features)
             {
-                var featurePanel = new FeaturePanel(Context, feature);
+                var featurePanel = new FeatureTicketsPanel(Context, feature);
                 var featureHeader = CreateFeatureHeader(feature);
 
                 featurePanel.Updated += () => Update();
@@ -55,7 +55,7 @@ namespace Scrumr.Client.Views
             }
         }
 
-        private void ToggleVisibility(FeaturePanel featurePanel)
+        private void ToggleVisibility(FeatureTicketsPanel featurePanel)
         {
             featurePanel.Feature.IsMinimised = !featurePanel.Feature.IsMinimised;
             featurePanel.SetVisiblity(!featurePanel.Feature.IsMinimised);

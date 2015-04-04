@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 
 namespace Scrumr.Client
 {
-    partial class TileTicketView : UserControl, ITicketView
+    partial class TicketTile : UserControl, ITicketView
     {
         public event Action<Ticket> RequestClose;
         public event Action<Ticket> RequestReopen;
@@ -25,7 +25,7 @@ namespace Scrumr.Client
 
         public Ticket Ticket { get; set; }
 
-        public TileTicketView(Ticket ticket)
+        public TicketTile(Ticket ticket)
         {
             InitializeComponent();
 

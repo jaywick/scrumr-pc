@@ -16,7 +16,7 @@ using System.Windows.Shapes;
 
 namespace Scrumr.Client
 {
-    public partial class FeaturePanel : UserControl
+    public partial class FeatureTicketsPanel : UserControl
     {
         public event Action Updated;
 
@@ -24,12 +24,12 @@ namespace Scrumr.Client
 
         private ScrumrContext Context { get; set; }
 
-        public FeaturePanel()
+        public FeatureTicketsPanel()
         {
             InitializeComponent();
         }
 
-        public FeaturePanel(ScrumrContext context, Feature feature)
+        public FeatureTicketsPanel(ScrumrContext context, Feature feature)
             : this()
         {
             Context = context;
@@ -42,7 +42,7 @@ namespace Scrumr.Client
 
             foreach (var ticket in orderedTickets)
             {
-                var ticketView = new TileTicketView(ticket);
+                var ticketView = new TicketTile(ticket);
 
                 ticketView.RequestClose += (t) => CloseTicket(t as Ticket);
                 ticketView.RequestReopen += (t) => OpenTicket(t as Ticket);
@@ -52,7 +52,7 @@ namespace Scrumr.Client
                 LayoutRoot.Children.Add(ticketView);
             }
 
-            var addTile = new AddButtonTileView(Feature, Feature.Project.LatestSprint);
+            var addTile = new AddTicketTile(Feature, Feature.Project.LatestSprint);
             addTile.Added += AddedTicket;
             LayoutRoot.Children.Add(addTile);
         }
@@ -75,7 +75,7 @@ namespace Scrumr.Client
 
         private void ResizeTickets(double factor)
         {
-            foreach (var ticketView in LayoutRoot.Children.OfType<TileTicketView>())
+            foreach (var ticketView in LayoutRoot.Children.OfType<TicketTile>())
             {
                 ticketView.Width = factor * 139;
                 ticketView.Height = factor * 84;

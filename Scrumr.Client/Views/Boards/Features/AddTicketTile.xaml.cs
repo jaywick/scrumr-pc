@@ -18,7 +18,7 @@ using System.Diagnostics;
 
 namespace Scrumr.Client
 {
-    partial class AddButtonTileView : UserControl
+    partial class AddTicketTile : UserControl
     {
         public event Action<Ticket> Added;
 
@@ -27,7 +27,7 @@ namespace Scrumr.Client
 
         private Process _oskProcess;
 
-        public AddButtonTileView(Feature feature, Sprint sprint)
+        public AddTicketTile(Feature feature, Sprint sprint)
         {
             InitializeComponent();
             this.Feature = feature;
