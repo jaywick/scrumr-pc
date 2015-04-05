@@ -30,7 +30,7 @@ namespace Scrumr.Client
 
             Project = project;
 
-            labelName.Text = project.Name.ToString();
+            labelName.Text = project.Name;
             labelName.Foreground = Brushes.White;
 
             ContextMenu = new ContextMenu();

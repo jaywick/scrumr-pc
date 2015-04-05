@@ -5,8 +5,8 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d">
     <Grid Margin="8,4" Height="84" Width="139" >
-        <TextBox x:Name="TicketSummary" FontSize="12.5" Visibility="Collapsed" TextWrapping="Wrap"/>
-        <Label x:Name="AddIconLabel" BorderBrush="#FFB9B9B9" Background="White" BorderThickness="0.5" FontSize="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#FFD1D1D1" Visibility="Visible" >
+        <TextBox x:Name="TicketSummary" FontSize="12.5" Background="#ecf0f1" Visibility="Collapsed" TextWrapping="Wrap"/>
+        <Label x:Name="AddIconLabel" BorderBrush="#34495e" Background="#ecf0f1" BorderThickness="0.5" FontSize="40" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Foreground="#7734495e" Visibility="Visible" >
             +
         </Label>
     </Grid>

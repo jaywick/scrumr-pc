@@ -6,7 +6,7 @@
              xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
              mc:Ignorable="d">
     <Grid>
-        <metro:Tile x:Name="tileProject" Width="300" Margin="8,4">
+        <metro:Tile x:Name="tileProject" Width="300" Margin="8,4" Background="#34495e">
             <Label x:Name="textContainer" FontSize="20" HorizontalContentAlignment="Right" VerticalContentAlignment="Bottom" Height="140" Width="300" >
                 <TextBlock x:Name="labelName" TextWrapping="WrapWithOverflow" Padding="8,5" Text="test text" Foreground="White"/>
             </Label>

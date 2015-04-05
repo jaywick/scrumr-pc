@@ -35,17 +35,13 @@ namespace Scrumr.Client
             labelName.Foreground = Brushes.White;
 
             if (ticket.State == TicketState.Closed)
-            {
-                tileTicket.Background = CreateBrush("#99b433");
-            }
+                tileTicket.Background = CreateBrush("#27ae60");
             else if (ticket.IsBacklogged)
-            {
-                tileTicket.Background = CreateBrush("#ffc40d");
-            }
+                tileTicket.Background = CreateBrush("#7f8c8d");
+            else if (ticket.Type == TicketType.Bug)
+                tileTicket.Background = CreateBrush("#e74c3c");
             else
-            {
-                tileTicket.Background = CreateBrush("#2d89ef");
-            }
+                tileTicket.Background = CreateBrush("#3498db");
 
             ContextMenu = new ContextMenu();
 
