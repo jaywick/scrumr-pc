@@ -65,32 +65,19 @@ namespace Scrumr.Client
 
         private void LoadCommands()
         {
-            MenuButton.Click += (s, e) => FlyoutMenu(!MenuFlyout.IsOpen); ;
+            MenuButton.Click += (s, e) => MenuFlyout.IsOpen = !MenuFlyout.IsOpen;
 
-            MenuFlyoutContent.RequestEditProject += () => { FlyoutMenu(false); EditProject(); };
-            MenuFlyoutContent.RequestChooseFile += async () => { FlyoutMenu(false); await ChooseFileAsync(); };
-            MenuFlyoutContent.RequestCreateFile += async () => { FlyoutMenu(false); await CreateFileAsync(); };
-            MenuFlyoutContent.RequestNewTicket += () => { FlyoutMenu(false); NewTicket(); };
-            MenuFlyoutContent.RequestNewFeature += () => { FlyoutMenu(false); NewFeature(); };
-            MenuFlyoutContent.RequestNewSprint += () => { FlyoutMenu(false); NewSprint(); };
+            MenuFlyoutContent.RequestEditProject += () => { MenuFlyout.IsOpen = false; EditProject(); };
+            MenuFlyoutContent.RequestChooseFile += async () => { MenuFlyout.IsOpen = false; await ChooseFileAsync(); };
+            MenuFlyoutContent.RequestCreateFile += async () => { MenuFlyout.IsOpen = false; await CreateFileAsync(); };
+            MenuFlyoutContent.RequestNewTicket += () => { MenuFlyout.IsOpen = false; NewTicket(); };
+            MenuFlyoutContent.RequestNewFeature += () => { MenuFlyout.IsOpen = false; NewFeature(); };
+            MenuFlyoutContent.RequestNewSprint += () => { MenuFlyout.IsOpen = false; NewSprint(); };
             MenuFlyoutContent.RequestNewProject += () => NewProject();
-            MenuFlyoutContent.ProjectSelected += (p) => { FlyoutMenu(false); SwitchProject(p); };
+            MenuFlyoutContent.RequestShowHideClosedTickets += () => { MenuFlyout.IsOpen = false; ToggleClosedTicketsDisplay(); };
+            MenuFlyoutContent.ProjectSelected += (p) => { MenuFlyout.IsOpen = false; SwitchProject(p); };
 
             MenuFlyoutContent.Load(Board.Context);
-        }
-
-        private void FlyoutMenu(bool isVisible)
-        {
-            if (isVisible)
-            {
-                MenuFlyout.IsOpen = true;
-                FlyoutOverlay.FadeIn(0.5);
-            }
-            else
-            {
-                MenuFlyout.IsOpen = false;
-                FlyoutOverlay.FadeOut(0.5);
-            }
         }
 
         private async Task LoadAsync()
@@ -133,6 +120,7 @@ namespace Scrumr.Client
                     return;
                 }
 
+                Board.ShowClosedTickets = Boolean.Parse(App.Preferences[Preferences.ShowClosedTickets, "true"]);
                 Board.Project = GetDefaultProject();
                 MenuFlyoutContent.SelectProject(Board.Project);
                 Board.Update();
@@ -159,6 +147,13 @@ namespace Scrumr.Client
         {
             Board.Project = project;
             App.Preferences[Preferences.DefaultProjectKey] = project.Name;
+        }
+
+        private void ToggleClosedTicketsDisplay()
+        {
+            Board.ShowClosedTickets = !Board.ShowClosedTickets;
+            App.Preferences[Preferences.ShowClosedTickets] = Board.ShowClosedTickets.ToString();
+            Board.Update();
         }
 
         private void EditProject()
@@ -318,9 +313,17 @@ namespace Scrumr.Client
             MenuFlyoutContent.SelectProject(project);
         }
 
-        private void CloseFlyout(object sender, MouseButtonEventArgs e)
+        private void MenuFlyout_IsOpenChanged(object sender, RoutedEventArgs e)
         {
-            FlyoutMenu(false);
+            if (MenuFlyout.IsOpen)
+                FlyoutOverlay.FadeIn(0.5);
+            else
+                FlyoutOverlay.FadeOut(0.5);
+        }
+
+        private void FlyoutOverlay_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MenuFlyout.IsOpen = false;
         }
     }
 }

@@ -20,6 +20,8 @@ namespace Scrumr.Client
     {
         public ScrumrContext Context { get; set; }
 
+        public bool ShowClosedTickets { get; set; }
+
         public Func<Sprint, bool> SprintFilter { get; set; }
         public Func<Feature, bool> FeatureFilter { get; set; }
         public Func<Ticket, bool> TicketFilter { get; set; }

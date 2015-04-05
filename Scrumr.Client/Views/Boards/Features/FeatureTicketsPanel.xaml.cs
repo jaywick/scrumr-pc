@@ -30,7 +30,7 @@ namespace Scrumr.Client
             InitializeComponent();
         }
 
-        public FeatureTicketsPanel(ScrumrContext context, Feature feature, Sprint sprint)
+        public FeatureTicketsPanel(ScrumrContext context, Feature feature, Sprint sprint, bool showClosedTickets)
             : this()
         {
             Context = context;
@@ -45,6 +45,9 @@ namespace Scrumr.Client
 
             foreach (var ticket in orderedTickets)
             {
+                if (ticket.State == TicketState.Closed)
+                    continue;
+
                 var ticketView = new TicketTile(ticket);
 
                 ticketView.RequestClose += (t) => CloseTicket(t as Ticket);

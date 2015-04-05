@@ -11,6 +11,8 @@ namespace Scrumr.Client
     {
         void Update();
 
+        bool ShowClosedTickets { get; set; }
+
         ScrumrContext Context { get; set; }
         Project Project { get; set; }
     }

@@ -20,6 +20,8 @@ namespace Scrumr.Client
     {
         public Database.ScrumrContext Context { get; set; }
 
+        public bool ShowClosedTickets { get; set; }
+
         private Sprint Sprint { get; set; }
 
         private Database.Project _project;
@@ -81,7 +83,7 @@ namespace Scrumr.Client
 
             foreach (var feature in Project.Features)
             {
-                var featurePanel = new FeatureTicketsPanel(Context, feature, Sprint);
+                var featurePanel = new FeatureTicketsPanel(Context, feature, Sprint, ShowClosedTickets);
                 var featureHeader = CreateFeatureHeader(feature);
 
                 featurePanel.Updated += () => Update();

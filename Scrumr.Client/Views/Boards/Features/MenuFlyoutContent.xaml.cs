@@ -28,6 +28,7 @@ namespace Scrumr.Client
         public event Action RequestNewFeature;
         public event Action RequestNewSprint;
         public event Action RequestNewProject;
+        public event Action RequestShowHideClosedTickets;
 
         private ContextMenu _addMenu;
         private ContextMenu _projectsList;
@@ -58,6 +59,7 @@ namespace Scrumr.Client
             _projectsList.Items.Add(ViewDirector.CreateMenuItem("Configure project", () => RequestEditProject()));
             _projectsList.Items.Add(ViewDirector.CreateMenuItem("Choose database", () => RequestChooseFile()));
             _projectsList.Items.Add(ViewDirector.CreateMenuItem("Create new database", () => RequestCreateFile()));
+            _projectsList.Items.Add(ViewDirector.CreateMenuItem("Show/Hide closed tickets", () => RequestShowHideClosedTickets()));
 
             ManageProjectsButton.Click += (s, e) => _projectsList.IsOpen = true;
             _projectsList.Placement = System.Windows.Controls.Primitives.PlacementMode.Right;

@@ -9,8 +9,8 @@
 
     <metro:MetroWindow.Flyouts>
         <metro:FlyoutsControl>
-            <metro:Flyout Name="MenuFlyout" Header="Menu">
-                <local:MenuFlyoutContent x:Name="MenuFlyoutContent"/>
+            <metro:Flyout Name="MenuFlyout" Header="Menu" IsOpenChanged="MenuFlyout_IsOpenChanged" >
+                <local:MenuFlyoutContent x:Name="MenuFlyoutContent" />
             </metro:Flyout>
         </metro:FlyoutsControl>
     </metro:MetroWindow.Flyouts>
@@ -39,6 +39,6 @@
         <local:BlankView    Grid.Row="1" x:Name="BlankPanel" Visibility="Visible" RequestOpen="ChooseFile" RequestNew="CreateFile" />
         <metro:ProgressRing Grid.Row="1" x:Name="ProgressBusy" IsActive="False" />
         
-        <Grid               Grid.RowSpan="2" x:Name="FlyoutOverlay" Visibility="Collapsed" MouseDown="CloseFlyout" Background="#66000000"/>
+        <Grid               Grid.RowSpan="2" x:Name="FlyoutOverlay" Visibility="Collapsed" MouseDown="FlyoutOverlay_MouseDown" Background="#66000000"/>
     </Grid>
 </metro:MetroWindow >
