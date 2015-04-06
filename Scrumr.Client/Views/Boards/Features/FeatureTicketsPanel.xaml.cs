@@ -18,7 +18,7 @@ namespace Scrumr.Client
 {
     public partial class FeatureTicketsPanel : UserControl
     {
-        public event Action Updated;
+        public event Action<Entity> Updated;
 
         public Feature Feature { get; set; }
         public Sprint Sprint { get; set; }
@@ -99,25 +99,25 @@ namespace Scrumr.Client
         private void OpenTicket(Ticket ticket)
         {
             ticket.Open();
-            Updated();
+            Updated(ticket);
         }
 
         private void CloseTicket(Ticket ticket)
         {
             ticket.Close();
-            Updated();
+            Updated(ticket);
         }
 
         private void EditTicket(Ticket ticket)
         {
             ViewDirector.EditTicket(ticket, Context);
-            Updated();
+            Updated(ticket);
         }
 
         private async Task RemoveEntity<T>(T entity) where T : Entity
         {
             await ViewDirector.RemoveEntity(entity, Context);
-            Updated();
+            Updated(null);
         }
 
         public async void AddedTicket(Ticket ticket)
@@ -125,7 +125,7 @@ namespace Scrumr.Client
             Context.Tickets.Insert(ticket);
             await Context.SaveChangesAsync();
 
-            Updated();
+            Updated(ticket);
         }
 
         public void SetVisiblity(bool isVisible)

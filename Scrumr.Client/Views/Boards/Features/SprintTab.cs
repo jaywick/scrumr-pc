@@ -26,5 +26,23 @@ namespace Scrumr.Client
         {
             get { return Sprint.IfNotNull(x => x.Name) ?? "All"; }
         }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as SprintTab;
+
+            if (other == null)
+                return false;
+
+            return this.GetHashCode() == other.GetHashCode();
+        }
+
+        public override int GetHashCode()
+        {
+            if (Sprint == null)
+                return base.GetHashCode();
+
+            return Sprint.ID;
+        }
     }
 }

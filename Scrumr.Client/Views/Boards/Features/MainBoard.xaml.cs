@@ -24,6 +24,8 @@ namespace Scrumr.Client
 
         private Sprint Sprint { get; set; }
 
+        private Entity LastUpdatedEntity { get; set; }
+
         private Database.Project _project;
         public Database.Project Project
         {
@@ -31,7 +33,7 @@ namespace Scrumr.Client
             set
             {
                 _project = value;
-                Update();
+                Update(value);
             }
         }
 
@@ -46,12 +48,20 @@ namespace Scrumr.Client
             tabMain.SelectedValue = FeatureTab;
         }
 
-        public void Update()
+        public void Update(Entity entity)
         {
+            LastUpdatedEntity = entity;
+
             UpdateBreadcrumb();
             UpdateProjects();
             UpdateSprints();
             UpdateFeatures();
+
+            if (LastUpdatedEntity != null && LastUpdatedEntity is Ticket)
+            {
+                var ticket = (Ticket)LastUpdatedEntity;
+                tabSprints.SelectedItem = new SprintTab(ticket.Sprint);
+            }
         }
 
         private void UpdateBreadcrumb()
@@ -86,7 +96,7 @@ namespace Scrumr.Client
                 var featurePanel = new FeatureTicketsPanel(Context, feature, Sprint, ShowClosedTickets);
                 var featureHeader = CreateFeatureHeader(feature);
 
-                featurePanel.Updated += () => Update();
+                featurePanel.Updated += entity => Update(entity);
                 featurePanel.SetVisiblity(!feature.IsMinimised);
 
                 featureHeader.PreviewMouseDown += (s, e) => ToggleVisibility(featurePanel);

@@ -58,7 +58,7 @@ namespace Scrumr.Client
             InitializeComponent();
         }
 
-        public void Update()
+        public void Update(Entity entity = null)
         {
             if (Project == null) throw new InvalidOperationException("Project is missing");
             if (Context == null) throw new InvalidOperationException("Context is missing");

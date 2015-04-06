@@ -9,7 +9,7 @@ namespace Scrumr.Client
 {
     public interface IBoardView
     {
-        void Update();
+        void Update(Entity entity = null);
 
         bool ShowClosedTickets { get; set; }
 
