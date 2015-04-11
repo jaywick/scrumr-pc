@@ -111,12 +111,14 @@ namespace Scrumr.Database
             await SaveChangesAsync();
         }
 
-        public async Task AddNewTicket(Ticket ticket)
+        public async Task<Ticket> AddNewTicket(Ticket ticket)
         {
             ticket.ProjectTicketId = ticket.Project.NextProjectTicketId++;
 
             Tickets.Insert(ticket);
             await SaveChangesAsync();
+
+            return ticket;
         }
 
         public async Task DeleteProject(Project project)

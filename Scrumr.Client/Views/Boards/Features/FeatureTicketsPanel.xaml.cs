@@ -122,9 +122,7 @@ namespace Scrumr.Client
 
         public async void AddedTicket(Ticket ticket)
         {
-            Context.Tickets.Insert(ticket);
-            await Context.SaveChangesAsync();
-
+            await Context.AddNewTicket(ticket);
             Updated(ticket);
         }
 
