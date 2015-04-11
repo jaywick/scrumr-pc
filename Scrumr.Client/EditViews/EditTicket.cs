@@ -23,12 +23,16 @@ namespace Scrumr.Client
         public EditTicket(ScrumrContext context, Ticket entity = null, PropertyBag properties = null)
             : base(context, entity)
         {
-            _projectId = properties.GetValue<int>("projectId")
-                ?? (entity as Ticket)
-                    .IfNotNull(x => x.Sprint)
-                    .IfNotNull(x => (int?)x.ProjectId);
             _sprintId = properties.GetValue<int>("sprintId");
             _featureId = properties.GetValue<int>("featureId");
+
+            if (!_sprintId.HasValue && !_featureId.HasValue)
+            {
+                _projectId = properties.GetValue<int>("projectId")
+                    ?? (entity as Ticket)
+                        .IfNotNull(x => x.Sprint)
+                        .IfNotNull(x => (int?)x.ProjectId);
+            }
 
             LoadViews();
             LoadSources();
