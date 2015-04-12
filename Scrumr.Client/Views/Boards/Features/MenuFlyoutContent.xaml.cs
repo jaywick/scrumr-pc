@@ -20,7 +20,6 @@ namespace Scrumr.Client
     {
         private bool _lockProjectSelection = false;
 
-        public event Action<Project> ProjectSelected;
         public event Action RequestEditProject;
         public event Action RequestChooseFile;
         public event Action RequestCreateFile;
@@ -29,16 +28,16 @@ namespace Scrumr.Client
         public event Action RequestNewSprint;
         public event Action RequestNewProject;
         public event Action RequestShowHideClosedTickets;
+        public event Action RequestShowHideEmptyFeatures;
 
         private ContextMenu _addMenu;
-        private ContextMenu _projectsList;
+        private ContextMenu _manageProject;
 
         private ScrumrContext Context { get; set; }
 
         public MenuFlyoutContent()
         {
             InitializeComponent();
-            ProjectsList.Items.Clear();
         }
 
         public void Load(ScrumrContext context)
@@ -55,53 +54,16 @@ namespace Scrumr.Client
             _addMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Right;
             _addMenu.PlacementTarget = AddButton;
 
-            _projectsList = new ContextMenu();
-            _projectsList.Items.Add(ViewDirector.CreateMenuItem("Configure project", () => RequestEditProject()));
-            _projectsList.Items.Add(ViewDirector.CreateMenuItem("Choose database", () => RequestChooseFile()));
-            _projectsList.Items.Add(ViewDirector.CreateMenuItem("Create new database", () => RequestCreateFile()));
-            _projectsList.Items.Add(ViewDirector.CreateMenuItem("Show/Hide closed tickets", () => RequestShowHideClosedTickets()));
+            _manageProject = new ContextMenu();
+            _manageProject.Items.Add(ViewDirector.CreateMenuItem("Configure project", () => RequestEditProject()));
+            _manageProject.Items.Add(ViewDirector.CreateMenuItem("Choose database", () => RequestChooseFile()));
+            _manageProject.Items.Add(ViewDirector.CreateMenuItem("Create new database", () => RequestCreateFile()));
+            _manageProject.Items.Add(ViewDirector.CreateMenuItem("Show/Hide closed tickets", () => RequestShowHideClosedTickets()));
+            _manageProject.Items.Add(ViewDirector.CreateMenuItem("Show/Hide empty features", () => RequestShowHideEmptyFeatures()));
 
-            ManageProjectsButton.Click += (s, e) => _projectsList.IsOpen = true;
-            _projectsList.Placement = System.Windows.Controls.Primitives.PlacementMode.Right;
-            _projectsList.PlacementTarget = ManageProjectsButton;
-        }
-
-        public void SelectProject(Project project)
-        {
-            ProjectsList.SelectedItem = project;
-        }
-
-        private void OnProjectSelected(object s, SelectionChangedEventArgs e)
-        {
-            if (_lockProjectSelection)
-                return;
-
-            if (e.AddedItems.Count == 0)
-                return;
-
-            Project selectedProject;
-
-            if (e.AddedItems.Count > 0)
-                selectedProject = e.AddedItems[e.AddedItems.Count - 1] as Project;
-            else
-                selectedProject = e.AddedItems[0] as Project;
-
-            if (selectedProject == null)
-                return;
-
-            ProjectSelected(selectedProject);
-        }
-
-        public void Update()
-        {
-            _lockProjectSelection = true;
-
-            ProjectsList.Items.Clear();
-
-            foreach (var item in Context.Projects)
-                ProjectsList.Items.Add(item);
-
-            _lockProjectSelection = false;
+            ManageProjectsButton.Click += (s, e) => _manageProject.IsOpen = true;
+            _manageProject.Placement = System.Windows.Controls.Primitives.PlacementMode.Right;
+            _manageProject.PlacementTarget = ManageProjectsButton;
         }
     }
 }

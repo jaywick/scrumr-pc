@@ -12,6 +12,7 @@ namespace Scrumr.Client
         void Update(Entity entity = null);
 
         bool ShowClosedTickets { get; set; }
+        bool ShowEmptyFeatures { get; set; }
 
         ScrumrContext Context { get; set; }
         Project Project { get; set; }

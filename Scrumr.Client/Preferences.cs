@@ -14,6 +14,7 @@ namespace Scrumr.Client
         public const string SourceFileKey = "Source File";
         public const string DefaultProjectKey = "Default Project";
         public const string ShowClosedTickets = "Show Closed Tickets";
+        public const string ShowEmptyFeatures = "Show Empty Features";
 
         public string this[string key]
         {
@@ -28,7 +29,7 @@ namespace Scrumr.Client
                 if (String.IsNullOrWhiteSpace(key))
                     return defaultValue;
 
-                return defaultValue;
+                return GetValue(key);
             }
         }
 

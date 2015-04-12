@@ -75,7 +75,7 @@ namespace Scrumr.Client
             MenuFlyoutContent.RequestNewSprint += () => { MenuFlyout.IsOpen = false; NewSprint(); };
             MenuFlyoutContent.RequestNewProject += () => NewProject();
             MenuFlyoutContent.RequestShowHideClosedTickets += () => { MenuFlyout.IsOpen = false; ToggleClosedTicketsDisplay(); };
-            MenuFlyoutContent.ProjectSelected += (p) => { MenuFlyout.IsOpen = false; SwitchProject(p); };
+            MenuFlyoutContent.RequestShowHideEmptyFeatures += () => { MenuFlyout.IsOpen = false; ToggleEmptyFeaturesDisplay(); };
 
             MenuFlyoutContent.Load(Board.Context);
         }
@@ -120,15 +120,13 @@ namespace Scrumr.Client
                     return;
                 }
 
-                Board.ShowClosedTickets = Boolean.Parse(App.Preferences[Preferences.ShowClosedTickets, "true"]);
+                Board.ShowClosedTickets = Boolean.Parse(App.Preferences[Preferences.ShowClosedTickets, "True"]);
+                Board.ShowEmptyFeatures = Boolean.Parse(App.Preferences[Preferences.ShowEmptyFeatures, "True"]);
                 Board.Project = GetDefaultProject();
-                MenuFlyoutContent.SelectProject(Board.Project);
                 Board.Update();
 
                 LoadCommands();
                 LoadShortcuts();
-
-                MenuFlyoutContent.Update();
             }
         }
 
@@ -156,15 +154,19 @@ namespace Scrumr.Client
             Board.Update();
         }
 
+        private void ToggleEmptyFeaturesDisplay()
+        {
+            Board.ShowEmptyFeatures = !Board.ShowEmptyFeatures;
+            App.Preferences[Preferences.ShowEmptyFeatures] = Board.ShowEmptyFeatures.ToString();
+            Board.Update();
+        }
+
         private void EditProject()
         {
             ViewDirector.EditEntity(Board.Project, Board.Context);
 
             if (Board.Project == null)
                 return;
-
-            MenuFlyoutContent.Update();
-            MenuFlyoutContent.SelectProject(Board.Context.Projects.FirstOrDefault());
         }
 
         private async void ChooseFile()
@@ -308,9 +310,6 @@ namespace Scrumr.Client
 
             if (project == null)
                 return;
-
-            MenuFlyoutContent.Update();
-            MenuFlyoutContent.SelectProject(project);
         }
 
         private void MenuFlyout_IsOpenChanged(object sender, RoutedEventArgs e)

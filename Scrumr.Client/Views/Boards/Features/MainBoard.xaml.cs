@@ -21,6 +21,7 @@ namespace Scrumr.Client
         public Database.ScrumrContext Context { get; set; }
 
         public bool ShowClosedTickets { get; set; }
+        public bool ShowEmptyFeatures { get; set; }
 
         private Sprint Sprint { get; set; }
 
@@ -94,6 +95,10 @@ namespace Scrumr.Client
             foreach (var feature in Project.Features)
             {
                 var featurePanel = new FeatureTicketsPanel(Context, feature, Sprint, ShowClosedTickets);
+
+                if (!ShowEmptyFeatures && featurePanel.IsEmpty)
+                    continue;
+
                 var featureHeader = CreateFeatureHeader(feature);
 
                 featurePanel.Updated += entity => Update(entity);

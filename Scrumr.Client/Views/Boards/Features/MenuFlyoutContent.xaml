@@ -8,15 +8,6 @@
     <Grid>
         <StackPanel Width="350" Orientation="Vertical">
             <Button x:Name="AddButton" Content="ADD" Padding="10,20" FontSize="15" BorderBrush="Transparent" Background="Transparent"/>
-            <Separator Margin="10 20" Opacity="0.1"/>
-            <ListBox x:Name="ProjectsList" FontSize="15" FontWeight="Bold" BorderBrush="Transparent" Background="Transparent" SelectionChanged="OnProjectSelected">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding Name}" Padding="20, 10"/>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
-            <Separator Margin="10 20" Opacity="0.1"/>
             <Button x:Name="ManageProjectsButton" Content="MANAGE" Padding="10,20" FontSize="15" BorderBrush="Transparent" Background="Transparent"/>
         </StackPanel>
     </Grid>

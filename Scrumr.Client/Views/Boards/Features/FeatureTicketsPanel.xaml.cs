@@ -23,6 +23,8 @@ namespace Scrumr.Client
         public Feature Feature { get; set; }
         public Sprint Sprint { get; set; }
 
+        public bool IsEmpty { get; private set; }
+
         private ScrumrContext Context { get; set; }
 
         public FeatureTicketsPanel()
@@ -43,9 +45,11 @@ namespace Scrumr.Client
                 .ThenByDescending(x => x.State)
                 .ThenBy(x => x.ID);
 
+            IsEmpty = !orderedTickets.Any();
+
             foreach (var ticket in orderedTickets)
             {
-                if (ticket.State == TicketState.Closed)
+                if (!showClosedTickets && ticket.State == TicketState.Closed)
                     continue;
 
                 var ticketView = new TicketTile(ticket);
