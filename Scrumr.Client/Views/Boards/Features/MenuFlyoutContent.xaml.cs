@@ -30,9 +30,6 @@ namespace Scrumr.Client
         public event Action RequestShowHideClosedTickets;
         public event Action RequestShowHideEmptyFeatures;
 
-        private ContextMenu _addMenu;
-        private ContextMenu _manageProject;
-
         private ScrumrContext Context { get; set; }
 
         public MenuFlyoutContent()
@@ -44,26 +41,18 @@ namespace Scrumr.Client
         {
             Context = context;
 
-            _addMenu = new ContextMenu();
-            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Ticket", () => RequestNewTicket()));
-            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Feature", () => RequestNewFeature()));
-            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Sprint", () => RequestNewSprint()));
-            _addMenu.Items.Add(ViewDirector.CreateMenuItem("Project", () => RequestNewProject()));
+            AddTicket.Click += (s, e) => RequestNewTicket();
+            AddSprint.Click += (s, e) => RequestNewFeature();
+            AddFeature.Click += (s, e) => RequestNewSprint();
+            AddProject.Click += (s, e) => RequestNewProject();
 
-            AddButton.Click += (s, e) => _addMenu.IsOpen = true;
-            _addMenu.Placement = System.Windows.Controls.Primitives.PlacementMode.Right;
-            _addMenu.PlacementTarget = AddButton;
+            EditProject.Click += (s, e) => RequestEditProject();
 
-            _manageProject = new ContextMenu();
-            _manageProject.Items.Add(ViewDirector.CreateMenuItem("Configure project", () => RequestEditProject()));
-            _manageProject.Items.Add(ViewDirector.CreateMenuItem("Choose database", () => RequestChooseFile()));
-            _manageProject.Items.Add(ViewDirector.CreateMenuItem("Create new database", () => RequestCreateFile()));
-            _manageProject.Items.Add(ViewDirector.CreateMenuItem("Show/Hide closed tickets", () => RequestShowHideClosedTickets()));
-            _manageProject.Items.Add(ViewDirector.CreateMenuItem("Show/Hide empty features", () => RequestShowHideEmptyFeatures()));
+            LoadDatabase.Click += (s, e) => RequestChooseFile();
+            NewDatabase.Click += (s, e) => RequestCreateFile();
 
-            ManageProjectsButton.Click += (s, e) => _manageProject.IsOpen = true;
-            _manageProject.Placement = System.Windows.Controls.Primitives.PlacementMode.Right;
-            _manageProject.PlacementTarget = ManageProjectsButton;
+            ShowHideClosedTickets.Click += (s, e) => RequestShowHideClosedTickets();
+            ShowHideEmptyFeatures.Click += (s, e) => RequestShowHideEmptyFeatures();
         }
     }
 }

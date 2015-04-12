@@ -7,8 +7,18 @@
              d:DesignHeight="500">
     <Grid>
         <StackPanel Width="350" Orientation="Vertical">
-            <Button x:Name="AddButton" Content="ADD" Padding="10,20" FontSize="15" BorderBrush="Transparent" Background="Transparent"/>
-            <Button x:Name="ManageProjectsButton" Content="MANAGE" Padding="10,20" FontSize="15" BorderBrush="Transparent" Background="Transparent"/>
+            <Button x:Name="AddTicket" Content="Add Ticket" Padding="10,20" FontSize="15" BorderBrush="Transparent" Background="Transparent"/>
+            <Button x:Name="AddSprint" Content="Add Sprint" Padding="10,20" FontSize="15" BorderBrush="Transparent" Background="Transparent"/>
+            <Button x:Name="AddFeature" Content="Add Feature" Padding="10,20" FontSize="15" BorderBrush="Transparent" Background="Transparent"/>
+            <Button x:Name="AddProject" Content="Add Project" Padding="10,20" FontSize="15" BorderBrush="Transparent" Background="Transparent"/>
+            <Separator/>
+            <Button x:Name="EditProject" Content="Configure Project" Padding="10,20" FontSize="15" BorderBrush="Transparent" Background="Transparent"/>
+            <Separator/>
+            <Button x:Name="LoadDatabase" Content="Load database" Padding="10,20" FontSize="15" BorderBrush="Transparent" Background="Transparent"/>
+            <Button x:Name="NewDatabase" Content="New Database" Padding="10,20" FontSize="15" BorderBrush="Transparent" Background="Transparent"/>
+            <Separator/>
+            <Button x:Name="ShowHideClosedTickets" Content="Toggle Closed Tickets" Padding="10,20" FontSize="15" BorderBrush="Transparent" Background="Transparent"/>
+            <Button x:Name="ShowHideEmptyFeatures" Content="Toggle Empty Features" Padding="10,20" FontSize="15" BorderBrush="Transparent" Background="Transparent"/>
         </StackPanel>
     </Grid>
 </UserControl>
