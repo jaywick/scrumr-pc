@@ -24,13 +24,7 @@ namespace Scrumr.Client
 
         public string this[string key, string defaultValue]
         {
-            get
-            {
-                if (String.IsNullOrWhiteSpace(key))
-                    return defaultValue;
-
-                return GetValue(key);
-            }
+            get { return GetValue(key) ?? defaultValue; }
         }
 
         private static string GetValue(string key)
