@@ -58,6 +58,7 @@ namespace Scrumr.Client
                 ticketView.RequestReopen += (t) => OpenTicket(t as Ticket);
                 ticketView.RequestEdit += (t) => EditTicket(t as Ticket);
                 ticketView.RequestRemove += async (t) => await RemoveEntity(t as Ticket);
+                ticketView.RequestMakeSubfeature += async (t) => await MakeSubfeature(t as Ticket);
 
                 LayoutRoot.Children.Add(ticketView);
             }
@@ -121,6 +122,12 @@ namespace Scrumr.Client
         private async Task RemoveEntity<T>(T entity) where T : Entity
         {
             await ViewDirector.RemoveEntity(entity, Context);
+            Updated(null);
+        }
+
+        private async Task MakeSubfeature(Ticket ticket)
+        {
+            await Context.ConvertTicketToSubfeature(ticket);
             Updated(null);
         }
 

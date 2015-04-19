@@ -55,5 +55,14 @@ namespace Scrumr.Database
                     .Where(x => x.FeatureId == ID);
             }
         }
+
+        [JsonIgnore]
+        public bool IsDefault
+        {
+            get
+            {
+                return this.ID == Project.DefaultFeatureId;
+            }
+        }
     }
 }

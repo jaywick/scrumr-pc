@@ -68,6 +68,7 @@
     <Otherwise />
   </Choose>
   <ItemGroup>
+    <Compile Include="ConvertingTicketToSubfeature.cs" />
     <Compile Include="Helpers\DisposableTestFiles.cs" />
     <Compile Include="Helpers\ContextTestHelper.cs" />
     <Compile Include="ScrumrContextTests.cs" />

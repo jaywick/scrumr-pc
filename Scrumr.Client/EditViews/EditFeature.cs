@@ -13,7 +13,7 @@ namespace Scrumr.Client
         public EditFeature(ScrumrContext context, Feature entity = null, PropertyBag properties = null)
             : base(context, entity)
         {
-            var projectId = properties.GetValue<int>("projectId");
+            var projectId = properties.GetValue<int>("projectId") ?? entity.ProjectId;
             LoadProjectsList(projectId);
         }
 

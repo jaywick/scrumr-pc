@@ -84,15 +84,20 @@ namespace Scrumr.Client
             tabSprints.Items.Add(SprintTab.AllSprints); // all
             foreach (var sprint in Project.Sprints)
             {
-                tabSprints.Items.Add(new SprintTab(sprint));
+                var sprintTab = new SprintTab(sprint);
+                tabSprints.Items.Add(sprintTab);
             }
         }
 
         private void UpdateFeatures()
         {
             featureTicketsStack.Children.Clear();
+            
+            var sortedFeatures = Project.Features
+                .OrderByDescending(x => x.IsDefault)
+                .ThenBy(x => x.Name);
 
-            foreach (var feature in Project.Features)
+            foreach (var feature in sortedFeatures)
             {
                 var featurePanel = new FeatureTicketsPanel(Context, feature, Sprint, ShowClosedTickets);
 
@@ -104,7 +109,7 @@ namespace Scrumr.Client
                 featurePanel.Updated += entity => Update(entity);
                 featurePanel.SetVisiblity(!feature.IsMinimised);
 
-                featureHeader.PreviewMouseDown += (s, e) => ToggleVisibility(featurePanel);
+                featureHeader.MouseRightButtonDown += (s, e) => ViewDirector.EditEntity(featurePanel.Feature, Context);
 
                 featureTicketsStack.Children.Add(featureHeader);
                 featureTicketsStack.Children.Add(featurePanel);

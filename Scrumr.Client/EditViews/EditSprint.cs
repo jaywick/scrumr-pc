@@ -13,7 +13,7 @@ namespace Scrumr.Client
         public EditSprint(ScrumrContext context, Sprint sprint = null, PropertyBag properties = null)
             : base(context, sprint)
         {
-            var projectId = properties.GetValue<int>("projectId");
+            var projectId = properties.GetValue<int>("projectId") ?? sprint.ProjectId;
             LoadProjectsList(projectId);
         }
 

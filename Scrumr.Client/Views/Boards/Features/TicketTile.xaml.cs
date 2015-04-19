@@ -22,6 +22,7 @@ namespace Scrumr.Client
         public event Action<Ticket> RequestReopen;
         public event Action<Ticket> RequestEdit;
         public event Action<Ticket> RequestRemove;
+        public event Action<Ticket> RequestMakeSubfeature;
 
         public Ticket Project { get; set; }
 
@@ -53,6 +54,8 @@ namespace Scrumr.Client
             ContextMenu.Items.Add(new Separator());
             ContextMenu.Items.Add(ViewDirector.CreateMenuItem("Edit", () => RequestEdit(ticket)));
             ContextMenu.Items.Add(ViewDirector.CreateMenuItem("Remove", () => RequestRemove(ticket)));
+            ContextMenu.Items.Add(new Separator());
+            ContextMenu.Items.Add(ViewDirector.CreateMenuItem("Convert to subfeature", () => RequestMakeSubfeature(ticket)));
 
             tileTicket.Click += (s, e) => RequestEdit(ticket);
         }

@@ -171,6 +171,19 @@ namespace Scrumr.Database
             await SaveChangesAsync();
         }
 
+        public async Task<Feature> ConvertTicketToSubfeature(Ticket ticket)
+        {
+            var subfeatureName = ticket.Feature.Name + "/" + ticket.Name;
+            var subfeature = new Feature(subfeatureName, ticket.Feature.Project);
+
+            Features.Insert(subfeature);
+            await DeleteTicket(ticket);
+
+            await SaveChangesAsync();
+
+            return subfeature;
+        }
+
         private async Task LoadDatabaseAsync()
         {
             await Task.Factory.StartNew(() => LoadDatabase());
