@@ -26,13 +26,10 @@ namespace Scrumr.Client
             _sprintId = properties.GetValue<int>("sprintId");
             _featureId = properties.GetValue<int>("featureId");
 
-            if (!_sprintId.HasValue && !_featureId.HasValue)
-            {
-                _projectId = properties.GetValue<int>("projectId")
-                    ?? (entity as Ticket)
-                        .IfNotNull(x => x.Sprint)
-                        .IfNotNull(x => (int?)x.ProjectId);
-            }
+            _projectId = properties.GetValue<int>("projectId")
+                ?? (entity as Ticket)
+                    .IfNotNull(x => x.Sprint)
+                    .IfNotNull(x => (int?)x.ProjectId);
 
             LoadViews();
             LoadSources();
@@ -69,31 +66,21 @@ namespace Scrumr.Client
 
         private void LoadSources()
         {
-            if (_projectId.HasValue)
-            {
-                SprintView.Source = Context.Sprints.Where(x => x.ProjectId == _projectId.Value);
-                FeatureView.Source = Context.Features.Where(x => x.ProjectId == _projectId.Value);
-            }
-            else
-            {
-                SprintView.Source = Context.Sprints;
-                FeatureView.Source = Context.Features;
-            }
+            SprintView.Source = Context.Sprints.Where(x => x.ProjectId == _projectId.Value);
+            FeatureView.Source = Context.Features.Where(x => x.ProjectId == _projectId.Value);
         }
 
         private void SetSelections()
         {
             if (_sprintId.HasValue)
                 SprintView.Value = Context.Sprints[_sprintId.Value];
+            else
+                SprintView.Value = Context.Projects[_projectId.Value].Backlog;
 
             if (_featureId.HasValue)
                 FeatureView.Value = Context.Features[_featureId.Value];
-
-            if (_projectId.HasValue)
-            {
-                SprintView.Value = Context.Projects[_projectId.Value].Backlog;
+            else
                 FeatureView.Value = Context.Projects[_projectId.Value].DefaultFeature;
-            }
 
             TypeView.Value = TicketType.Task;
             StateView.Value = TicketState.Open;
