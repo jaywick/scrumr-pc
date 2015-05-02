@@ -42,8 +42,8 @@ namespace Scrumr.Client
             Context = context;
 
             AddTicket.Click += (s, e) => RequestNewTicket();
-            AddSprint.Click += (s, e) => RequestNewFeature();
-            AddFeature.Click += (s, e) => RequestNewSprint();
+            AddSprint.Click += (s, e) => RequestNewSprint();
+            AddFeature.Click += (s, e) => RequestNewFeature();
             AddProject.Click += (s, e) => RequestNewProject();
 
             EditProject.Click += (s, e) => RequestEditProject();
