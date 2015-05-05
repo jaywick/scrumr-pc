@@ -8,13 +8,11 @@ namespace Scrumr.Database
 {
     public class Table<TIdentifiable> : IEnumerable<TIdentifiable> where TIdentifiable : Identifiable
     {
-        internal int NextIndex { get; private set; }
-        private Dictionary<int, TIdentifiable> Items { get; set; }
+        private Dictionary<Guid, TIdentifiable> Items { get; set; }
 
         public Table()
         {
-            NextIndex = 1;
-            Items = new Dictionary<int, TIdentifiable>();
+            Items = new Dictionary<Guid, TIdentifiable>();
         }
 
         public IEnumerator<TIdentifiable> GetEnumerator()
@@ -33,7 +31,7 @@ namespace Scrumr.Database
                 Remove(item);
         }
 
-        public TIdentifiable this[int index]
+        public TIdentifiable this[Guid index]
         {
             get { return Items[index]; }
             set { Items[index] = value; }
@@ -41,8 +39,8 @@ namespace Scrumr.Database
 
         public void Insert(TIdentifiable item)
         {
-            if (item.ID == 0)
-                item.ID = NextIndex++;
+            if (item.ID == Guid.Empty)
+                item.ID = Guid.NewGuid();
 
             Items.Add(item.ID, item);
         }
@@ -53,15 +51,13 @@ namespace Scrumr.Database
                 Insert(item);
         }
 
-        public void Load(ScrumrContext context, IEnumerable<TIdentifiable> items, int nextIndex)
+        public void Load(ScrumrContext context, IEnumerable<TIdentifiable> items)
         {
             foreach (var item in items)
             {
                 item.Context = context;
                 Items.Add(item.ID, item);
             }
-
-            NextIndex = nextIndex;
         }
 
         public void Clear()

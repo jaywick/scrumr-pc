@@ -10,12 +10,12 @@ namespace Scrumr.Database
 {
     public class Meta
     {
+        public static readonly int CurrentSchemaVersion = 2;
+
+        public int SchemaVersion { get; set; }
+
         public Meta()
         {
-            NextProjectIndex = 1;
-            NextSprintIndex = 1;
-            NextFeatureIndex = 1;
-            NextTicketIndex = 1;
         }
 
         public Meta(int schemaVersion)
@@ -23,15 +23,5 @@ namespace Scrumr.Database
         {
             SchemaVersion = schemaVersion;
         }
-
-        public int SchemaVersion { get; set; }
-
-        public int NextProjectIndex { get; set; }
-
-        public int NextSprintIndex { get; set; }
-
-        public int NextFeatureIndex { get; set; }
-
-        public int NextTicketIndex { get; set; }
     }
 }

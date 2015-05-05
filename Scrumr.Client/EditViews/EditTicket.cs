@@ -16,20 +16,20 @@ namespace Scrumr.Client
         EnumPropertyView StateView;
         EnumPropertyView TypeView;
 
-        int? _projectId;
-        int? _sprintId;
-        int? _featureId;
+        Guid? _projectId;
+        Guid? _sprintId;
+        Guid? _featureId;
 
         public EditTicket(ScrumrContext context, Ticket entity = null, PropertyBag properties = null)
             : base(context, entity)
         {
-            _sprintId = properties.GetValue<int>("sprintId");
-            _featureId = properties.GetValue<int>("featureId");
+            _sprintId = properties.GetValue<Guid>("sprintId");
+            _featureId = properties.GetValue<Guid>("featureId");
 
-            _projectId = properties.GetValue<int>("projectId")
+            _projectId = properties.GetValue<Guid>("projectId")
                 ?? (entity as Ticket)
                     .IfNotNull(x => x.Sprint)
-                    .IfNotNull(x => (int?)x.ProjectId);
+                    .IfNotNull(x => (Guid?)x.ProjectId);
 
             LoadViews();
             LoadSources();

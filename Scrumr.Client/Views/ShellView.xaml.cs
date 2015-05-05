@@ -102,7 +102,7 @@ namespace Scrumr.Client
 
                 try
                 {
-                    Board.Context = await FileSystem.LoadContext(SourceFile, App.SchemaVersion);
+                    Board.Context = await FileSystem.LoadContext(SourceFile, Meta.CurrentSchemaVersion);
                 }
                 catch (SchemaMismatchException ex)
                 {
@@ -209,7 +209,7 @@ namespace Scrumr.Client
 
             var path = dialog.FileName;
 
-            await FileSystem.CreateNew(path, App.SchemaVersion);
+            await FileSystem.CreateNew(path, Meta.CurrentSchemaVersion);
 
             App.Preferences[Preferences.SourceFileKey] = path;
             await LoadAsync();

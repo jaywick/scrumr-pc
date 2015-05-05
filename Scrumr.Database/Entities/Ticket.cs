@@ -24,10 +24,10 @@ namespace Scrumr.Database
         public string Description { get; set; }
 
         [Foreign]
-        public int FeatureId { get; set; }
+        public Guid FeatureId { get; set; }
 
         [Foreign]
-        public int SprintId { get; set; }
+        public Guid SprintId { get; set; }
 
         public int ProjectTicketId { get; set; }
 
@@ -73,7 +73,7 @@ namespace Scrumr.Database
         }
 
         [JsonIgnore]
-        public int? ProjectId
+        public Guid? ProjectId
         {
             get
             {

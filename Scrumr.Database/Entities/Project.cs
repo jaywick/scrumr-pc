@@ -29,10 +29,10 @@ namespace Scrumr.Database
         public int NextProjectTicketId { get; set; }
 
         [Foreign]
-        public int? BacklogId { get; set; }
+        public Guid? BacklogId { get; set; }
 
         [Foreign]
-        public int? DefaultFeatureId { get; set; }
+        public Guid? DefaultFeatureId { get; set; }
 
         [JsonIgnore]
         public Sprint Backlog

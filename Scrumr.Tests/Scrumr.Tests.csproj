@@ -72,7 +72,6 @@
     <Compile Include="Helpers\DisposableTestFiles.cs" />
     <Compile Include="Helpers\ContextTestHelper.cs" />
     <Compile Include="ScrumrContextTests.cs" />
-    <Compile Include="SqlGeneratorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestEntity.cs" />
     <Compile Include="Helpers\PropertyTestHelper.cs" />

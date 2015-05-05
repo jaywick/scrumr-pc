@@ -42,7 +42,7 @@ namespace Scrumr.Client
             if (Sprint == null)
                 return base.GetHashCode();
 
-            return Sprint.ID;
+            return Sprint.ID.GetHashCode();
         }
     }
 }

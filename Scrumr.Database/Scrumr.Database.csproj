@@ -60,11 +60,14 @@
     <Compile Include="Entities\TicketType.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FileSystem.cs" />
-    <Compile Include="Identifiable.cs" />
+    <Compile Include="Entities\Identifiable.cs" />
+    <Compile Include="Migration\IMigration.cs" />
+    <Compile Include="Migration\MigrationAttribute.cs" />
+    <Compile Include="Migration\Migrator.cs" />
+    <Compile Include="Migration\Schema_V2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="ScrumrContext.cs" />
-    <Compile Include="SqlGenerator.cs" />
     <Compile Include="Table.cs" />
   </ItemGroup>
   <ItemGroup>

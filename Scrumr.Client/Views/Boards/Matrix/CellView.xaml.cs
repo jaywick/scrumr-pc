@@ -17,12 +17,12 @@ namespace Scrumr.Client
 {
     partial class CellView : UserControl
     {
-        public event Action<int, int> RequestNewTicket;
+        public event Action<Guid, Guid> RequestNewTicket;
 
-        public int SprintId { get; private set; }
-        public int FeatureId { get; private set; }
+        public Guid SprintId { get; private set; }
+        public Guid FeatureId { get; private set; }
 
-        public CellView(int sprintId, int featureId)
+        public CellView(Guid sprintId, Guid featureId)
         {
             InitializeComponent();
 

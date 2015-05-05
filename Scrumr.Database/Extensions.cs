@@ -55,8 +55,34 @@ namespace Scrumr.Database
             var unaryExpression = target.Body as UnaryExpression;
 
             var result = memberExpression ?? unaryExpression.IfNotNull(x => x.Operand) as MemberExpression;
-            
+
             return result.Member as PropertyInfo;
+        }
+
+        public static TAttribute GetAttribute<TAttribute>(this Type target) where TAttribute : Attribute
+        {
+            var attributes = Attribute.GetCustomAttributes(target);
+
+            if (!attributes.Any())
+                return null;
+
+            return attributes.Cast<TAttribute>().Single();
+        }
+
+        public static void ForEach<T>(this IEnumerable<T> target, Action<T> action)
+        {
+            foreach (T item in target)
+                action(item);
+        }
+
+        public static object GetValue(this Newtonsoft.Json.Linq.JToken target)
+        {
+            return (target as Newtonsoft.Json.Linq.JValue).IfNotNull(x => x.Value);
+        }
+
+        public static bool CompareValue(this Newtonsoft.Json.Linq.JToken target, Newtonsoft.Json.Linq.JToken other)
+        {
+            return GetValue(target).Equals(GetValue(other));
         }
     }
 }

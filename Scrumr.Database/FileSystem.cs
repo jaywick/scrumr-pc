@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using Scrumr.Database.Migration;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -19,6 +21,8 @@ namespace Scrumr.Database
             if (!File.Exists(filename))
                 throw new FileNotFoundException(String.Format("Cannot find database '{0}'", filename));
 
+            var isSchemaValid = CheckSchema(filename);
+
             return await ScrumrContext.Load(filename, expectedSchemaVersion);
         }
 
@@ -33,5 +37,29 @@ namespace Scrumr.Database
                 await context.SaveChangesAsync();
             }
         }
+
+        public static bool CheckSchema(string filename)
+        {
+            var rawData = System.IO.File.ReadAllText(filename);
+            var jsonData = JObject.Parse(rawData);
+            int currentSchema = 0;
+            
+            var result = int.TryParse(jsonData["Meta"]["SchemaVersion"].ToString(), out currentSchema);
+
+            if (!result)
+                throw new SchemaMismatchException(filename);
+
+            if (currentSchema > Meta.CurrentSchemaVersion)
+                throw new SchemaMismatchException(filename, Meta.CurrentSchemaVersion, currentSchema);
+
+            if (currentSchema == Meta.CurrentSchemaVersion)
+                return true;
+
+            var migrator = new Migrator(fromVersion: currentSchema, toVersion: Meta.CurrentSchemaVersion);
+            migrator.Upgrade(filename);
+
+            return true;
+        }
+
     }
 }

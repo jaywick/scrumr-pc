@@ -12,8 +12,6 @@ namespace Scrumr.Client
     {
         public static Preferences Preferences { get; private set; }
 
-        public static readonly int SchemaVersion = 1;
-
         public App()
         {
             Preferences = new Preferences();

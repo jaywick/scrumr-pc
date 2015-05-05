@@ -27,7 +27,7 @@ namespace Scrumr.Database
         }
 
         [Foreign]
-        public int ProjectId { get; set; }
+        public Guid ProjectId { get; set; }
 
         [JsonIgnore]
         public Project Project

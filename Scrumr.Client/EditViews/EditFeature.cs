@@ -13,7 +13,7 @@ namespace Scrumr.Client
         public EditFeature(ScrumrContext context, Feature entity = null, PropertyBag properties = null)
             : base(context, entity)
         {
-            var projectId = properties.GetValue<int>("projectId") ?? entity.ProjectId;
+            var projectId = properties.GetValue<Guid>("projectId") ?? entity.ProjectId;
             LoadProjectsList(projectId);
         }
 
@@ -29,7 +29,7 @@ namespace Scrumr.Client
             await Context.SaveChangesAsync();
         }
 
-        private void LoadProjectsList(int? projectId)
+        private void LoadProjectsList(Guid? projectId)
         {
             var projectsView = GetView<Project, DataListPropertyView>();
             projectsView.Source = Context.Projects;

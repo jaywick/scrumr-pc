@@ -26,10 +26,6 @@ namespace Scrumr.Database
         public DatabaseContainer(ScrumrContext context)
         {
             Meta = context.Meta;
-            Meta.NextTicketIndex = context.Tickets.NextIndex;
-            Meta.NextFeatureIndex = context.Features.NextIndex;
-            Meta.NextProjectIndex = context.Projects.NextIndex;
-            Meta.NextSprintIndex = context.Sprints.NextIndex;
 
             Projects = new List<Project>(context.Projects);
             Features = new List<Feature>(context.Features);

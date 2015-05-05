@@ -31,7 +31,7 @@ namespace Scrumr.Database
         public bool IsMinimised { get; set; }
 
         [Foreign, IgnoreRender]
-        public int ProjectId { get; set; }
+        public Guid ProjectId { get; set; }
 
         [JsonIgnore]
         public virtual Project Project

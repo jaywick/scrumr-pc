@@ -25,4 +25,18 @@ namespace Scrumr.Database
             ActualVersion = actualVersion;
         }
     }
+
+    public class UpgradeFailedException : Exception
+    {
+        private int _fromVersion;
+        private int _toVersion;
+        private Type _schemaUpgraderType;
+
+        public UpgradeFailedException(int fromVersion, int toVersion, Type schemaUpgraderType)
+        {
+            _fromVersion = fromVersion;
+            _toVersion = toVersion;
+            _schemaUpgraderType = schemaUpgraderType;
+        }
+    }
 }

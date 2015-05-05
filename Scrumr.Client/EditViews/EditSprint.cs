@@ -13,7 +13,7 @@ namespace Scrumr.Client
         public EditSprint(ScrumrContext context, Sprint sprint = null, PropertyBag properties = null)
             : base(context, sprint)
         {
-            var projectId = properties.GetValue<int>("projectId") ?? sprint.ProjectId;
+            var projectId = properties.GetValue<Guid>("projectId") ?? sprint.ProjectId;
             LoadProjectsList(projectId);
         }
 
@@ -29,7 +29,7 @@ namespace Scrumr.Client
             await Context.SaveChangesAsync();
         }
 
-        private void LoadProjectsList(int? projectId)
+        private void LoadProjectsList(Guid? projectId)
         {
             var projectsView = GetView<Project, DataListPropertyView>();
             projectsView.Source = Context.Projects;

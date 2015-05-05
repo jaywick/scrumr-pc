@@ -7,6 +7,7 @@ using Scrumr.Database;
 using System.IO;
 using Newtonsoft.Json;
 using Scrumr.Core;
+using Scrumr.Database.Migration;
 
 namespace Scrumr.Database
 {
@@ -51,15 +52,6 @@ namespace Scrumr.Database
             await instance.LoadDatabaseAsync();
 
             return instance;
-        }
-
-        public void CheckSchema()
-        {
-            if (Meta == null)
-                throw new SchemaMismatchException(DatabaseFile.FullName);
-
-            if (Meta.SchemaVersion != ExpectedSchemaVersion)
-                throw new SchemaMismatchException(DatabaseFile.FullName, ExpectedSchemaVersion, Meta.SchemaVersion);
         }
 
         //todo: mange this with attributres in in entity classes
@@ -145,7 +137,7 @@ namespace Scrumr.Database
             Tickets.RemoveRange(linkedTickets);
 
             var linkedProjects = Projects.Where(x => x.DefaultFeatureId == feature.ID);
-            Projects.ToList().ForEach(x => x.DefaultFeatureId = 0);
+            Projects.ToList().ForEach(x => x.DefaultFeatureId = null);
 
             Features.Remove(feature);
 
@@ -164,7 +156,7 @@ namespace Scrumr.Database
             Tickets.RemoveRange(linkedTickets);
 
             var linkedProjects = Projects.Where(x => x.BacklogId == sprint.ID);
-            Projects.ToList().ForEach(x => x.BacklogId = 0);
+            Projects.ToList().ForEach(x => x.BacklogId = null);
 
             Sprints.Remove(sprint);
 
@@ -202,10 +194,10 @@ namespace Scrumr.Database
                 var database = new JsonSerializer().Deserialize<DatabaseContainer>(reader);
 
                 Meta = database.Meta;
-                Projects.Load(this, database.Projects, database.Meta.NextProjectIndex);
-                Features.Load(this, database.Features, database.Meta.NextFeatureIndex);
-                Sprints.Load(this, database.Sprints, database.Meta.NextSprintIndex);
-                Tickets.Load(this, database.Tickets, database.Meta.NextTicketIndex);
+                Projects.Load(this, database.Projects);
+                Features.Load(this, database.Features);
+                Sprints.Load(this, database.Sprints);
+                Tickets.Load(this, database.Tickets);
 
                 reader.Close();
             }

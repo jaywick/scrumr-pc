@@ -13,7 +13,7 @@ namespace Scrumr.Client
 {
     public class ViewDirector
     {
-        public static Ticket AddTicket(ScrumrContext context, int? projectId = null, int? sprintId = null, int? featureId = null)
+        public static Ticket AddTicket(ScrumrContext context, Guid? projectId = null, Guid? sprintId = null, Guid? featureId = null)
         {
             var properties = new PropertyBag();
             properties.Add("projectId", projectId);
@@ -24,7 +24,7 @@ namespace Scrumr.Client
             return (Ticket)editor.GetResult();
         }
 
-        public static T AddEntity<T>(ScrumrContext context, int? projectId = null) where T : Entity
+        public static T AddEntity<T>(ScrumrContext context, Guid? projectId = null) where T : Entity
         {
             var properties = new PropertyBag();
             properties.Add("projectId", projectId);
@@ -44,7 +44,7 @@ namespace Scrumr.Client
             editor.Show();
         }
 
-        public static void EditEntity<T>(T entity, ScrumrContext context, int? projectId = null) where T : Entity
+        public static void EditEntity<T>(T entity, ScrumrContext context, Guid? projectId = null) where T : Entity
         {
             var properties = new PropertyBag();
             properties.Add("projectId", projectId);

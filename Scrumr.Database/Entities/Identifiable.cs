@@ -13,7 +13,7 @@ namespace Scrumr.Database
         public ScrumrContext Context { get; set; }
 
         [Primary]
-        public int ID { get; set; }
+        public Guid ID { get; set; }
 
         public Identifiable(ScrumrContext context)
         {
