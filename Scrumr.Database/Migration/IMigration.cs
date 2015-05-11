@@ -8,7 +8,6 @@ namespace Scrumr.Database.Migration
 {
     public interface IMigration
     {
-        int Version { get; set; }
         bool Upgrade(JObject currentPath);
     }
 }

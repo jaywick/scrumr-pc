@@ -105,7 +105,7 @@ namespace Scrumr.Database
 
         public async Task<Ticket> AddNewTicket(Ticket ticket)
         {
-            ticket.ProjectTicketId = ticket.Project.NextProjectTicketId++;
+            ticket.Created = DateTime.UtcNow;
 
             Tickets.Insert(ticket);
             await SaveChangesAsync();
@@ -205,6 +205,9 @@ namespace Scrumr.Database
 
         public void SaveChanges()
         {
+            Meta.LastModified = DateTime.UtcNow;
+            ++Meta.UpdateRevision;
+
             using (var stream = File.CreateText(DatabaseFile.FullName))
             {
                 var database = new DatabaseContainer(this);

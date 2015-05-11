@@ -22,7 +22,7 @@ namespace Scrumr.Database.Migration
 
         public void Upgrade(string databasePath)
         {
-            var upgrader = Assembly.GetAssembly(typeof(IMigration))
+            var upgrades = Assembly.GetAssembly(typeof(IMigration))
                 .GetTypes()
                 .Where(t => typeof(IMigration).IsAssignableFrom(t))
                 .Select(t => new
@@ -30,19 +30,20 @@ namespace Scrumr.Database.Migration
                     MigrationAttribute = t.GetAttribute<MigrationAttribute>(),
                     SchemaUpgradeType = t,
                 })
-                .Where(x => x.MigrationAttribute != null
-                    && x.MigrationAttribute.FromVersion == _fromVersion
-                    && x.MigrationAttribute.ToVersion == _toVersion)
-                .Select(x => (IMigration)Activator.CreateInstance(x.SchemaUpgradeType))
-                .SingleOrDefault();
+                .Where(x => x.MigrationAttribute != null && (x.MigrationAttribute.FromVersion >= _fromVersion || x.MigrationAttribute.ToVersion <= _toVersion))
+                .OrderBy(x => x.MigrationAttribute.FromVersion)
+                .Select(x => (IMigration)Activator.CreateInstance(x.SchemaUpgradeType));
 
             var rawData = System.IO.File.ReadAllText(databasePath);
             var jsonData = JObject.Parse(rawData);
 
-            var wasUpgradeSuccess = upgrader.Upgrade(jsonData);
-
-            if (!wasUpgradeSuccess)
-                throw new UpgradeFailedException(_fromVersion, _toVersion, upgrader.GetType());
+            foreach (var upgrade in upgrades)
+            {
+                var wasUpgradeSuccess = upgrade.Upgrade(jsonData);
+                
+                if (!wasUpgradeSuccess)
+                    throw new UpgradeFailedException(_fromVersion, _toVersion, upgrade.GetType());
+	        }
 
             jsonData["Meta"]["SchemaVersion"] = _toVersion;
 

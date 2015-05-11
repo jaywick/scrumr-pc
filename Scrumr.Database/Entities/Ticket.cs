@@ -60,6 +60,10 @@ namespace Scrumr.Database
 
         public TicketState State { get; set; }
 
+        public DateTime Created { get; set; }
+        
+        public DateTime? LastClosed { get; set; }
+
         [JsonIgnore]
         public Project Project
         {
@@ -104,6 +108,7 @@ namespace Scrumr.Database
         public void Close()
         {
             State = TicketState.Closed;
+            LastClosed = DateTime.UtcNow;
         }
     }
 }

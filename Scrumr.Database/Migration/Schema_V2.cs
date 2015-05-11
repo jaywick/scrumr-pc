@@ -13,13 +13,6 @@ namespace Scrumr.Database.Migration
     [Migration(from: 1, to: 2)]
     public class Schema_V2 : IMigration
     {
-        public Schema_V2()
-        {
-            Version = 2;
-        }
-
-        public int Version { get; set; }
-
         public bool Upgrade(JObject data)
         {
             UpgradeProjectIds(data);
