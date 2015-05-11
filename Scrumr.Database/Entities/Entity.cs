@@ -11,6 +11,7 @@ namespace Scrumr.Database
         public Entity()
             : base(null)
         {
+            Created = DateTime.UtcNow;
         }
 
         public Entity(ScrumrContext context)
@@ -19,5 +20,7 @@ namespace Scrumr.Database
         }
 
         public string Name { get; set; }
+
+        public DateTime Created { get; set; }
     }
 }

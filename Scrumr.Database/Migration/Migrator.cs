@@ -30,7 +30,7 @@ namespace Scrumr.Database.Migration
                     MigrationAttribute = t.GetAttribute<MigrationAttribute>(),
                     SchemaUpgradeType = t,
                 })
-                .Where(x => x.MigrationAttribute != null && (x.MigrationAttribute.FromVersion >= _fromVersion || x.MigrationAttribute.ToVersion <= _toVersion))
+                .Where(x => x.MigrationAttribute != null && (x.MigrationAttribute.FromVersion >= _fromVersion && x.MigrationAttribute.ToVersion <= _toVersion))
                 .OrderBy(x => x.MigrationAttribute.FromVersion)
                 .Select(x => (IMigration)Activator.CreateInstance(x.SchemaUpgradeType));
 

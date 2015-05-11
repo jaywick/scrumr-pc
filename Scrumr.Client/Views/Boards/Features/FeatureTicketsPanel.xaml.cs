@@ -43,7 +43,7 @@ namespace Scrumr.Client
                 .Where(MatchSprint)
                 .OrderBy(x => !x.IsBacklogged)
                 .ThenByDescending(x => x.State)
-                .ThenBy(x => x.ID);
+                .ThenBy(x => x.Created);
 
             IsEmpty = !orderedTickets.Any();
 

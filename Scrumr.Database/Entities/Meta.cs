@@ -10,7 +10,7 @@ namespace Scrumr.Database
 {
     public class Meta
     {
-        public static readonly int CurrentSchemaVersion = 3;
+        public static readonly int CurrentSchemaVersion = 4;
 
         public int SchemaVersion { get; set; }
 

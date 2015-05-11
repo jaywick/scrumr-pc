@@ -60,8 +60,6 @@ namespace Scrumr.Database
 
         public TicketState State { get; set; }
 
-        public DateTime Created { get; set; }
-        
         public DateTime? LastClosed { get; set; }
 
         [JsonIgnore]
