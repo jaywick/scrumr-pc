@@ -27,11 +27,10 @@ namespace Scrumr.Client
 
         private Process _oskProcess;
 
-        public AddTicketTile(Feature feature, Sprint sprint)
+        public AddTicketTile(Feature feature)
         {
             InitializeComponent();
             this.Feature = feature;
-            this.Sprint = sprint ?? feature.Project.Backlog;
 
             this.PreviewMouseDown += AddButtonTileView_PreviewMouseDown;
             this.PreviewLostKeyboardFocus += (s,e) => Reset();
@@ -72,7 +71,6 @@ namespace Scrumr.Client
                     Description = "",
                     State = TicketState.Open,
                     Type = TicketType.Task,
-                    SprintId = Sprint.ID,
                     FeatureId = Feature.ID,
                 });
 

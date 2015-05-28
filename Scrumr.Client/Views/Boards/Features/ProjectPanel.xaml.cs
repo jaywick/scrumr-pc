@@ -33,13 +33,13 @@ namespace Scrumr.Client
         {
             Context = context;
 
-            foreach (var ticket in context.Projects)
+            foreach (var project in context.Projects)
             {
-                var projectTile = new ProjectTile(ticket);
+                var projectTile = new ProjectTile(project);
 
-                projectTile.RequestEdit += project => EditProject(project);
-                projectTile.RequestRemove += async project => await RemoveEntity(project);
-                projectTile.RequestOpenProject += project => RequestOpenProject(project);
+                projectTile.RequestEdit += p => EditProject(p);
+                projectTile.RequestRemove += async p => await RemoveEntity(p);
+                projectTile.RequestOpenProject += p => RequestOpenProject(p);
 
                 LayoutRoot.Children.Add(projectTile);
             }

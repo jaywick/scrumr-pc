@@ -17,23 +17,21 @@ namespace Scrumr.Client
 {
     partial class CellView : UserControl
     {
-        public event Action<Guid, Guid> RequestNewTicket;
+        public event Action<Guid> RequestNewTicket;
 
-        public Guid SprintId { get; private set; }
         public Guid FeatureId { get; private set; }
 
-        public CellView(Guid sprintId, Guid featureId)
+        public CellView(Guid featureId)
         {
             InitializeComponent();
 
-            SprintId = sprintId;
             FeatureId = featureId;
 
             AllowDrop = true;
             Background = Brushes.Transparent;
 
             ContextMenu = new ContextMenu();
-            ContextMenu.Items.Add(ViewDirector.CreateMenuItem("New Ticket", () => RequestNewTicket(SprintId, FeatureId)));
+            ContextMenu.Items.Add(ViewDirector.CreateMenuItem("New Ticket", () => RequestNewTicket(FeatureId)));
         }
 
         internal void Add(TicketView ticketView)

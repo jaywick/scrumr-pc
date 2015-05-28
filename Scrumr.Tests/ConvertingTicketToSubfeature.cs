@@ -34,12 +34,11 @@ namespace Scrumr.Tests
             var project = new Project("Project X", _context);
             await _context.AddNewProject(project);
 
-            _ticket = ContextTestHelper.CreateTestTicket("Ticket A", project);
-            await _context.AddNewTicket(_ticket);
-
-            var feature = new Feature("Feature 1", project);
-
+            var feature = new Feature("Feature 1", project.Backlog);
             _context.Features.Insert(feature);
+
+            _ticket = ContextTestHelper.CreateTestTicket("Ticket A", feature);
+            await _context.AddNewTicket(_ticket);
         }
 
         [TestCase]
@@ -63,8 +62,8 @@ namespace Scrumr.Tests
 
             var newSubfeature = await _context.ConvertTicketToSubfeature(_ticket);
 
-            var expected = _ticket.Feature.ProjectId;
-            var actual = newSubfeature.ProjectId;
+            var expected = _ticket.Feature.Sprint.ProjectId;
+            var actual = newSubfeature.Sprint.ProjectId;
 
             Assert.AreEqual(expected, expected);
         }

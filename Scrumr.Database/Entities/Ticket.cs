@@ -26,9 +26,6 @@ namespace Scrumr.Database
         [Foreign]
         public Guid FeatureId { get; set; }
 
-        [Foreign]
-        public Guid SprintId { get; set; }
-
         public int ProjectTicketId { get; set; }
 
         [JsonIgnore]
@@ -43,18 +40,6 @@ namespace Scrumr.Database
                 FeatureId = value.ID;
             }
         }
-        [JsonIgnore]
-        public Sprint Sprint
-        {
-            get
-            {
-                return Context.Sprints[SprintId];
-            }
-            set
-            {
-                SprintId = value.ID;
-            }
-        }
 
         public TicketType Type { get; set; }
 
@@ -63,14 +48,26 @@ namespace Scrumr.Database
         public DateTime? LastClosed { get; set; }
 
         [JsonIgnore]
+        public Sprint Sprint
+        {
+            get
+            {
+                if (Feature == null)
+                    return null;
+
+                return Feature.Sprint;
+            }
+        }
+
+        [JsonIgnore]
         public Project Project
         {
             get
             {
-                if (Sprint == null)
+                if (Feature == null)
                     return null;
 
-                return Sprint.Project;
+                return Feature.Sprint.Project;
             }
         }
 
@@ -79,10 +76,10 @@ namespace Scrumr.Database
         {
             get
             {
-                if (Sprint == null)
+                if (Feature == null)
                     return null;
 
-                return Sprint.ProjectId;
+                return Feature.Sprint.ProjectId;
             }
         }
 
@@ -95,7 +92,7 @@ namespace Scrumr.Database
         [JsonIgnore]
         public bool IsBacklogged
         {
-            get { return Sprint.IsBacklog; }
+            get { return Feature.Sprint.IsBacklog; }
         }
 
         public void Open()

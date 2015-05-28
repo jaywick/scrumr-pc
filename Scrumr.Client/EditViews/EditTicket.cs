@@ -66,21 +66,15 @@ namespace Scrumr.Client
 
         private void LoadSources()
         {
-            SprintView.Source = Context.Sprints.Where(x => x.ProjectId == _projectId.Value);
-            FeatureView.Source = Context.Features.Where(x => x.ProjectId == _projectId.Value);
+            FeatureView.Source = Context.Features.Where(x => x.Sprint.ProjectId == _projectId.Value);
         }
 
         private void SetSelections()
         {
-            if (_sprintId.HasValue)
-                SprintView.Value = Context.Sprints[_sprintId.Value];
-            else
-                SprintView.Value = Context.Projects[_projectId.Value].Backlog;
-
             if (_featureId.HasValue)
                 FeatureView.Value = Context.Features[_featureId.Value];
             else
-                FeatureView.Value = Context.Projects[_projectId.Value].DefaultFeature;
+                FeatureView.Value = Context.Projects[_projectId.Value].Features.FirstOrDefault();
 
             TypeView.Value = TicketType.Task;
             StateView.Value = TicketState.Open;

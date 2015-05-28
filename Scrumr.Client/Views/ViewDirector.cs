@@ -37,7 +37,6 @@ namespace Scrumr.Client
         {
             var properties = new PropertyBag();
             properties.Add("projectId", ticket.ProjectId);
-            properties.Add("sprintId", ticket.SprintId);
             properties.Add("featureId", ticket.FeatureId);
 
             var editor = EditEntityBase<Ticket>.Create(context, ticket, properties);

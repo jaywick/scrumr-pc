@@ -40,9 +40,7 @@ namespace Scrumr.Client
             Sprint = sprint;
 
             var orderedTickets = Feature.Tickets
-                .Where(MatchSprint)
-                .OrderBy(x => !x.IsBacklogged)
-                .ThenByDescending(x => x.State)
+                .OrderBy(x => x.State)
                 .ThenBy(x => x.Created);
 
             IsEmpty = !orderedTickets.Any();
@@ -63,17 +61,9 @@ namespace Scrumr.Client
                 LayoutRoot.Children.Add(ticketView);
             }
 
-            var addTile = new AddTicketTile(Feature, sprint);
+            var addTile = new AddTicketTile(Feature);
             addTile.Added += AddedTicket;
             LayoutRoot.Children.Add(addTile);
-        }
-
-        private bool MatchSprint(Ticket ticket)
-        {
-            if (Sprint == null)
-                return true;
-
-            return ticket.SprintId == Sprint.ID;
         }
 
         void FeaturePanel_ManipulationDelta(object sender, ManipulationDeltaEventArgs e)

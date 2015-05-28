@@ -78,26 +78,15 @@ namespace Scrumr.Database
                 .HasOptional(p => p.DefaultFeature);
         }*/
 
-
-        public IEnumerable<Ticket> GetTickets(ScrumrContext context, Feature feature, Sprint sprint)
-        {
-            return Tickets
-                .Where(x => x.FeatureId == feature.ID)
-                .Where(x => x.SprintId == sprint.ID);
-        }
-
         public async Task AddNewProject(Project project)
         {
             Projects.Insert(project);
             await SaveChangesAsync();
 
-            var feature = new Feature("General", project);
             var sprint = new Sprint("Backlog", project);
 
-            Features.Insert(feature);
             Sprints.Insert(sprint);
 
-            project.DefaultFeatureId = feature.ID;
             project.BacklogId = sprint.ID;
             project.NextProjectTicketId = 1;
             await SaveChangesAsync();
@@ -115,10 +104,10 @@ namespace Scrumr.Database
 
         public async Task DeleteProject(Project project)
         {
-            var linkedTickets = Tickets.Where(x => x.Sprint.Project.ID == project.ID).ToList();
+            var linkedTickets = Tickets.Where(x => x.Feature.Sprint.ProjectId == project.ID).ToList();
             Tickets.RemoveRange(linkedTickets);
 
-            var linkedFeatures = Features.Where(x => x.ProjectId == project.ID);
+            var linkedFeatures = Features.Where(x => x.Sprint.ProjectId == project.ID);
             Features.RemoveRange(linkedFeatures);
 
             var linkedSprints = Sprints.Where(x => x.ProjectId == project.ID);
@@ -136,9 +125,6 @@ namespace Scrumr.Database
             var linkedTickets = Tickets.Where(x => x.FeatureId == feature.ID);
             Tickets.RemoveRange(linkedTickets);
 
-            var linkedProjects = Projects.Where(x => x.DefaultFeatureId == feature.ID);
-            Projects.ToList().ForEach(x => x.DefaultFeatureId = null);
-
             Features.Remove(feature);
 
             await SaveChangesAsync();
@@ -152,8 +138,11 @@ namespace Scrumr.Database
 
         public async Task DeleteSprint(Sprint sprint)
         {
-            var linkedTickets = Tickets.Where(x => x.SprintId == sprint.ID);
+            var linkedTickets = Tickets.Where(x => x.Feature.SprintId == sprint.ID);
             Tickets.RemoveRange(linkedTickets);
+
+            var linkedFeatures = Features.Where(x => x.SprintId == sprint.ID);
+            Features.RemoveRange(linkedFeatures);
 
             var linkedProjects = Projects.Where(x => x.BacklogId == sprint.ID);
             Projects.ToList().ForEach(x => x.BacklogId = null);
@@ -166,7 +155,7 @@ namespace Scrumr.Database
         public async Task<Feature> ConvertTicketToSubfeature(Ticket ticket)
         {
             var subfeatureName = ticket.Feature.Name + "/" + ticket.Name;
-            var subfeature = new Feature(subfeatureName, ticket.Feature.Project);
+            var subfeature = new Feature(subfeatureName, ticket.Feature.Sprint);
 
             Features.Insert(subfeature);
             await DeleteTicket(ticket);

@@ -87,15 +87,20 @@ namespace Scrumr.Client
                 var sprintTab = new SprintTab(sprint);
                 tabSprints.Items.Add(sprintTab);
             }
+
+            Sprint = Project.Backlog;
         }
 
         private void UpdateFeatures()
         {
             featureTicketsStack.Children.Clear();
-            
-            var sortedFeatures = Project.Features
-                .OrderByDescending(x => x.IsDefault)
-                .ThenBy(x => x.Name);
+
+            IEnumerable<Feature> sortedFeatures;
+
+            if (Sprint != null)
+                sortedFeatures = Sprint.Features.OrderBy(x => x.Name);
+            else
+                sortedFeatures = Project.Features.OrderBy(x => x.Name);
 
             foreach (var feature in sortedFeatures)
             {

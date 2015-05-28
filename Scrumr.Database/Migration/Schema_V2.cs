@@ -10,7 +10,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Scrumr.Database.Migration
 {
-    [Migration(from: 1, to: 2)]
+    [Migration(version: 2)]
     public class Schema_V2 : IMigration
     {
         public bool Upgrade(JObject data)

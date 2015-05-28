@@ -31,9 +31,6 @@ namespace Scrumr.Database
         [Foreign]
         public Guid? BacklogId { get; set; }
 
-        [Foreign]
-        public Guid? DefaultFeatureId { get; set; }
-
         [JsonIgnore]
         public Sprint Backlog
         {
@@ -51,32 +48,6 @@ namespace Scrumr.Database
         }
 
         [JsonIgnore]
-        public Feature DefaultFeature
-        {
-            get
-            {
-                if (!DefaultFeatureId.HasValue)
-                    return null;
-
-                return Context.Features[DefaultFeatureId.Value];
-            }
-            set
-            {
-                DefaultFeatureId = value.ID;
-            }
-        }
-
-        [JsonIgnore]
-        public IEnumerable<Feature> Features
-        {
-            get
-            {
-                return Context.Features
-                    .Where(x => x.ProjectId == this.ID);
-            }
-        }
-
-        [JsonIgnore]
         public IEnumerable<Sprint> Sprints
         {
             get
@@ -87,12 +58,22 @@ namespace Scrumr.Database
         }
 
         [JsonIgnore]
+        public IEnumerable<Feature> Features
+        {
+            get
+            {
+                return Context.Features
+                    .Where(x => x.Sprint.ProjectId == this.ID);
+            }
+        }
+
+        [JsonIgnore]
         public IEnumerable<Ticket> Tickets
         {
             get
             {
                 return Context.Tickets
-                    .Where(x => x.Feature.ProjectId == this.ID);
+                    .Where(x => x.Feature.Sprint.ProjectId == this.ID);
             }
         }
 

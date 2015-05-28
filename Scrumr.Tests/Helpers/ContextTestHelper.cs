@@ -9,14 +9,13 @@ namespace Scrumr.Tests
 {
     internal class ContextTestHelper
     {
-        internal static Ticket CreateTestTicket(string name, Project project)
+        internal static Ticket CreateTestTicket(string name, Feature feature)
         {
-            return new Ticket(project.Context)
+            return new Ticket(feature.Context)
             {
                 Name = "Ticket X.1",
                 Description = "",
-                Sprint = project.Backlog,
-                Feature = project.DefaultFeature,
+                Feature = feature,
                 State = TicketState.Open,
                 Type = TicketType.Task
             };

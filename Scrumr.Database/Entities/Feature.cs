@@ -19,11 +19,11 @@ namespace Scrumr.Database
         {
         }
 
-        public Feature(string name, Project project)
-            : base(project.Context)
+        public Feature(string name, Sprint sprint)
+            : base(sprint.Context)
         {
             this.Name = name;
-            this.ProjectId = project.ID;
+            this.SprintId = sprint.ID;
         }
 
         public bool IsArchived { get; set; }
@@ -31,18 +31,18 @@ namespace Scrumr.Database
         public bool IsMinimised { get; set; }
 
         [Foreign, IgnoreRender]
-        public Guid ProjectId { get; set; }
+        public Guid SprintId { get; set; }
 
         [JsonIgnore]
-        public virtual Project Project
+        public virtual Sprint Sprint
         {
             get
             {
-                return Context.Projects[ProjectId];
+                return Context.Sprints[SprintId];
             }
             set
             {
-                ProjectId = value.ID;
+                SprintId = value.ID;
             }
         }
 
@@ -53,15 +53,6 @@ namespace Scrumr.Database
             {
                 return Context.Tickets
                     .Where(x => x.FeatureId == ID);
-            }
-        }
-
-        [JsonIgnore]
-        public bool IsDefault
-        {
-            get
-            {
-                return this.ID == Project.DefaultFeatureId;
             }
         }
     }

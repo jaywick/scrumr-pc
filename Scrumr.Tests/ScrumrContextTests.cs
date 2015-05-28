@@ -60,9 +60,9 @@ namespace Scrumr.Tests
 
             var features = new List<Feature>()
             {
-                new Feature("Feature 1", project),
-                new Feature("Feature 2", project),
-                new Feature("Feature 3", project),
+                new Feature("Feature 1", project.Backlog),
+                new Feature("Feature 2", project.Backlog),
+                new Feature("Feature 3", project.Backlog),
             };
 
             context.Features.InsertRange(features);
@@ -70,7 +70,7 @@ namespace Scrumr.Tests
 
             await context.DeleteProject(project);
 
-            var exists = context.Features.Any(x => x.ProjectId == project.ID);
+            var exists = context.Features.Any(x => x.Sprint.ProjectId == project.ID);
 
             Assert.IsFalse(exists);
         }
@@ -106,11 +106,14 @@ namespace Scrumr.Tests
             var project = new Project("Project X", context);
             await context.AddNewProject(project);
 
+            var feature = new Feature(context);
+            feature.Sprint = project.Backlog;
+
             var tickets = new List<Ticket>()
             {
-                ContextTestHelper.CreateTestTicket("Ticket 1", project),
-                ContextTestHelper.CreateTestTicket("Ticket 2", project),
-                ContextTestHelper.CreateTestTicket("Ticket 3", project),
+                ContextTestHelper.CreateTestTicket("Ticket 1", feature),
+                ContextTestHelper.CreateTestTicket("Ticket 2", feature),
+                ContextTestHelper.CreateTestTicket("Ticket 3", feature),
             };
 
             await context.SaveChangesAsync();
@@ -138,21 +141,6 @@ namespace Scrumr.Tests
         }
 
         [TestCase]
-        public async Task ShouldCreateDefaultFeatureOnAddingNewProject()
-        {
-            var context = await ContextTestHelper.CreateTestDatabase(_workspace);
-            await context.AddNewProject(new Project("Project X", context));
-
-            var projectAdded = context.Projects.Single();
-            var featureAdded = context.Features.Single();
-
-            var expected = featureAdded;
-            var actual = projectAdded.DefaultFeature;
-
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestCase]
         public async Task ShouldSetDefaultValueForNextTicketIdOnAddNewProject()
         {
             var context = await ContextTestHelper.CreateTestDatabase(_workspace);
@@ -160,58 +148,6 @@ namespace Scrumr.Tests
 
             var expected = 1;
             var actual = context.Projects.First().NextProjectTicketId;
-
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestCase]
-        public async Task ShouldReturnFirstProjectTicketIdOnAddingNewTicket()
-        {
-            var context = await ContextTestHelper.CreateTestDatabase(_workspace);
-            var project = new Project("Project X", context);
-            await context.AddNewProject(project);
-            await context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket X", project));
-
-            var expected = 1;
-            var actual = context.Tickets.Single().ProjectTicketId;
-
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestCase]
-        public async Task ShouldIncrementNextTicketIdOnAddingNewTicket()
-        {
-            var context = await ContextTestHelper.CreateTestDatabase(_workspace);
-            var project = new Project("Project X", context);
-            await context.AddNewProject(project);
-            await context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket 1", project));
-            await context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket 2", project)); ;
-
-            var secondTicketAdded = context.Tickets.ToList()[1];
-
-            var expected = 2;
-            var actual = secondTicketAdded.ProjectTicketId;
-
-            Assert.AreEqual(expected, actual);
-        }
-
-        [TestCase]
-        public async Task ShouldNotIncrementProjectTicketIdOnAddingTicketToAnotherProject()
-        {
-            var context = await ContextTestHelper.CreateTestDatabase(_workspace);
-            var project = new Project("Project X", context);
-            await context.AddNewProject(project);
-            await context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket X.1", project));
-            await context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket X.2", project));
-
-            var project2 = new Project("Project Y", context);
-            await context.AddNewProject(project2);
-            await context.AddNewTicket(ContextTestHelper.CreateTestTicket("Ticket Y.1", project2));
-
-            var secondProjectTicket = context.Tickets.ToList()[2];
-
-            var expected = 1;
-            var actual = secondProjectTicket.ProjectTicketId;
 
             Assert.AreEqual(expected, actual);
         }

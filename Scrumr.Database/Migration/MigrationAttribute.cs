@@ -7,13 +7,16 @@ namespace Scrumr.Database.Migration
 {
     class MigrationAttribute : Attribute
     {
-        public int FromVersion { get; set; }
         public int ToVersion { get; set; }
 
-        public MigrationAttribute(int from, int to)
+        public int FromVersion
         {
-            FromVersion = from;
-            ToVersion = to;
+            get { return ToVersion - 1; }
+        }
+
+        public MigrationAttribute(int version)
+        {
+            ToVersion = version;
         }
     }
 }

@@ -43,6 +43,16 @@ namespace Scrumr.Database
         }
 
         [JsonIgnore]
+        public IEnumerable<Feature> Features
+        {
+            get
+            {
+                return Context.Features
+                    .Where(x => x.SprintId == ID);
+            }
+        }
+
+        [JsonIgnore]
         public IEnumerable<Ticket> Tickets
         {
             get

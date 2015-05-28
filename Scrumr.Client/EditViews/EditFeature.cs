@@ -13,14 +13,14 @@ namespace Scrumr.Client
         public EditFeature(ScrumrContext context, Feature entity = null, PropertyBag properties = null)
             : base(context, entity)
         {
-            var projectId = properties.GetValue<Guid>("projectId") ?? entity.ProjectId;
-            LoadProjectsList(projectId);
+            var sprintId = properties.GetValue<Guid>("sprintId") ?? entity.SprintId;
+            LoadSprintsList(sprintId);
         }
 
         protected override IEnumerable<Expression<Func<Feature, object>>> OnRender()
         {
             yield return x => x.Name;
-            yield return x => x.Project;
+            yield return x => x.Sprint;
         }
 
         protected override async Task OnCreated(Feature entity)
@@ -29,13 +29,13 @@ namespace Scrumr.Client
             await Context.SaveChangesAsync();
         }
 
-        private void LoadProjectsList(Guid? projectId)
+        private void LoadSprintsList(Guid? sprintId)
         {
-            var projectsView = GetView<Project, DataListPropertyView>();
-            projectsView.Source = Context.Projects;
+            var sprintsView = GetView<Sprint, DataListPropertyView>();
+            sprintsView.Source = Context.Sprints ;
 
-            if (projectId.HasValue)
-                projectsView.SelectItem(Context.Projects.Get(projectId.Value));
+            if (sprintId.HasValue)
+                sprintsView.SelectItem(Context.Sprints[sprintId.Value]);
         }
 
         protected override async Task OnDeleting(Feature feature)

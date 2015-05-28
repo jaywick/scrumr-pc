@@ -65,7 +65,6 @@ namespace Scrumr.Client
             if (Context == null) throw new InvalidOperationException("Context is missing");
 
             SprintFilter = x => x.ProjectId == Project.ID;
-            FeatureFilter = x => x.ProjectId == Project.ID;
             TicketFilter = x => true;
 
             Board.Children.Clear();
@@ -88,7 +87,7 @@ namespace Scrumr.Client
             {
                 foreach (var feature in VisibleFeatures)
                 {
-                    CreateTicketCell(column, row, sprint.ID, feature.ID);
+                    CreateTicketCell(column, row, feature.ID);
                     row++;
                 }
 
@@ -139,15 +138,14 @@ namespace Scrumr.Client
             }
         }
 
-        private void CreateTicketCell(int column, int row, Guid sprintId, Guid featureId)
+        private void CreateTicketCell(int column, int row, Guid featureId)
         {
-            var cellView = new CellView(sprintId, featureId);
+            var cellView = new CellView(featureId);
             Board.InsertAt(cellView, column, row);
-            cellView.Drop += (s, e) => MoveTicket(e.Data.GetData<Ticket>(), sprintId, featureId);
-            cellView.RequestNewTicket += (s, f) => NewTicket(s, f);
+            cellView.Drop += (s, e) => MoveTicket(e.Data.GetData<Ticket>(), featureId);
+            cellView.RequestNewTicket += (f) => NewTicket(f);
 
             var tickets = VisibleTickets
-                .Where(t => t.SprintId == sprintId)
                 .Where(t => t.FeatureId == featureId);
 
             foreach (var ticket in tickets)
@@ -192,15 +190,14 @@ namespace Scrumr.Client
             Update();
         }
 
-        public void NewTicket(Guid sprintId, Guid featureId)
+        public void NewTicket(Guid featureId)
         {
-            ViewDirector.AddTicket(Context, Project.ID, sprintId, featureId);
+            ViewDirector.AddTicket(Context, Project.ID, featureId);
             Update();
         }
 
-        private void MoveTicket(Ticket ticket, Guid sprintId, Guid featureId)
+        private void MoveTicket(Ticket ticket, Guid featureId)
         {
-            ticket.SprintId = sprintId;
             ticket.FeatureId = featureId;
 
             Update();
