@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using Scrumr.Core.Extensions;
 
 namespace Scrumr.Database
 {
@@ -54,6 +55,11 @@ namespace Scrumr.Database
                 return Context.Tickets
                     .Where(x => x.FeatureId == ID);
             }
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0}: {1}", ID.ToSubcode(), Name);
         }
     }
 }

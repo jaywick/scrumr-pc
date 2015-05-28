@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using Scrumr.Core.Extensions;
 
 namespace Scrumr.Database
 {
@@ -69,6 +70,11 @@ namespace Scrumr.Database
             {
                 return this.ID == Project.BacklogId;
             }
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0}: {1}", ID.ToSubcode(), Name);
         }
     }
 }

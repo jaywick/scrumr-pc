@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Scrumr.Core.Extensions;
 
 namespace Scrumr.Database
 {
@@ -86,6 +87,11 @@ namespace Scrumr.Database
                     .OrderByDescending(x => x.ID)
                     .FirstOrDefault();
             }
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0}: {1}", ID.ToSubcode(), Name);
         }
     }
 }
