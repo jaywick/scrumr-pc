@@ -11,19 +11,16 @@ namespace Scrumr.Client
 {
     class EditTicket : EditEntityBase<Ticket>
     {
-        DataListPropertyView SprintView;
         DataListPropertyView FeatureView;
         EnumPropertyView StateView;
         EnumPropertyView TypeView;
 
         Guid? _projectId;
-        Guid? _sprintId;
         Guid? _featureId;
 
         public EditTicket(ScrumrContext context, Ticket entity = null, PropertyBag properties = null)
             : base(context, entity)
         {
-            _sprintId = properties.GetValue<Guid>("sprintId");
             _featureId = properties.GetValue<Guid>("featureId");
 
             _projectId = properties.GetValue<Guid>("projectId")
@@ -42,7 +39,6 @@ namespace Scrumr.Client
             yield return x => x.Description;
             yield return x => x.Type;
             yield return x => x.State;
-            yield return x => x.Sprint;
             yield return x => x.Feature;
         }
 
@@ -58,7 +54,6 @@ namespace Scrumr.Client
 
         private void LoadViews()
         {
-            SprintView = GetView<Sprint, DataListPropertyView>();
             FeatureView = GetView<Feature, DataListPropertyView>();
             StateView = GetView<TicketState, EnumPropertyView>();
             TypeView = GetView<TicketType, EnumPropertyView>();

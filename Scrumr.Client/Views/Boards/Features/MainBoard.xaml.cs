@@ -83,7 +83,8 @@ namespace Scrumr.Client
         {
             tabSprints.Items.Clear();
 
-            tabSprints.Items.Add(SprintTab.AllSprints); // all
+            tabSprints.Items.Add(SprintTab.AllSprints);
+
             foreach (var sprint in Project.Sprints)
             {
                 var sprintTab = new SprintTab(sprint);
