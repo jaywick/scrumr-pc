@@ -29,13 +29,13 @@ namespace Scrumr.Client
             await Context.SaveChangesAsync();
         }
 
-        private void LoadSprintsList(Guid? sprintId)
+        private void LoadSprintsList(Guid sprintId)
         {
             var sprintsView = GetView<Sprint, DataListPropertyView>();
-            sprintsView.Source = Context.Sprints ;
+            var parentProjectId = Context.Sprints[sprintId].ProjectId;
+            sprintsView.Source = Context.Sprints.Where(x => x.ProjectId == parentProjectId);
 
-            if (sprintId.HasValue)
-                sprintsView.SelectItem(Context.Sprints[sprintId.Value]);
+            sprintsView.SelectItem(Context.Sprints[sprintId]);
         }
 
         protected override async Task OnDeleting(Feature feature)

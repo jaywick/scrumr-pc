@@ -108,7 +108,7 @@ namespace Scrumr.Client
                 {
                     Logger.Log("ERROR: " + ex.Message);
                     ShowBlank(String.Format(
-                        "The database you are trying to laod is out of date and cannot be used with this version of the application.\n" +
+                        "The database you are trying to load is out of date and cannot be used with this version of the application.\n" +
                         "Application expects v{0}, however database is v{1}.\n\n" +
                         "{2}", ex.ExpectedVersion, ex.ActualVersion, ex.FilePath));
                     return;
@@ -144,7 +144,6 @@ namespace Scrumr.Client
         private void SwitchProject(Project project)
         {
             Board.Project = project;
-            App.Preferences[Preferences.DefaultProjectKey] = project.Name;
         }
 
         private void ToggleClosedTicketsDisplay()

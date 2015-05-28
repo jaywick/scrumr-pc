@@ -34,6 +34,7 @@ namespace Scrumr.Client
             set
             {
                 _project = value;
+                App.Preferences[Preferences.DefaultProjectKey] = Project.Name;
                 Update(value);
             }
         }
@@ -67,12 +68,13 @@ namespace Scrumr.Client
 
         private void UpdateBreadcrumb()
         {
-            FeatureTab.Header = Project.Name + " > Features";
+            FeatureTab.Header = Project.Name;
         }
 
         private void UpdateProjects()
         {
             var projectPanel = new ProjectPanel(Context);
+            projectPanel.Updated += () => Update(null);
             projectPanel.RequestOpenProject += project => OpenProject(project);
             controlProjectPanel.Content = projectPanel;
         }
