@@ -59,10 +59,23 @@ namespace Scrumr.Client
             UpdateSprints();
             UpdateFeatures();
 
-            if (LastUpdatedEntity != null && LastUpdatedEntity is Ticket)
+            if (LastUpdatedEntity == null)
+                return;
+
+            if (LastUpdatedEntity is Ticket)
             {
                 var ticket = (Ticket)LastUpdatedEntity;
                 tabSprints.SelectedItem = new SprintTab(ticket.Sprint);
+            }
+            else if (LastUpdatedEntity is Sprint)
+            {
+                var sprint = (Sprint)LastUpdatedEntity;
+                tabSprints.SelectedItem = new SprintTab(sprint);
+            }
+            else if (LastUpdatedEntity is Feature)
+            {
+                var feature = (Feature)LastUpdatedEntity;
+                tabSprints.SelectedItem = new SprintTab(feature.Sprint);
             }
         }
 
@@ -90,6 +103,8 @@ namespace Scrumr.Client
                 var sprintTab = new SprintTab(sprint);
                 tabSprints.Items.Add(sprintTab);
             }
+
+            tabSprints.Items.Add(SprintTab.NewSprint);
 
             Sprint = Project.Backlog;
         }
@@ -122,6 +137,30 @@ namespace Scrumr.Client
                 featureTicketsStack.Children.Add(featureHeader);
                 featureTicketsStack.Children.Add(featurePanel);
             }
+
+            featureTicketsStack.Children.Add(CreateAddNewFeatureButton());
+        }
+
+        private UIElement CreateAddNewFeatureButton()
+        {
+            var addNewFeatureButton = new Label
+            {
+                Content = "+ Add new feature",
+                FontSize = 16,
+                Foreground = Brushes.Black,
+            };
+
+            addNewFeatureButton.MouseLeftButtonDown += (s, e) =>
+            {
+                var newFeature = ViewDirector.AddFeature(Context, Sprint.ID);
+
+                if (newFeature == null)
+                    return;
+
+                Update(newFeature);
+            };
+
+            return addNewFeatureButton;
         }
 
         private void ToggleVisibility(FeatureTicketsPanel featurePanel)
@@ -140,12 +179,33 @@ namespace Scrumr.Client
             };
         }
 
-        private void tabSprints_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void TabSprints_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (e.AddedItems.IsNullOrEmpty())
                 return;
 
-            Sprint = e.AddedItems.Cast<SprintTab>().First().Sprint;
+            var sprintTab = e.AddedItems.Cast<SprintTab>().First();
+
+            if (sprintTab == SprintTab.NewSprint)
+            {
+                var newSprint = ViewDirector.AddEntity<Sprint>(Context, Project.ID);
+
+                var lastSelectedTab = e.RemovedItems.Cast<SprintTab>().FirstOrDefault();
+
+                if (lastSelectedTab != null && lastSelectedTab != SprintTab.NewSprint)
+                    tabSprints.SelectedItem = lastSelectedTab;
+                else
+                    tabSprints.SelectedItem = SprintTab.AllSprints;
+
+                if (newSprint == null)
+                    return;
+
+                Update(newSprint);
+
+                return;
+            }
+            
+            Sprint = sprintTab.Sprint;
             UpdateFeatures();
         }
     }

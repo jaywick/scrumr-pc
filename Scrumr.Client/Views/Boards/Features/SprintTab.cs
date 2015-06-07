@@ -10,22 +10,28 @@ namespace Scrumr.Client
     class SprintTab
     {
         public static SprintTab AllSprints { get; set; }
+        public static SprintTab NewSprint { get; set; }
+
         public Sprint Sprint { get; set; }
 
         static SprintTab()
         {
-            AllSprints = new SprintTab(null);
+            AllSprints = new SprintTab("All");
+            NewSprint = new SprintTab("+");
+        }
+
+        public SprintTab(string header)
+        {
+            Header = header;
         }
 
         public SprintTab(Sprint sprint)
         {
             Sprint = sprint;
+            Header = sprint.Name;
         }
 
-        public string Header
-        {
-            get { return Sprint.IfNotNull(x => x.Name) ?? "All"; }
-        }
+        public string Header { get; set; }
 
         public override bool Equals(object obj)
         {

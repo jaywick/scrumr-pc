@@ -24,6 +24,15 @@ namespace Scrumr.Client
             return (Ticket)editor.GetResult();
         }
 
+        public static Feature AddFeature(ScrumrContext context, Guid? sprintId = null)
+        {
+            var properties = new PropertyBag();
+            properties.Add("sprintId", sprintId);
+
+            var editor = EditEntityBase<Feature>.Create(context, null, properties);
+            return editor.GetResult();
+        }
+
         public static T AddEntity<T>(ScrumrContext context, Guid? projectId = null) where T : Entity
         {
             var properties = new PropertyBag();

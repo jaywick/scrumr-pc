@@ -21,7 +21,7 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <TabControl Grid.Row="0" x:Name="tabSprints" DisplayMemberPath="Header" SelectionChanged="tabSprints_SelectionChanged"/>
+                    <TabControl Grid.Row="0" x:Name="tabSprints" DisplayMemberPath="Header" SelectionChanged="TabSprints_SelectionChanged"/>
 
                     <ScrollViewer Grid.Row="1" PanningMode="VerticalOnly">
                         <StackPanel x:Name="featureTicketsStack"/>
