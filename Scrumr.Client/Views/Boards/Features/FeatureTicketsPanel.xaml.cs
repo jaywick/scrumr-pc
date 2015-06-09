@@ -40,7 +40,7 @@ namespace Scrumr.Client
             Sprint = sprint;
 
             var orderedTickets = Feature.Tickets
-                .OrderBy(x => x.State)
+                .OrderByDescending(x => x.State)
                 .ThenBy(x => x.Created);
 
             IsEmpty = !orderedTickets.Any();

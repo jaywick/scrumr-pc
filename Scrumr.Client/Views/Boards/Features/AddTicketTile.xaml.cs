@@ -45,7 +45,7 @@ namespace Scrumr.Client
 
         public void StartQuickEdit()
         {
-            _oskProcess = Process.Start(@"C:\Program Files\Common Files\Microsoft Shared\ink\TabTip.exe");
+            //_oskProcess = Process.Start(@"C:\Program Files\Common Files\Microsoft Shared\ink\TabTip.exe");
 
             TicketSummary.Visibility = Visibility.Visible;
             AddIconLabel.Visibility = Visibility.Collapsed;
@@ -87,9 +87,9 @@ namespace Scrumr.Client
 
         private void HideKeyboard()
         {
-            Process.GetProcessesByName("tabtip")
+            /*Process.GetProcessesByName("tabtip")
                 .ToList()
-                .ForEach(x => x.Kill());
+                .ForEach(x => x.Kill());*/
         }
     }
 }

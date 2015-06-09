@@ -152,7 +152,7 @@ namespace Scrumr.Client
 
             addNewFeatureButton.MouseLeftButtonDown += (s, e) =>
             {
-                var newFeature = ViewDirector.AddFeature(Context, Sprint.ID);
+                var newFeature = ViewDirector.AddFeature(Context, (Sprint ?? Project.Backlog).ID);
 
                 if (newFeature == null)
                     return;
@@ -204,7 +204,7 @@ namespace Scrumr.Client
 
                 return;
             }
-            
+
             Sprint = sprintTab.Sprint;
             UpdateFeatures();
         }
